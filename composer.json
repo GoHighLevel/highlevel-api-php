@@ -1,0 +1,49 @@
+{
+  "name": "gohighlevel/api-client",
+  "description": "Official PHP SDK for the GoHighLevel API",
+  "keywords": [
+    "gohighlevel",
+    "highlevel",
+    "ghl",
+    "api",
+    "sdk",
+    "php",
+    "crm",
+    "marketing"
+  ],
+  "homepage": "https://github.com/gohighlevel/highlevel-api-php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "GoHighLevel",
+      "homepage": "https://www.gohighlevel.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "^7.0",
+    "mongodb/mongodb": "^2.0"
+  },
+  "suggest": {
+    "ext-curl": "Recommended for better HTTP performance with Guzzle",
+    "ext-mongodb": "Required for MongoDB session storage support"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.89",
+    "phpstan/phpstan": "^1.10",
+    "phpunit/phpunit": "^9.5",
+    "squizlabs/php_codesniffer": "^3.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "HighLevel\\": "lib/"
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

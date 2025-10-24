@@ -1,0 +1,244 @@
+<?php
+
+namespace HighLevel\Services\Payments\Models;
+
+/**
+ * GetSubscriptionResponseSchema model
+ * 
+ * @package HighLevel\Services\Payments\Models
+ */
+class GetSubscriptionResponseSchema
+{
+    /**
+     * @var string
+     */
+    public string $id;
+
+    /**
+     * @var array&lt;string, mixed&gt;
+     */
+    public array $alt_type;
+
+    /**
+     * @var string
+     */
+    public string $alt_id;
+
+    /**
+     * @var string|null
+     */
+    public ?string $contact_id = null;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $contact_snapshot = null;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $coupon = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $currency = null;
+
+    /**
+     * @var float|null
+     */
+    public ?float $amount = null;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $status = null;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $live_mode = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $entity_type = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $entity_id = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $entity_source;
+
+    /**
+     * @var string|null
+     */
+    public ?string $subscription_id = null;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $subscription_snapshot = null;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $payment_provider = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $ip_address = null;
+
+    /**
+     * @var string
+     */
+    public string $created_at;
+
+    /**
+     * @var string
+     */
+    public string $updated_at;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $meta = null;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $mark_as_test = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $schedule;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $auto_payment = null;
+
+    /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $recurring_product = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $canceled_at = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $canceled_by = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $trace_id = null;
+
+    /**
+     * Raw data storage for models without defined schema
+     * @var array<string, mixed>
+     */
+    private array $data = [];
+
+    /**
+     * Create model from array data
+     * 
+     * @param array<string, mixed> $data Model data
+     */
+    public function __construct(array $data = [])
+    {
+        $this->id = $data['_id'] ?? '';
+        $this->alt_type = $data['altType'] ?? null;
+        $this->alt_id = $data['altId'] ?? '';
+        $this->contact_id = $data['contactId'] ?? null;
+        $this->contact_snapshot = $data['contactSnapshot'] ?? null;
+        $this->coupon = $data['coupon'] ?? null;
+        $this->currency = $data['currency'] ?? null;
+        $this->amount = $data['amount'] ?? null;
+        $this->status = $data['status'] ?? null;
+        $this->live_mode = $data['liveMode'] ?? null;
+        $this->entity_type = $data['entityType'] ?? null;
+        $this->entity_id = $data['entityId'] ?? null;
+        $this->entity_source = $data['entitySource'] ?? null;
+        $this->subscription_id = $data['subscriptionId'] ?? null;
+        $this->subscription_snapshot = $data['subscriptionSnapshot'] ?? null;
+        $this->payment_provider = $data['paymentProvider'] ?? null;
+        $this->ip_address = $data['ipAddress'] ?? null;
+        $this->created_at = $data['createdAt'] ?? '';
+        $this->updated_at = $data['updatedAt'] ?? '';
+        $this->meta = $data['meta'] ?? null;
+        $this->mark_as_test = $data['markAsTest'] ?? null;
+        $this->schedule = $data['schedule'] ?? null;
+        $this->auto_payment = $data['autoPayment'] ?? null;
+        $this->recurring_product = $data['recurringProduct'] ?? null;
+        $this->canceled_at = $data['canceledAt'] ?? null;
+        $this->canceled_by = $data['canceledBy'] ?? null;
+        $this->trace_id = $data['traceId'] ?? null;
+        // No defined properties - store raw data for flexible models
+        $this->data = $data;
+    }
+
+    /**
+     * Convert model to array (for models without defined schema)
+     * 
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Magic getter for accessing data properties
+     * 
+     * @param string $name Property name
+     * @return mixed Property value or null if not found
+     */
+    public function __get(string $name)
+    {
+        return $this->data[$name] ?? null;
+    }
+
+    /**
+     * Magic setter for setting data properties
+     * 
+     * @param string $name Property name
+     * @param mixed $value Property value
+     * @return void
+     */
+    public function __set(string $name, $value): void
+    {
+        $this->data[$name] = $value;
+    }
+
+    /**
+     * Magic isset for checking if data property exists
+     * 
+     * @param string $name Property name
+     * @return bool True if property exists, false otherwise
+     */
+    public function __isset(string $name): bool
+    {
+        return isset($this->data[$name]);
+    }
+
+    /**
+     * Get all data as array
+     * 
+     * @return array<string, mixed>
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+}
