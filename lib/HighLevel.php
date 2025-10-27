@@ -337,6 +337,11 @@ class HighLevel
 
         // Initialize session storage
         $this->sessionStorage = $config['sessionStorage'] ?? new MemorySessionStorage($this->logger);
+        
+        // Update logger for user-provided session storage to use the correct log level
+        if (isset($config['sessionStorage'])) {
+            $this->sessionStorage->setLogger($this->logger);
+        }
 
         // Initialize HTTP client
         $this->initializeHttpClient();
