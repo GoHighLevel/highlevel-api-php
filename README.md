@@ -42,8 +42,8 @@ $config = new HighLevelConfig([
 or with 
 
 $config = new HighLevelConfig([
-     'clientId' => 'your-client-id',
-    'clientSecret' => 'your-client-secret'
+    'clientId' => 'your-client-id', // $_ENV['CLIENT_ID']
+    'clientSecret' => 'your-client-secret' // $_ENV['CLIENT_SECRET']
 ]);
 
 $ghl = new HighLevel($config);
@@ -79,7 +79,7 @@ $ghl = new HighLevel($config);
 $authUrl = $ghl->oauth->getAuthorizationUrl(
     'your-client-id',
     'https://your-app.com/callback',
-    'contacts.readonly contacts.write'
+    'contacts.readonly contacts.write' // add all scopes here(one space seperated)
 );
 
 header('Location: ' . $authUrl);
