@@ -242,14 +242,20 @@ class MongoDBSessionStorage extends SessionStorage
                 'applicationId' => $applicationId,
                 'resourceId' => $resourceId,
             ], $sessionArray, [
-                'expire_at' => $this->calculateExpireAt($sessionData->expires_in),
-                'createdAt' => new UTCDateTime(),
-                'updatedAt' => new UTCDateTime()
+                'expire_at' => $this->calculateExpireAt($sessionData->expires_in)
             ]);
 
-            $collection->findOneAndReplace(
+            $collection->findOneAndUpdate(
                 ['uniqueKey' => $uniqueKey],
-                $sessionDocument,
+                [
+                    '$set' => $sessionDocument,
+                    '$setOnInsert' => [
+                        'createdAt' => new UTCDateTime(),
+                    ],
+                    '$currentDate' => [
+                        'updatedAt' => true,
+                    ],
+                ],
                 ['upsert' => true]
             );
 
@@ -452,4 +458,3 @@ class MongoDBSessionStorage extends SessionStorage
         return $this->isConnected;
     }
 }
-

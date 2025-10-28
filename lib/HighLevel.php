@@ -3,10 +3,7 @@
 namespace HighLevel;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use HighLevel\Services\Associations\Associations;
@@ -48,9 +45,7 @@ use HighLevel\Storage\SessionStorage;
 use HighLevel\Storage\MemorySessionStorage;
 use HighLevel\Storage\ISessionData;
 use HighLevel\Logging\Logger;
-use HighLevel\Logging\LogLevel;
 use HighLevel\Webhook\WebhookManager;
-use HighLevel\Constants\UserType;
 
 /**
  * HighLevel SDK Client
@@ -453,14 +448,9 @@ class HighLevel
         return function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
                 return $handler($request, $options)->then(
-                    function (ResponseInterface $response) {
-                        return $response; // Pass through successful responses
-                    },
-                    function (RequestException $exception) use ($request, $options, $handler) {
-                        // Handle 401 Unauthorized responses with automatic token refresh
-                        if ($exception->hasResponse() && 
-                            $exception->getResponse()->getStatusCode() === 401 && 
-                            !isset($options['_retry_attempt'])) {
+                    function (ResponseInterface $response) use ($request, $options, $handler) {
+                        // Check if response is 401 and handle token refresh
+                        if ($response->getStatusCode() === 401 && !isset($options['_retry_attempt'])) {
                             
                             $this->logger->warn('401 Unauthorized - Attempting token refresh');
                             
@@ -490,7 +480,7 @@ class HighLevel
                                             // Create new request with refreshed token
                                             $newRequest = $request->withHeader('Authorization', $newToken);
                                             
-                                            // Add retry flag to prevent infinite loops
+                                            // Add retry flag to prevent infinite loops and restore original options
                                             $retryOptions = array_merge($options, ['_retry_attempt' => true]);
                                             
                                             $this->logger->debug("Retrying request with refreshed token for {$resourceId}");
@@ -504,8 +494,7 @@ class HighLevel
                                 ]);
                             }
                         }
-                        
-                        throw $exception; // Re-throw the original exception
+                        return $response;
                     }
                 );
             };
@@ -635,8 +624,8 @@ class HighLevel
     private function refreshTokenIfNeeded(string $resourceId, ISessionData $sessionData): ?string
     {
         try {
-            $refreshToken = $sessionData['refreshToken'] ?? $sessionData['refresh_token'] ?? null;
-            $userType = $sessionData['userType'] ?? $sessionData['user_type'] ?? null;
+            $refreshToken = $sessionData->refreshToken ?? $sessionData->refresh_token ?? null;
+            $userType = $sessionData->userType ?? $sessionData->user_type ?? null;
             
             if (!$refreshToken) {
                 $this->logger->warn("No refresh token available for {$resourceId}");
@@ -652,26 +641,13 @@ class HighLevel
                 $userType ?? 'Location'
             );
             
-            if (isset($refreshData['access_token'])) {
-                // Update session storage with new token data
-                $updatedSessionData = array_merge($sessionData, [
-                    'accessToken' => $refreshData['access_token'],
-                    'tokenType' => $refreshData['token_type'] ?? 'Bearer',
-                    'expiresIn' => $refreshData['expires_in'] ?? 3600,
-                    'expireAt' => time() + ($refreshData['expires_in'] ?? 3600),
-                ]);
+            if ($refreshData->access_token) {
+                $this->sessionStorage->setSession($resourceId, new ISessionData($refreshData));
                 
-                // Update refresh token if provided
-                if (isset($refreshData['refresh_token'])) {
-                    $updatedSessionData['refreshToken'] = $refreshData['refresh_token'];
-                }
-                
-                $this->sessionStorage->setSession($resourceId, new ISessionData($updatedSessionData));
-                
-                $tokenType = $refreshData['token_type'] ?? 'Bearer';
+                $tokenType = $refreshData->token_type ?? 'Bearer';
                 $this->logger->info("Token refreshed successfully for {$resourceId}");
                 
-                return "{$tokenType} {$refreshData['access_token']}";
+                return "{$tokenType} {$refreshData->access_token}";
             } else {
                 $this->logger->warn("Token refresh failed - no access_token in response for {$resourceId}");
                 return null;
