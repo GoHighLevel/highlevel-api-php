@@ -25,6 +25,11 @@ class CalendarNotificationResponseDTO
     public ?array $additional_email_ids = null;
 
     /**
+     * @var array&lt;string&gt;|null
+     */
+    public ?array $additional_phone_numbers = null;
+
+    /**
      * @var string|null
      */
     public ?string $channel = null;
@@ -38,6 +43,11 @@ class CalendarNotificationResponseDTO
      * @var bool|null
      */
     public ?bool $is_active = null;
+
+    /**
+     * @var array&lt;string&gt;|null
+     */
+    public ?array $additional_whatsapp_numbers = null;
 
     /**
      * @var string|null
@@ -90,9 +100,11 @@ class CalendarNotificationResponseDTO
         $this->id = $data['_id'] ?? null;
         $this->receiver_type = $data['receiverType'] ?? null;
         $this->additional_email_ids = $data['additionalEmailIds'] ?? null;
+        $this->additional_phone_numbers = $data['additionalPhoneNumbers'] ?? null;
         $this->channel = $data['channel'] ?? null;
         $this->notification_type = $data['notificationType'] ?? null;
         $this->is_active = $data['isActive'] ?? null;
+        $this->additional_whatsapp_numbers = $data['additionalWhatsappNumbers'] ?? null;
         $this->template_id = $data['templateId'] ?? null;
         $this->body = $data['body'] ?? null;
         $this->subject = $data['subject'] ?? null;

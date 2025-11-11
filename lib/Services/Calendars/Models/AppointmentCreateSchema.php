@@ -42,6 +42,11 @@ class AppointmentCreateSchema
     /**
      * @var string|null
      */
+    public ?string $description = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $address = null;
 
     /**
@@ -108,6 +113,7 @@ class AppointmentCreateSchema
         $this->override_location_config = $data['overrideLocationConfig'] ?? null;
         $this->appointment_status = $data['appointmentStatus'] ?? null;
         $this->assigned_user_id = $data['assignedUserId'] ?? null;
+        $this->description = $data['description'] ?? null;
         $this->address = $data['address'] ?? null;
         $this->ignore_date_range = $data['ignoreDateRange'] ?? null;
         $this->to_notify = $data['toNotify'] ?? null;

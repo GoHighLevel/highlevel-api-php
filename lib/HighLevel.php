@@ -43,7 +43,7 @@ use HighLevel\Services\VoiceAi\VoiceAi;
 use HighLevel\Services\Workflows\Workflows;
 use HighLevel\Storage\SessionStorage;
 use HighLevel\Storage\MemorySessionStorage;
-use HighLevel\Storage\ISessionData;
+use HighLevel\Storage\SessionData;
 use HighLevel\Logging\Logger;
 use HighLevel\Webhook\WebhookManager;
 
@@ -621,7 +621,7 @@ class HighLevel
      * @param array<string, mixed> $sessionData
      * @return string|null New authorization header value
      */
-    private function refreshTokenIfNeeded(string $resourceId, ISessionData $sessionData): ?string
+    private function refreshTokenIfNeeded(string $resourceId, SessionData $sessionData): ?string
     {
         try {
             $refreshToken = $sessionData->refreshToken ?? $sessionData->refresh_token ?? null;
@@ -642,7 +642,7 @@ class HighLevel
             );
             
             if ($refreshData->access_token) {
-                $this->sessionStorage->setSession($resourceId, new ISessionData($refreshData));
+                $this->sessionStorage->setSession($resourceId, new SessionData($refreshData));
                 
                 $tokenType = $refreshData->token_type ?? 'Bearer';
                 $this->logger->info("Token refreshed successfully for {$resourceId}");

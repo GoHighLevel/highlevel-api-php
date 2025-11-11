@@ -65,6 +65,11 @@ class CalendarEventDTO
     public ?string $notes = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $description = null;
+
+    /**
      * @var bool|null
      */
     public ?bool $is_recurring = null;
@@ -133,6 +138,7 @@ class CalendarEventDTO
         $this->assigned_user_id = $data['assignedUserId'] ?? '';
         $this->users = $data['users'] ?? [];
         $this->notes = $data['notes'] ?? null;
+        $this->description = $data['description'] ?? null;
         $this->is_recurring = $data['isRecurring'] ?? null;
         $this->rrule = $data['rrule'] ?? null;
         $this->start_time = $data['startTime'] ?? null;

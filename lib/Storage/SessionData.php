@@ -10,7 +10,7 @@ use HighLevel\Constants\UserType;
  * 
  * @package HighLevel\Storage
  */
-class ISessionData
+class SessionData
 {
     /**
      * OAuth access token
@@ -75,11 +75,11 @@ class ISessionData
     /**
      * Create session data from array, object, or existing data
      * 
-     * @param array<string, mixed>|object|ISessionData $data Session data
+     * @param array<string, mixed>|object|SessionData $data Session data
      */
     public function __construct($data = [])
     {
-        if ($data instanceof ISessionData) {
+        if ($data instanceof SessionData) {
             $this->access_token = $data->access_token;
             $this->refresh_token = $data->refresh_token;
             $this->token_type = $data->token_type;

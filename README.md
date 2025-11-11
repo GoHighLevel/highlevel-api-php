@@ -65,7 +65,7 @@ error_log('Fetched contacts: ' . json_encode($contactsResponse, JSON_PRETTY_PRIN
 
 use HighLevel\HighLevel;
 use HighLevel\HighLevelConfig;
-use HighLevel\Storage\ISessionData;
+use HighLevel\Storage\SessionData;
 
 // Initialize with OAuth credentials
 $config = new HighLevelConfig([
@@ -95,7 +95,7 @@ $tokenData = $ghl->oauth->getAccessToken([
 
 // Step 3: Store the session
 $locationId = $tokenData->location_id
-$ghl->getSessionStorage()->setSession($locationId, new ISessionData($tokenData));
+$ghl->getSessionStorage()->setSession($locationId, new SessionData($tokenData));
 ```
 
 ## Configuration Options

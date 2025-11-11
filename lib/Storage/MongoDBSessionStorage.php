@@ -108,17 +108,6 @@ class MongoDBSessionStorage extends SessionStorage
         return explode('-', $this->clientId)[0];
     }
 
-    /**
-     * Generate a unique key combining applicationId and resourceId
-     * 
-     * @param string $resourceId The resource identifier (companyId or locationId)
-     * @return string Unique composite key
-     */
-    private function generateUniqueKey(string $resourceId): string
-    {
-        $applicationId = $this->getApplicationId();
-        return "{$applicationId}:{$resourceId}";
-    }
 
     /**
      * Initialize the MongoDB connection
@@ -192,6 +181,14 @@ class MongoDBSessionStorage extends SessionStorage
             if (!$collectionExists) {
                 $this->db->createCollection($collectionName);
                 $this->logger->debug("Created MongoDB collection: {$collectionName}");
+
+                // Create compound unique index on applicationId and resourceId
+                $collection = $this->db->selectCollection($collectionName);
+                $collection->createIndex(
+                    ['applicationId' => 1, 'resourceId' => 1],
+                    ['unique' => true, 'name' => 'application_resource_unique']
+                );
+                $this->logger->debug("Created unique compound index on applicationId and resourceId");
             } else {
                 $this->logger->debug("MongoDB collection already exists: {$collectionName}");
             }
@@ -224,21 +221,19 @@ class MongoDBSessionStorage extends SessionStorage
      * Store a session in MongoDB
      * 
      * @param string $resourceId Unique identifier: it can be a companyId or a locationId
-     * @param ISessionData $sessionData Session data to store
+     * @param SessionData $sessionData Session data to store
      * @return void
      * @throws \Exception
      */
-    public function setSession(string $resourceId, ISessionData $sessionData): void
+    public function setSession(string $resourceId, SessionData $sessionData): void
     {
         try {
             $collection = $this->getCollection($this->collectionName);
             $applicationId = $this->getApplicationId();
-            $uniqueKey = $this->generateUniqueKey($resourceId);
-            
+
             // Convert to array and merge with metadata
             $sessionArray = $sessionData->toArray();
             $sessionDocument = array_merge([
-                'uniqueKey' => $uniqueKey,
                 'applicationId' => $applicationId,
                 'resourceId' => $resourceId,
             ], $sessionArray, [
@@ -246,7 +241,7 @@ class MongoDBSessionStorage extends SessionStorage
             ]);
 
             $collection->findOneAndUpdate(
-                ['uniqueKey' => $uniqueKey],
+                ['applicationId' => $applicationId, 'resourceId' => $resourceId],
                 [
                     '$set' => $sessionDocument,
                     '$setOnInsert' => [
@@ -259,7 +254,7 @@ class MongoDBSessionStorage extends SessionStorage
                 ['upsert' => true]
             );
 
-            $this->logger->debug("Session stored: {$uniqueKey}");
+            $this->logger->debug("Session stored: {$applicationId}:{$resourceId}");
         } catch (\Exception $error) {
             $this->logger->error("Error storing session {$this->getApplicationId()}:{$resourceId}: {$error->getMessage()}");
             throw $error;
@@ -270,27 +265,26 @@ class MongoDBSessionStorage extends SessionStorage
      * Retrieve a session from MongoDB
      * 
      * @param string $resourceId Unique identifier: it can be a companyId or a locationId
-     * @return ISessionData|null Session data or null if not found
+     * @return SessionData|null Session data or null if not found
      * @throws \Exception
      */
-    public function getSession(string $resourceId): ?ISessionData
+    public function getSession(string $resourceId): ?SessionData
     {
         try {
             $collection = $this->getCollection($this->collectionName);
-            $uniqueKey = $this->generateUniqueKey($resourceId);
-            
-            $sessionDocument = $collection->findOne(['uniqueKey' => $uniqueKey]);
-            
+            $applicationId = $this->getApplicationId();
+
+            $sessionDocument = $collection->findOne(['applicationId' => $applicationId, 'resourceId' => $resourceId]);
+
             if (!$sessionDocument) {
                 return null;
             }
 
-            $this->logger->debug("Session retrieved: {$uniqueKey}");
+            $this->logger->debug("Session retrieved: {$applicationId}:{$resourceId}");
             
             // Convert BSON document to array and remove MongoDB metadata
             $sessionArray = (array) $sessionDocument;
             unset(
-                $sessionArray['uniqueKey'],
                 $sessionArray['applicationId'],
                 $sessionArray['resourceId'],
                 $sessionArray['createdAt'],
@@ -298,7 +292,7 @@ class MongoDBSessionStorage extends SessionStorage
                 $sessionArray['_id']
             );
             
-            return new ISessionData($sessionArray);
+            return new SessionData($sessionArray);
         } catch (\Exception $error) {
             $this->logger->error("Error retrieving session {$this->getApplicationId()}:{$resourceId}: {$error->getMessage()}");
             throw $error;
@@ -316,14 +310,14 @@ class MongoDBSessionStorage extends SessionStorage
     {
         try {
             $collection = $this->getCollection($this->collectionName);
-            $uniqueKey = $this->generateUniqueKey($resourceId);
-            
-            $result = $collection->deleteOne(['uniqueKey' => $uniqueKey]);
-            
+            $applicationId = $this->getApplicationId();
+
+            $result = $collection->deleteOne(['applicationId' => $applicationId, 'resourceId' => $resourceId]);
+
             if ($result->getDeletedCount() > 0) {
-                $this->logger->debug("Session deleted: {$uniqueKey}");
+                $this->logger->debug("Session deleted: {$applicationId}:{$resourceId}");
             } else {
-                $this->logger->debug("Session not found for deletion: {$uniqueKey}");
+                $this->logger->debug("Session not found for deletion: {$applicationId}:{$resourceId}");
             }
         } catch (\Exception $error) {
             $this->logger->error("Error deleting session {$this->getApplicationId()}:{$resourceId}: {$error->getMessage()}");
@@ -342,10 +336,10 @@ class MongoDBSessionStorage extends SessionStorage
     {
         try {
             $collection = $this->getCollection($this->collectionName);
-            $uniqueKey = $this->generateUniqueKey($resourceId);
-            
+            $applicationId = $this->getApplicationId();
+
             $sessionDocument = $collection->findOne(
-                ['uniqueKey' => $uniqueKey],
+                ['applicationId' => $applicationId, 'resourceId' => $resourceId],
                 ['projection' => ['access_token' => 1]]
             );
             
@@ -371,10 +365,10 @@ class MongoDBSessionStorage extends SessionStorage
     {
         try {
             $collection = $this->getCollection($this->collectionName);
-            $uniqueKey = $this->generateUniqueKey($resourceId);
-            
+            $applicationId = $this->getApplicationId();
+
             $sessionDocument = $collection->findOne(
-                ['uniqueKey' => $uniqueKey],
+                ['applicationId' => $applicationId, 'resourceId' => $resourceId],
                 ['projection' => ['refresh_token' => 1]]
             );
             
@@ -406,19 +400,18 @@ class MongoDBSessionStorage extends SessionStorage
             $count = count($sessions);
             $this->logger->debug("Found {$count} sessions for application: {$applicationId}");
             
-            // Return session data without MongoDB metadata as ISessionData instances
+            // Return session data without MongoDB metadata as SessionData instances
             $cleanSessions = [];
             foreach ($sessions as $doc) {
                 $sessionArray = (array) $doc;
                 unset(
-                    $sessionArray['uniqueKey'],
                     $sessionArray['applicationId'],
                     $sessionArray['resourceId'],
                     $sessionArray['createdAt'],
                     $sessionArray['updatedAt'],
                     $sessionArray['_id']
                 );
-                $cleanSessions[] = new ISessionData($sessionArray);
+                $cleanSessions[] = new SessionData($sessionArray);
             }
             
             return $cleanSessions;

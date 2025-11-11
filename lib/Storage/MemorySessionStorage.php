@@ -144,11 +144,11 @@ class MemorySessionStorage extends SessionStorage
      * Store a session in PHP native session
      * 
      * @param string $resourceId Unique identifier: it can be a companyId or a locationId
-     * @param ISessionData $sessionData Session data to store
+     * @param SessionData $sessionData Session data to store
      * @return void
      * @throws \Exception
      */
-    public function setSession(string $resourceId, ISessionData $sessionData): void
+    public function setSession(string $resourceId, SessionData $sessionData): void
     {
         try {
             $uniqueKey = $this->generateUniqueKey($resourceId);
@@ -179,10 +179,10 @@ class MemorySessionStorage extends SessionStorage
      * Retrieve a session from PHP native session
      * 
      * @param string $resourceId Unique identifier: it can be a companyId or a locationId
-     * @return ISessionData|null Session data or null if not found
+     * @return SessionData|null Session data or null if not found
      * @throws \Exception
      */
-    public function getSession(string $resourceId): ?ISessionData
+    public function getSession(string $resourceId): ?SessionData
     {
         try {
             $uniqueKey = $this->generateUniqueKey($resourceId);
@@ -199,11 +199,11 @@ class MemorySessionStorage extends SessionStorage
             $sessionDocument = $_SESSION[$this->sessionNamespace][$uniqueKey];
             $this->logger->debug("Session retrieved from PHP session: {$uniqueKey}");
             
-            // Return the session data without the timestamps as ISessionData instance
+            // Return the session data without the timestamps as SessionData instance
             $sessionData = $sessionDocument;
             unset($sessionData['createdAt'], $sessionData['updatedAt']);
             
-            return new ISessionData($sessionData);
+            return new SessionData($sessionData);
         } catch (\Exception $error) {
             $this->logger->error("Error retrieving session {$this->getApplicationId()}:{$resourceId}: {$error->getMessage()}");
             throw $error;
@@ -320,7 +320,7 @@ class MemorySessionStorage extends SessionStorage
                 if (str_starts_with($key, "{$applicationId}:")) {
                     $cleanSessionData = $sessionData;
                     unset($cleanSessionData['createdAt'], $cleanSessionData['updatedAt']);
-                    $appSessions[] = new ISessionData($cleanSessionData);
+                    $appSessions[] = new SessionData($cleanSessionData);
                 }
             }
             

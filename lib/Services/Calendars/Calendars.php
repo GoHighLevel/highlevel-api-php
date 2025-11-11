@@ -23,7 +23,6 @@ use HighLevel\Services\Calendars\Models\GetCalendarEventsSuccessfulResponseDTO;
 use HighLevel\Services\Calendars\Models\BlockSlotCreateRequestDTO;
 use HighLevel\Services\Calendars\Models\BlockedSlotSuccessfulResponseDto;
 use HighLevel\Services\Calendars\Models\BlockSlotEditRequestDTO;
-use HighLevel\Services\Calendars\Models\GetSlotsSuccessfulResponseDto;
 use HighLevel\Services\Calendars\Models\CalendarUpdateDTO;
 use HighLevel\Services\Calendars\Models\CalendarByIdSuccessfulResponseDTO;
 use HighLevel\Services\Calendars\Models\CalendarDeleteSuccessfulResponseDTO;
@@ -1205,14 +1204,14 @@ class Calendars
      *   userIds?: array // The users for whom the free slots are returned
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
-     * @return GetSlotsSuccessfulResponseDto Response data
+     * @return mixed Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function getSlots(
         array $params,
         ?array $options = null
-    ): GetSlotsSuccessfulResponseDto {
+    ): mixed {
         $paramDefs = [['name' => 'calendarId', 'in' => 'path'], ['name' => 'startDate', 'in' => 'query'], ['name' => 'endDate', 'in' => 'query'], ['name' => 'timezone', 'in' => 'query'], ['name' => 'userId', 'in' => 'query'], ['name' => 'userIds', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -1264,7 +1263,7 @@ class Calendars
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new GetSlotsSuccessfulResponseDto($responseData);
+            return $responseData;
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

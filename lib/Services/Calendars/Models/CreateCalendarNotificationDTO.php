@@ -62,6 +62,11 @@ class CreateCalendarNotificationDTO
     /**
      * @var array&lt;string&gt;|null
      */
+    public ?array $additional_phone_numbers = null;
+
+    /**
+     * @var array&lt;string&gt;|null
+     */
     public ?array $selected_users = null;
 
     /**
@@ -73,6 +78,11 @@ class CreateCalendarNotificationDTO
      * @var string|null
      */
     public ?string $from_name = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $from_number = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -111,9 +121,11 @@ class CreateCalendarNotificationDTO
             $this->before_time = $data['beforeTime'] ?? null;
         }
         $this->additional_email_ids = $data['additionalEmailIds'] ?? null;
+        $this->additional_phone_numbers = $data['additionalPhoneNumbers'] ?? null;
         $this->selected_users = $data['selectedUsers'] ?? null;
         $this->from_address = $data['fromAddress'] ?? null;
         $this->from_name = $data['fromName'] ?? null;
+        $this->from_number = $data['fromNumber'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

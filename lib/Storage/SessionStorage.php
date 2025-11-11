@@ -82,18 +82,18 @@ abstract class SessionStorage
      * Store a session in the storage
      * 
      * @param string $resourceId Unique identifier for the resource (companyId or locationId)
-     * @param ISessionData $sessionData Session data to store
+     * @param SessionData $sessionData Session data to store
      * @return void
      */
-    abstract public function setSession(string $resourceId, ISessionData $sessionData): void;
+    abstract public function setSession(string $resourceId, SessionData $sessionData): void;
 
     /**
      * Retrieve a session from the storage
      * 
      * @param string $resourceId Unique identifier for the resource (companyId or locationId)
-     * @return ISessionData|null Session data or null if not found
+     * @return SessionData|null Session data or null if not found
      */
-    abstract public function getSession(string $resourceId): ?ISessionData;
+    abstract public function getSession(string $resourceId): ?SessionData;
 
     /**
      * Delete a session from the storage
@@ -123,7 +123,7 @@ abstract class SessionStorage
      * Get all sessions for the current application (optional method)
      * This method is optional and can be overridden by implementations that support it
      * 
-     * @return ISessionData[] Array of session data for the current application
+     * @return SessionData[] Array of session data for the current application
      * @throws \Exception If not implemented by the storage implementation
      */
     public function getSessionsByApplication(): array

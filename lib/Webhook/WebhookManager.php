@@ -3,6 +3,7 @@
 namespace HighLevel\Webhook;
 
 use HighLevel\Logging\Logger;
+use HighLevel\Storage\SessionData;
 use HighLevel\Storage\SessionStorage;
 
 /**
@@ -204,7 +205,7 @@ class WebhookManager
             ]);
 
             // Store the location token in session storage
-            $this->sessionStorage->setSession($locationId, $locationTokenResponse);
+            $this->sessionStorage->setSession($locationId, new SessionData($locationTokenResponse));
 
             $this->logger->debug(
                 "Location access token generated and stored for location: {$locationId}"

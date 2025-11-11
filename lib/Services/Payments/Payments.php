@@ -334,6 +334,7 @@ class Payments
      *   orderId: string // ID of the order that needs to be returned
      *   locationId?: string // LocationId is the id of the sub-account.
      *   altId: string // AltId is the unique identifier e.g: location id.
+     *   altType: string // AltType is the type of identifier.
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetOrderResponseSchema Response data
@@ -344,7 +345,7 @@ class Payments
         array $params,
         ?array $options = null
     ): GetOrderResponseSchema {
-        $paramDefs = [['name' => 'orderId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query']];
+        $paramDefs = [['name' => 'orderId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
