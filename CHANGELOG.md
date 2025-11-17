@@ -1,5 +1,4 @@
 
-## [1.0.0-beta] - TBD
+## [1.0.0-beta] - 2025-11-17
 
-### Added
-- Initial beta release
+- Initial beta release of HighLevel SDK for PHP
