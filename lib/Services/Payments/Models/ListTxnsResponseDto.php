@@ -23,7 +23,7 @@ class ListTxnsResponseDto
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
-    private array $data = [];
+//    private array $data = [];
 
     /**
      * Create model from array data

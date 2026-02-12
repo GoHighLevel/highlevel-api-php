@@ -2353,7 +2353,7 @@ class Products
      * @throws GHLError
      * @throws GuzzleException
      */
-    public function listInvoices(
+    public function listProducts(
         array $params,
         ?array $options = null
     ): ListProductsResponseDto {
