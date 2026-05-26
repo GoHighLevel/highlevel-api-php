@@ -17,7 +17,7 @@ class GetSubscriptionResponseSchema
     /**
      * @var array&lt;string, mixed&gt;
      */
-    public array $alt_type;
+    public string $alt_type;
 
     /**
      * @var string
@@ -52,7 +52,7 @@ class GetSubscriptionResponseSchema
     /**
      * @var array&lt;string, mixed&gt;|null
      */
-    public ?array $status = null;
+    public ?string $status = null;
 
     /**
      * @var bool|null

@@ -57,7 +57,7 @@ class TxnResponseSchema
     /**
      * @var array&lt;string, mixed&gt;
      */
-    public array $status;
+    public string $status;
 
     /**
      * @var bool|null
