@@ -155,6 +155,11 @@ class GetTxnResponseSchema
     public ?string $merged_from_contact_id = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $created_by = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -196,6 +201,7 @@ class GetTxnResponseSchema
         $this->qbo_response = $data['qboResponse'] ?? null;
         $this->trace_id = $data['traceId'] ?? null;
         $this->merged_from_contact_id = $data['mergedFromContactId'] ?? null;
+        $this->created_by = $data['createdBy'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

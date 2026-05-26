@@ -25,11 +25,6 @@ class CallActionSchema
     public string $action_name;
 
     /**
-     * @var string|null
-     */
-    public ?string $description = null;
-
-    /**
      * @var mixed
      */
     public mixed $action_parameters;
@@ -60,7 +55,6 @@ class CallActionSchema
         $this->action_id = $data['actionId'] ?? null;
         $this->action_type = $data['actionType'] ?? '';
         $this->action_name = $data['actionName'] ?? '';
-        $this->description = $data['description'] ?? null;
         $this->action_parameters = $data['actionParameters'] ?? null;
         $this->executed_at = $data['executedAt'] ?? null;
         $this->trigger_received_at = $data['triggerReceivedAt'] ?? null;

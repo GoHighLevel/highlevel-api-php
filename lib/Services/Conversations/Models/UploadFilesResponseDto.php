@@ -15,6 +15,11 @@ class UploadFilesResponseDto
     public array $uploaded_files;
 
     /**
+     * @var array&lt;string&gt;|null
+     */
+    public ?array $twilio_media_sids = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -28,6 +33,7 @@ class UploadFilesResponseDto
     public function __construct(array $data = [])
     {
         $this->uploaded_files = $data['uploadedFiles'] ?? null;
+        $this->twilio_media_sids = $data['twilioMediaSids'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

@@ -150,7 +150,7 @@ class Users
         }
         $paramDefs = [];
         $extracted = RequestUtils::extractParams([], $paramDefs);
-        $requirements = ["Agency-Access","Location-Access"];
+        $requirements = ["Agency-Access"];
 
         $url = RequestUtils::buildUrl('/users/search/filter-by-email', $extracted['path']);
         
@@ -465,7 +465,8 @@ class Users
 
     /**
      * Get User by Location
-     * Get User by Location
+     * Deprecated. Use &#x60;GET /users/search&#x60; instead. Pass &#x60;locationId&#x60; as a query parameter to filter results by location, along with the required &#x60;companyId&#x60; and other search filters as needed.
+     * @deprecated Deprecated. Use &#x60;GET /users/search&#x60; instead instead.
      * 
      * @param array{
      *   locationId: string

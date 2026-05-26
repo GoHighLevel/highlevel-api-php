@@ -95,6 +95,11 @@ class UpdateContactDto
     public ?string $source = null;
 
     /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $date_of_birth = null;
+
+    /**
      * @var string|null
      */
     public ?string $country = null;
@@ -144,6 +149,7 @@ class UpdateContactDto
         $this->tags = $data['tags'] ?? null;
         $this->custom_fields = $data['customFields'] ?? null;
         $this->source = $data['source'] ?? null;
+        $this->date_of_birth = $data['dateOfBirth'] ?? null;
         $this->country = $data['country'] ?? null;
         $this->assigned_to = $data['assignedTo'] ?? null;
         // No defined properties - store raw data for flexible models

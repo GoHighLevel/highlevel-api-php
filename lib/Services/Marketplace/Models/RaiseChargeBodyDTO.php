@@ -50,9 +50,9 @@ class RaiseChargeBodyDTO
     public ?float $price = null;
 
     /**
-     * @var string
+     * @var float
      */
-    public string $units;
+    public float $units;
 
     /**
      * @var string|null
@@ -80,7 +80,7 @@ class RaiseChargeBodyDTO
         $this->company_id = $data['companyId'] ?? '';
         $this->description = $data['description'] ?? '';
         $this->price = $data['price'] ?? null;
-        $this->units = $data['units'] ?? '';
+        $this->units = $data['units'] ?? 0;
         $this->event_time = $data['eventTime'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;

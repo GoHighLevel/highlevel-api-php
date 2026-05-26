@@ -17,12 +17,27 @@ class UploadFilesDto
     /**
      * @var string
      */
+    public string $contact_id;
+
+    /**
+     * @var string
+     */
     public string $location_id;
 
     /**
      * @var array&lt;string&gt;
      */
     public array $attachment_urls;
+
+    /**
+     * @var string|null
+     */
+    public ?string $chat_service_sid = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $is_group_sms = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -38,8 +53,11 @@ class UploadFilesDto
     public function __construct(array $data = [])
     {
         $this->conversation_id = $data['conversationId'] ?? '';
+        $this->contact_id = $data['contactId'] ?? '';
         $this->location_id = $data['locationId'] ?? '';
         $this->attachment_urls = $data['attachmentUrls'] ?? [];
+        $this->chat_service_sid = $data['chatServiceSid'] ?? null;
+        $this->is_group_sms = $data['isGroupSms'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

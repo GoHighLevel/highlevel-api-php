@@ -35,6 +35,21 @@ class GetNoteSchema
     public ?string $contact_id = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $title = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $color = null;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $pinned = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -52,6 +67,9 @@ class GetNoteSchema
         $this->user_id = $data['userId'] ?? null;
         $this->date_added = $data['dateAdded'] ?? null;
         $this->contact_id = $data['contactId'] ?? null;
+        $this->title = $data['title'] ?? null;
+        $this->color = $data['color'] ?? null;
+        $this->pinned = $data['pinned'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

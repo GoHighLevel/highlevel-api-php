@@ -298,6 +298,8 @@ class Businesses
      * 
      * @param array{
      *   locationId: string
+     *   limit?: string
+     *   skip?: string
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetBusinessByLocationResponseDto Response data
@@ -308,7 +310,7 @@ class Businesses
         array $params,
         ?array $options = null
     ): GetBusinessByLocationResponseDto {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
+        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'skip', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
 

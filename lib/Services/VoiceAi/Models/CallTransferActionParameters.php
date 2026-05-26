@@ -25,9 +25,9 @@ class CallTransferActionParameters
     public string $transfer_to_value;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $trigger_message = null;
+    public string $trigger_message;
 
     /**
      * @var bool|null
@@ -50,7 +50,7 @@ class CallTransferActionParameters
         $this->trigger_prompt = $data['triggerPrompt'] ?? '';
         $this->transfer_to_type = $data['transferToType'] ?? '';
         $this->transfer_to_value = $data['transferToValue'] ?? '';
-        $this->trigger_message = $data['triggerMessage'] ?? null;
+        $this->trigger_message = $data['triggerMessage'] ?? '';
         $this->hear_whisper_message = $data['hearWhisperMessage'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;

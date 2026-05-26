@@ -35,6 +35,16 @@ class SendMessageResponseDto
     public ?string $msg = null;
 
     /**
+     * @var mixed
+     */
+    public mixed $forward_data;
+
+    /**
+     * @var string
+     */
+    public string $status;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -52,6 +62,8 @@ class SendMessageResponseDto
         $this->message_id = $data['messageId'] ?? '';
         $this->message_ids = $data['messageIds'] ?? null;
         $this->msg = $data['msg'] ?? null;
+        $this->forward_data = $data['forwardData'] ?? null;
+        $this->status = $data['status'] ?? '';
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

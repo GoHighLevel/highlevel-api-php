@@ -60,6 +60,11 @@ class AutoPaymentDetailsDto
     public ?string $card_id = null;
 
     /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $provider = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -107,6 +112,7 @@ class AutoPaymentDetailsDto
             $this->becs_direct_debit = $data['becsDirectDebit'] ?? null;
         }
         $this->card_id = $data['cardId'] ?? null;
+        $this->provider = $data['provider'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

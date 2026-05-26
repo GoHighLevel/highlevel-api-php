@@ -32,6 +32,11 @@ class ProcessMessageBodyDto
     /**
      * @var string
      */
+    public string $contact_id;
+
+    /**
+     * @var string
+     */
     public string $conversation_provider_id;
 
     /**
@@ -106,6 +111,7 @@ class ProcessMessageBodyDto
         $this->attachments = $data['attachments'] ?? null;
         $this->message = $data['message'] ?? null;
         $this->conversation_id = $data['conversationId'] ?? '';
+        $this->contact_id = $data['contactId'] ?? '';
         $this->conversation_provider_id = $data['conversationProviderId'] ?? '';
         $this->html = $data['html'] ?? null;
         $this->subject = $data['subject'] ?? null;

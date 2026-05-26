@@ -27,11 +27,6 @@ class UpdateUserDto
     /**
      * @var string|null
      */
-    public ?string $email_change_o_t_p = null;
-
-    /**
-     * @var string|null
-     */
     public ?string $password = null;
 
     /**
@@ -80,6 +75,16 @@ class UpdateUserDto
     public ?string $profile_photo = null;
 
     /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $twilio_phone = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $platform_language = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -95,7 +100,6 @@ class UpdateUserDto
         $this->first_name = $data['firstName'] ?? null;
         $this->last_name = $data['lastName'] ?? null;
         $this->email = $data['email'] ?? null;
-        $this->email_change_o_t_p = $data['emailChangeOTP'] ?? null;
         $this->password = $data['password'] ?? null;
         $this->phone = $data['phone'] ?? null;
         $this->type = $data['type'] ?? null;
@@ -111,6 +115,8 @@ class UpdateUserDto
         $this->scopes = $data['scopes'] ?? null;
         $this->scopes_assigned_to_only = $data['scopesAssignedToOnly'] ?? null;
         $this->profile_photo = $data['profilePhoto'] ?? null;
+        $this->twilio_phone = $data['twilioPhone'] ?? null;
+        $this->platform_language = $data['platformLanguage'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

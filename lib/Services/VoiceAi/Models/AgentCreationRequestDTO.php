@@ -10,9 +10,9 @@ namespace HighLevel\Services\VoiceAi\Models;
 class AgentCreationRequestDTO
 {
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $location_id = null;
+    public string $location_id;
 
     /**
      * @var string|null
@@ -117,7 +117,7 @@ class AgentCreationRequestDTO
      */
     public function __construct(array $data = [])
     {
-        $this->location_id = $data['locationId'] ?? null;
+        $this->location_id = $data['locationId'] ?? '';
         $this->agent_name = $data['agentName'] ?? null;
         $this->business_name = $data['businessName'] ?? null;
         $this->welcome_message = $data['welcomeMessage'] ?? null;

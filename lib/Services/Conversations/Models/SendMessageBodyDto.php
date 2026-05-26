@@ -15,6 +15,11 @@ class SendMessageBodyDto
     public string $type;
 
     /**
+     * @var array&lt;string, mixed&gt;
+     */
+    public array $sub_type;
+
+    /**
      * @var string
      */
     public string $contact_id;
@@ -92,6 +97,11 @@ class SendMessageBodyDto
     /**
      * @var string|null
      */
+    public ?string $custom_subtype_id = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $email_reply_mode = null;
 
     /**
@@ -103,6 +113,26 @@ class SendMessageBodyDto
      * @var string|null
      */
     public ?string $to_number = null;
+
+    /**
+     * @var mixed
+     */
+    public mixed $forward;
+
+    /**
+     * @var string
+     */
+    public string $status;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $uses_native_scheduling_ai = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $optimization_period = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -118,6 +148,7 @@ class SendMessageBodyDto
     public function __construct(array $data = [])
     {
         $this->type = $data['type'] ?? '';
+        $this->sub_type = $data['subType'] ?? null;
         $this->contact_id = $data['contactId'] ?? '';
         $this->appointment_id = $data['appointmentId'] ?? null;
         $this->attachments = $data['attachments'] ?? null;
@@ -133,9 +164,14 @@ class SendMessageBodyDto
         $this->scheduled_timestamp = $data['scheduledTimestamp'] ?? null;
         $this->conversation_provider_id = $data['conversationProviderId'] ?? null;
         $this->email_to = $data['emailTo'] ?? null;
+        $this->custom_subtype_id = $data['customSubtypeId'] ?? null;
         $this->email_reply_mode = $data['emailReplyMode'] ?? null;
         $this->from_number = $data['fromNumber'] ?? null;
         $this->to_number = $data['toNumber'] ?? null;
+        $this->forward = $data['forward'] ?? null;
+        $this->status = $data['status'] ?? '';
+        $this->uses_native_scheduling_ai = $data['usesNativeSchedulingAi'] ?? null;
+        $this->optimization_period = $data['optimizationPeriod'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

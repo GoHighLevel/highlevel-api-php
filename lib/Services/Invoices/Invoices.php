@@ -33,6 +33,7 @@ use HighLevel\Services\Invoices\Models\CancelInvoiceScheduleResponseDto;
 use HighLevel\Services\Invoices\Models\Text2PayDto;
 use HighLevel\Services\Invoices\Models\Text2PayInvoiceResponseDto;
 use HighLevel\Services\Invoices\Models\GenerateInvoiceNumberResponseDto;
+use HighLevel\Services\Invoices\Models\GetInvoiceSettingsResponseDto;
 use HighLevel\Services\Invoices\Models\GetInvoiceResponseDto;
 use HighLevel\Services\Invoices\Models\UpdateInvoiceDto;
 use HighLevel\Services\Invoices\Models\UpdateInvoiceResponseDto;
@@ -1640,6 +1641,89 @@ class Invoices
             $responseData = json_decode($body, true);
             
             return new GenerateInvoiceNumberResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Invoice Settings
+     * Get the invoice settings for the given location
+     * 
+     * @param array{
+     *   altId: string // Location Id or Agency Id
+     *   altType: string
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return GetInvoiceSettingsResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getInvoiceSettings(
+        array $params,
+        ?array $options = null
+    ): GetInvoiceSettingsResponseDto {
+        $paramDefs = [['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["Location-Access","Agency-Access"];
+
+        $url = RequestUtils::buildUrl('/invoices/settings', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new GetInvoiceSettingsResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

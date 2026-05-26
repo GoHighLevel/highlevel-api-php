@@ -10,7 +10,17 @@ namespace HighLevel\Services\Conversations\Models;
 class GetMessagesByConversationResponseDto
 {
     /**
-     * @var array&lt;string, mixed&gt;
+     * @var string
+     */
+    public string $last_message_id;
+
+    /**
+     * @var bool
+     */
+    public bool $next_page;
+
+    /**
+     * @var array&lt;GetMessageResponseDto&gt;
      */
     public array $messages;
 
@@ -27,7 +37,16 @@ class GetMessagesByConversationResponseDto
      */
     public function __construct(array $data = [])
     {
-        $this->messages = $data['messages'] ?? null;
+        $this->last_message_id = $data['lastMessageId'] ?? '';
+        $this->next_page = $data['nextPage'] ?? false;
+        // Handle array of GetMessageResponseDto objects
+        if (isset($data['messages']) && is_array($data['messages'])) {
+            $this->messages = array_map(function($item) {
+                return is_array($item) ? new GetMessageResponseDto($item) : $item;
+            }, $data['messages']);
+        } else {
+            $this->messages = $data['messages'] ?? [];
+        }
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

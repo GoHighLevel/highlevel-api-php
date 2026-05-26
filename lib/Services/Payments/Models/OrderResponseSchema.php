@@ -130,6 +130,11 @@ class OrderResponseSchema
     public ?float $recurring_products = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $created_by = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -166,6 +171,7 @@ class OrderResponseSchema
         $this->fulfillment_status = $data['fulfillmentStatus'] ?? null;
         $this->onetime_products = $data['onetimeProducts'] ?? null;
         $this->recurring_products = $data['recurringProducts'] ?? null;
+        $this->created_by = $data['createdBy'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

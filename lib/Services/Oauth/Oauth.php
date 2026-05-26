@@ -302,6 +302,7 @@ class Oauth
      *   versionId?: string // VersionId of the app
      *   onTrial?: bool // Filters out locations which are installed for specified app in trial mode
      *   planId?: string // Filters out location which are installed for specified app under the specified planId
+     *   locationId?: string // locationId
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetInstalledLocationsSuccessfulResponseDto Response data
@@ -312,9 +313,9 @@ class Oauth
         array $params,
         ?array $options = null
     ): GetInstalledLocationsSuccessfulResponseDto {
-        $paramDefs = [['name' => 'skip', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'query', 'in' => 'query'], ['name' => 'isInstalled', 'in' => 'query'], ['name' => 'companyId', 'in' => 'query'], ['name' => 'appId', 'in' => 'query'], ['name' => 'versionId', 'in' => 'query'], ['name' => 'onTrial', 'in' => 'query'], ['name' => 'planId', 'in' => 'query'], ];
+        $paramDefs = [['name' => 'skip', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'query', 'in' => 'query'], ['name' => 'isInstalled', 'in' => 'query'], ['name' => 'companyId', 'in' => 'query'], ['name' => 'appId', 'in' => 'query'], ['name' => 'versionId', 'in' => 'query'], ['name' => 'onTrial', 'in' => 'query'], ['name' => 'planId', 'in' => 'query'], ['name' => 'locationId', 'in' => 'query'], ];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = ["Agency-Access"];
+        $requirements = ["Agency-Access-Only"];
 
 
         $url = RequestUtils::buildUrl('/oauth/installedLocations', $extracted['path']);

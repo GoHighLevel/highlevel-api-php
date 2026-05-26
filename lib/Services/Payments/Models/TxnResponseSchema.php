@@ -155,6 +155,11 @@ class TxnResponseSchema
     public string $fulfilled_at;
 
     /**
+     * @var string|null
+     */
+    public ?string $created_by = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -196,6 +201,7 @@ class TxnResponseSchema
         $this->amount_refunded = $data['amountRefunded'] ?? null;
         $this->payment_method = $data['paymentMethod'] ?? null;
         $this->fulfilled_at = $data['fulfilledAt'] ?? '';
+        $this->created_by = $data['createdBy'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

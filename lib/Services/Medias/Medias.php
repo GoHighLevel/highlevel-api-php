@@ -41,7 +41,7 @@ class Medias
 
     /**
      * Get List of Files/ Folders
-     * Fetches list of files and folders from the media library
+     * Fetches list of files and folders from the media storage
      * 
      * @param array{
      *   offset?: string // Number of files to skip in listing
@@ -131,7 +131,7 @@ class Medias
     }
 
     /**
-     * Upload File into Media Library
+     * Upload File into Media Storage
      * If hosted is set to true then fileUrl is required. Else file is required. If adding a file, maximum allowed is 25 MB
      * 
      * @param array $requestBody Request body data
@@ -218,7 +218,7 @@ class Medias
 
     /**
      * Delete File or Folder
-     * Deletes specific file or folder from the media library
+     * Deletes specific file or folder from the media storage
      * 
      * @param array{
      *   id: string
@@ -392,7 +392,7 @@ class Medias
 
     /**
      * Create Folder
-     * Creates a new folder in the media library
+     * Creates a new folder in the media storage
      * 
      * @param CreateFolderParams $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options

@@ -30,6 +30,16 @@ class InstalledLocationSchema
     public ?bool $is_installed = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $version_id = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $installed_at = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -46,6 +56,8 @@ class InstalledLocationSchema
         $this->name = $data['name'] ?? '';
         $this->address = $data['address'] ?? '';
         $this->is_installed = $data['isInstalled'] ?? null;
+        $this->version_id = $data['versionId'] ?? null;
+        $this->installed_at = $data['installedAt'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

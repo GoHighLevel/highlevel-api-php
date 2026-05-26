@@ -72,6 +72,15 @@ class MongoDBSessionStorage extends SessionStorage
         string $collectionName = 'application_sessions',
         ?Logger $logger = null
     ) {
+        if (!class_exists(Client::class)) {
+            throw new \RuntimeException(
+                'MongoDBSessionStorage requires the mongodb/mongodb package. '
+                . 'Install it with: '
+                . 'composer require mongodb/mongodb:^1.17 (PHP 7.4 / 8.0) '
+                . 'or composer require mongodb/mongodb:^2.0 (PHP 8.1+). '
+                . 'The PECL ext-mongodb extension is also required.'
+            );
+        }
         parent::__construct($logger ? $logger->child('MongoDB') : new Logger('warn', 'GHL SDK MongoDB'));
         $this->dbUrl = $dbUrl;
         $this->dbName = $dbName;

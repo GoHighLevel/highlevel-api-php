@@ -105,6 +105,11 @@ class UpsertContactDto
     public ?string $source = null;
 
     /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $date_of_birth = null;
+
+    /**
      * @var string|null
      */
     public ?string $country = null;
@@ -118,6 +123,11 @@ class UpsertContactDto
      * @var string|null
      */
     public ?string $assigned_to = null;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $create_new_if_duplicate_allowed = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -161,9 +171,11 @@ class UpsertContactDto
         $this->tags = $data['tags'] ?? null;
         $this->custom_fields = $data['customFields'] ?? null;
         $this->source = $data['source'] ?? null;
+        $this->date_of_birth = $data['dateOfBirth'] ?? null;
         $this->country = $data['country'] ?? null;
         $this->company_name = $data['companyName'] ?? null;
         $this->assigned_to = $data['assignedTo'] ?? null;
+        $this->create_new_if_duplicate_allowed = $data['createNewIfDuplicateAllowed'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

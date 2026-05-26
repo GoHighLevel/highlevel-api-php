@@ -125,6 +125,11 @@ class GetOrderResponseSchema
     public ?array $tax_calculation_provider = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $created_by = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -160,6 +165,7 @@ class GetOrderResponseSchema
         $this->trace_id = $data['traceId'] ?? null;
         $this->automatic_taxes_calculated = $data['automaticTaxesCalculated'] ?? null;
         $this->tax_calculation_provider = $data['taxCalculationProvider'] ?? null;
+        $this->created_by = $data['createdBy'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

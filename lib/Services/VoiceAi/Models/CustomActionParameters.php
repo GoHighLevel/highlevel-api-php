@@ -15,9 +15,9 @@ class CustomActionParameters
     public string $trigger_prompt;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $trigger_message = null;
+    public string $trigger_message;
 
     /**
      * @var mixed
@@ -43,7 +43,7 @@ class CustomActionParameters
     public function __construct(array $data = [])
     {
         $this->trigger_prompt = $data['triggerPrompt'] ?? '';
-        $this->trigger_message = $data['triggerMessage'] ?? null;
+        $this->trigger_message = $data['triggerMessage'] ?? '';
         $this->api_details = $data['apiDetails'] ?? null;
         $this->selected_paths = $data['selectedPaths'] ?? null;
         // No defined properties - store raw data for flexible models

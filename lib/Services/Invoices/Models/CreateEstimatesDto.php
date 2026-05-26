@@ -35,7 +35,7 @@ class CreateEstimatesDto
     public string $currency;
 
     /**
-     * @var array&lt;InvoiceItemDto&gt;
+     * @var array&lt;EstimateLineItemDto&gt;
      */
     public array $items;
 
@@ -157,10 +157,10 @@ class CreateEstimatesDto
             $this->business_details = $data['businessDetails'] ?? null;
         }
         $this->currency = $data['currency'] ?? '';
-        // Handle array of InvoiceItemDto objects
+        // Handle array of EstimateLineItemDto objects
         if (isset($data['items']) && is_array($data['items'])) {
             $this->items = array_map(function($item) {
-                return is_array($item) ? new InvoiceItemDto($item) : $item;
+                return is_array($item) ? new EstimateLineItemDto($item) : $item;
             }, $data['items']);
         } else {
             $this->items = $data['items'] ?? [];

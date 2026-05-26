@@ -15,9 +15,9 @@ class FilterByEmailDto
     public string $company_id;
 
     /**
-     * @var array&lt;string&gt;
+     * @var string
      */
-    public array $emails;
+    public string $emails;
 
     /**
      * @var bool|null
@@ -53,7 +53,7 @@ class FilterByEmailDto
     public function __construct(array $data = [])
     {
         $this->company_id = $data['companyId'] ?? '';
-        $this->emails = $data['emails'] ?? [];
+        $this->emails = $data['emails'] ?? '';
         $this->deleted = $data['deleted'] ?? null;
         $this->skip = $data['skip'] ?? null;
         $this->limit = $data['limit'] ?? null;

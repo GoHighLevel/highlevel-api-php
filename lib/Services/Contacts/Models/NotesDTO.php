@@ -20,6 +20,21 @@ class NotesDTO
     public string $body;
 
     /**
+     * @var string|null
+     */
+    public ?string $title = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $color = null;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $pinned = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -34,6 +49,9 @@ class NotesDTO
     {
         $this->user_id = $data['userId'] ?? null;
         $this->body = $data['body'] ?? '';
+        $this->title = $data['title'] ?? null;
+        $this->color = $data['color'] ?? null;
+        $this->pinned = $data['pinned'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

@@ -240,14 +240,15 @@ class Payments
      * @param array{
      *   locationId?: string // LocationId is the id of the sub-account.
      *   altId: string // AltId is the unique identifier e.g: location id.
-     *   altType: string // AltType is the type of identifier.
      *   status?: string // Order status.
+     *   paymentStatus?: string // Payment Status of the Order
      *   paymentMode?: string // Mode of payment.
      *   startAt?: string // Starting interval of orders.
      *   endAt?: string // Closing interval of orders.
      *   search?: string // The name of the order for searching.
      *   contactId?: string // Contact id for filtering of orders.
      *   funnelProductIds?: string // Funnel product ids separated by comma.
+     *   sourceId?: string // Source id
      *   limit?: int // The maximum number of items to be included in a single page of results
      *   offset?: int // The starting index of the page, indicating the position from which the results should be retrieved.
      * } $params Request parameters
@@ -260,7 +261,7 @@ class Payments
         array $params,
         ?array $options = null
     ): ListOrdersResponseDto {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query'], ['name' => 'status', 'in' => 'query'], ['name' => 'paymentMode', 'in' => 'query'], ['name' => 'startAt', 'in' => 'query'], ['name' => 'endAt', 'in' => 'query'], ['name' => 'search', 'in' => 'query'], ['name' => 'contactId', 'in' => 'query'], ['name' => 'funnelProductIds', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'offset', 'in' => 'query']];
+        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query'], ['name' => 'status', 'in' => 'query'], ['name' => 'paymentStatus', 'in' => 'query'], ['name' => 'paymentMode', 'in' => 'query'], ['name' => 'startAt', 'in' => 'query'], ['name' => 'endAt', 'in' => 'query'], ['name' => 'search', 'in' => 'query'], ['name' => 'contactId', 'in' => 'query'], ['name' => 'funnelProductIds', 'in' => 'query'], ['name' => 'sourceId', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'offset', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
@@ -334,7 +335,6 @@ class Payments
      *   orderId: string // ID of the order that needs to be returned
      *   locationId?: string // LocationId is the id of the sub-account.
      *   altId: string // AltId is the unique identifier e.g: location id.
-     *   altType: string // AltType is the type of identifier.
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetOrderResponseSchema Response data
@@ -345,7 +345,7 @@ class Payments
         array $params,
         ?array $options = null
     ): GetOrderResponseSchema {
-        $paramDefs = [['name' => 'orderId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query']];
+        $paramDefs = [['name' => 'orderId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
@@ -416,7 +416,7 @@ class Payments
      * The &quot;Record Order Payment&quot; API allows to record a payment for an order. Use this endpoint to record payment for an order and update the order status to &quot;Paid&quot;.
      * 
      * @param array{
-     *   orderId: string // MongoDB Order ID
+     *   orderId: string // Order ID
      * } $params Request parameters
      * @param PostRecordOrderPaymentBody $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
@@ -487,89 +487,6 @@ class Payments
             $responseData = json_decode($body, true);
             
             return new PostRecordOrderPaymentResponse($responseData);
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * migration Endpoint for Order Payment Status
-     * Process to migrate all the older orders and based on the statuses introduce the payment statuses as well
-     * 
-     * @param array{
-     *   locationId?: string // LocationId is the id of the sub-account.
-     *   altId: string // AltId is the unique identifier e.g: location id.
-     * } $params Request parameters
-     * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function postMigrateOrderPaymentStatus(
-        array $params,
-        ?array $options = null
-    ): mixed {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'altId', 'in' => 'query']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = ["Location-Access"];
-
-        $url = RequestUtils::buildUrl('/payments/orders/migrate-order-ps', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'POST',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return $responseData;
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -1039,6 +956,7 @@ class Payments
      *   id?: string // Subscription id for filtering of subscriptions.
      *   limit?: int // The maximum number of items to be included in a single page of results
      *   offset?: int // The starting index of the page, indicating the position from which the results should be retrieved.
+     *   getPaymentsCollectedCount?: bool // Get the total payments collected for the subscription.
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return ListSubscriptionResponseDto Response data
@@ -1049,7 +967,7 @@ class Payments
         array $params,
         ?array $options = null
     ): ListSubscriptionResponseDto {
-        $paramDefs = [['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query'], ['name' => 'entityId', 'in' => 'query'], ['name' => 'paymentMode', 'in' => 'query'], ['name' => 'startAt', 'in' => 'query'], ['name' => 'endAt', 'in' => 'query'], ['name' => 'entitySourceType', 'in' => 'query'], ['name' => 'search', 'in' => 'query'], ['name' => 'contactId', 'in' => 'query'], ['name' => 'id', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'offset', 'in' => 'query']];
+        $paramDefs = [['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query'], ['name' => 'entityId', 'in' => 'query'], ['name' => 'paymentMode', 'in' => 'query'], ['name' => 'startAt', 'in' => 'query'], ['name' => 'endAt', 'in' => 'query'], ['name' => 'entitySourceType', 'in' => 'query'], ['name' => 'search', 'in' => 'query'], ['name' => 'contactId', 'in' => 'query'], ['name' => 'id', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'offset', 'in' => 'query'], ['name' => 'getPaymentsCollectedCount', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
