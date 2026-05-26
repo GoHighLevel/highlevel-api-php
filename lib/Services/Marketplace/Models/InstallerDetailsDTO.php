@@ -27,7 +27,12 @@ class InstallerDetailsDTO
     /**
      * @var string
      */
-    public string $company_email;
+    public string $relationship_number;
+
+    /**
+     * @var string|null
+     */
+    public ?string $company_email = null;
 
     /**
      * @var string|null
@@ -43,6 +48,11 @@ class InstallerDetailsDTO
      * @var bool
      */
     public bool $is_whitelabel_company;
+
+    /**
+     * @var string|null
+     */
+    public ?string $company_plan = null;
 
     /**
      * @var string|null
@@ -75,10 +85,12 @@ class InstallerDetailsDTO
         $this->company_id = $data['companyId'] ?? '';
         $this->location_id = $data['locationId'] ?? null;
         $this->company_name = $data['companyName'] ?? '';
-        $this->company_email = $data['companyEmail'] ?? '';
+        $this->relationship_number = $data['relationshipNumber'] ?? '';
+        $this->company_email = $data['companyEmail'] ?? null;
         $this->company_owner_full_name = $data['companyOwnerFullName'] ?? null;
         $this->user_id = $data['userId'] ?? '';
         $this->is_whitelabel_company = $data['isWhitelabelCompany'] ?? false;
+        $this->company_plan = $data['companyPlan'] ?? null;
         $this->company_high_level_plan = $data['companyHighLevelPlan'] ?? null;
         $this->marketplace_app_plan_id = $data['marketplaceAppPlanId'] ?? null;
         $this->whitelabel_details = $data['whitelabelDetails'] ?? null;

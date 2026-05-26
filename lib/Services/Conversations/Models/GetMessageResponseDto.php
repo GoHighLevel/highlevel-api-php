@@ -15,11 +15,6 @@ class GetMessageResponseDto
     public string $id;
 
     /**
-     * @var string|null
-     */
-    public ?string $alt_id = null;
-
-    /**
      * @var float
      */
     public float $type;
@@ -113,7 +108,6 @@ class GetMessageResponseDto
     public function __construct(array $data = [])
     {
         $this->id = $data['id'] ?? '';
-        $this->alt_id = $data['altId'] ?? null;
         $this->type = $data['type'] ?? 0;
         $this->message_type = $data['messageType'] ?? '';
         $this->location_id = $data['locationId'] ?? '';

@@ -40,6 +40,10 @@ use HighLevel\Services\Calendars\Models\CreateCalendarResourceDTO;
 use HighLevel\Services\Calendars\Models\CalendarNotificationResponseDTO;
 use HighLevel\Services\Calendars\Models\UpdateCalendarNotificationsDTO;
 use HighLevel\Services\Calendars\Models\CalendarNotificationDeleteResponseDTO;
+use HighLevel\Services\Calendars\Models\GetAllSchedulesResponseDTO;
+use HighLevel\Services\Calendars\Models\ScheduleResponseDTO;
+use HighLevel\Services\Calendars\Models\UpdateScheduleDTO;
+use HighLevel\Services\Calendars\Models\CreateScheduleDTO;
 use HighLevel\Services\Calendars\Models\CalendarsGetSuccessfulResponseDTO;
 use HighLevel\Services\Calendars\Models\CalendarCreateDTO;
 
@@ -2819,6 +2823,598 @@ class Calendars
             $responseData = json_decode($body, true);
             
             return new CalendarNotificationDeleteResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * List user availability schedule
+     * Retrieve user availability schedules based on various filters including location, calendar, and user. Supports pagination.
+     * 
+     * @param array{
+     *   locationId: string // Location ID to filter schedules by
+     *   userId: string // User ID to filter schedules by specific user
+     *   calendarId?: string // Calendar ID for filtering schedules by specific calendar
+     *   skip?: int // Number of items to skip for pagination
+     *   limit?: int // Maximum number of items to return (max 500)
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return GetAllSchedulesResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getAllSchedules(
+        array $params,
+        ?array $options = null
+    ): GetAllSchedulesResponseDTO {
+        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'userId', 'in' => 'query'], ['name' => 'calendarId', 'in' => 'query'], ['name' => 'skip', 'in' => 'query'], ['name' => 'limit', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/search', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new GetAllSchedulesResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get user availability schedule
+     * Retrieve a specific schedule by its unique identifier. Returns detailed information including rules, timezone, and associated calendars/users.
+     * 
+     * @param array{
+     *   id: string // Unique identifier of the schedule
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ScheduleResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getScheduleById(
+        array $params,
+        ?array $options = null
+    ): ScheduleResponseDTO {
+        $paramDefs = [['name' => 'id', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/{id}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ScheduleResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Update user availability schedule
+     * Modify an existing schedule by updating its rules, timezone, and name All fields are optional - only provided fields will be updated.
+     * 
+     * @param array{
+     *   id: string // Unique identifier of the schedule to update
+     * } $params Request parameters
+     * @param UpdateScheduleDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ScheduleResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateSchedule(
+        array $params,
+        UpdateScheduleDTO $requestBody,
+        ?array $options = null
+    ): ScheduleResponseDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'id', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/{id}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ScheduleResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Delete user availability schedule
+     * Permanently remove a schedule and all its associated rules. This action cannot be undone.
+     * 
+     * @param array{
+     *   id: string // Unique identifier of the schedule to delete
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return mixed Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function deleteSchedule(
+        array $params,
+        ?array $options = null
+    ): mixed {
+        $paramDefs = [['name' => 'id', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/{id}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'DELETE',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return $responseData;
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Create user availability schedule
+     * Create new schedule with specified rules, timezone, location, user and calendar associations.
+     * 
+     * @param CreateScheduleDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ScheduleResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function createSchedule(
+        CreateScheduleDTO $requestBody,
+        ?array $options = null
+    ): ScheduleResponseDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ScheduleResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Apply user availability schedule to a calendar
+     * Associates a calendar with the given schedule by adding the calendarId to a schedule
+     * 
+     * @param array{
+     *   id: string // Unique identifier of the schedule
+     *   calendarId: string // Unique identifier of the team calendar to add to the schedule
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return mixed Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function addCalendarToSchedule(
+        array $params,
+        ?array $options = null
+    ): mixed {
+        $paramDefs = [['name' => 'id', 'in' => 'path'], ['name' => 'calendarId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/{id}/associations/{calendarId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return $responseData;
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Remove user availability schedule from a calendar
+     * Removes the association between a team calendar and the given schedule by removing the calendarId from the schedule
+     * 
+     * @param array{
+     *   id: string // Unique identifier of the schedule
+     *   calendarId: string // Unique identifier of the calendar to remove from the schedule
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return mixed Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function removeCalendarFromSchedule(
+        array $params,
+        ?array $options = null
+    ): mixed {
+        $paramDefs = [['name' => 'id', 'in' => 'path'], ['name' => 'calendarId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/{id}/associations/{calendarId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'DELETE',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return $responseData;
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

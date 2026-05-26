@@ -9,6 +9,20 @@ Official PHP SDK for the [GoHighLevel API](https://marketplace.gohighlevel.com/d
 - ext-curl
 - composer
 
+### Optional
+
+The SDK ships with an in-memory `SessionStorage` implementation that works out of the box. If you want persistent MongoDB-backed session storage via `HighLevel\Storage\MongoDBSessionStorage`, install the MongoDB packages separately:
+
+```bash
+# PHP 7.4 / 8.0
+composer require mongodb/mongodb:^1.17
+
+# PHP 8.1+
+composer require mongodb/mongodb:^2.0
+```
+
+You will also need the PECL `mongodb` extension (`pecl install mongodb`).
+
 ## Installation
 
 Install the SDK using Composer:
@@ -189,19 +203,68 @@ try {
 
 ## Webhook Support
 
-```php
-// Verify and process webhooks
-$webhookSecret = 'your-webhook-secret';
-$payload = $request->getBody()->getContents(); // raw request as string
-$request->getHeaderLine('x-wh-signature'); // signature will be present in header which will be sent by HighLevel
+`processWebhook` verifies the incoming signature, then for `INSTALL` events it auto-generates and stores a location access token, and for `UNINSTALL` events it removes the stored token. Two signature schemes are supported:
 
-$ghl->getWebhookManager()->processWebhook($payload, $signature, $_ENV['WEBHOOK_PUBLIC_KEY'], $_ENV['client_id']);
+| Header | Scheme | Public key env var |
+|---|---|---|
+| `x-ghl-signature` | Ed25519 (preferred) | `WEBHOOK_SIGNATURE_PUBLIC_KEY` |
+| `x-wh-signature` | RSA-SHA256 (legacy) | `WEBHOOK_PUBLIC_KEY` |
 
-This method will verify the webhook signature first. If it is valid, then for INSTALL event it will automatically generate token for your location and store it in the relavant storage option. Similarly on UNINSTALL event, it will remove the token from the storage. 
+If both signatures are received, Ed25519 takes precedence.
 
-$ghl->getWebhookManager()->verifySignature($payload, $signature, $_ENV['WEBHOOK_PUBLIC_KEY']);
-You can use this method independently to verify the webhook signature by SDK. 
+### Configuration
+
+Set the following environment variables in your app — the SDK reads them internally, so you never pass keys or the client id as method arguments:
+
+```dotenv
+WEBHOOK_SIGNATURE_PUBLIC_KEY=...   # Ed25519 public key
+WEBHOOK_PUBLIC_KEY=...             # RSA public key (legacy)
+CLIENT_ID=...                      # OAuth client id; enables appId validation
 ```
+
+The SDK checks `$_ENV`, `$_SERVER`, and `getenv()` in that order, so it works under PHP-FPM, CLI, and frameworks like Laravel/Slim that hydrate `$_ENV` via `phpdotenv`.
+
+### Usage
+
+Pass only the raw payload and the signature header values from the incoming HTTP request:
+
+```php
+$payload = $request->getBody()->getContents();           // raw request body as string
+$whSig   = $request->getHeaderLine('x-wh-signature')  ?: null; // RSA (legacy)
+$ghlSig  = $request->getHeaderLine('x-ghl-signature') ?: null; // Ed25519
+
+$result = $ghl->getWebhookManager()->processWebhook($payload, $whSig, $ghlSig);
+```
+
+### Response shape
+
+`processWebhook` returns an associative array:
+
+```php
+[
+    'processed'                    => true,           // bool — false if signature invalid or appId mismatch
+    'type'                         => 'INSTALL',      // string — webhook event type
+    'signatureType'                => 'ed25519',      // 'ed25519' | 'rsa' | null (null = skipped)
+    'signatureValid'               => true,           // bool
+    'skippedSignatureVerification' => false,          // bool — true if no key/signature was supplied
+]
+```
+
+On failure it returns `['processed' => false, 'reason' => 'invalid_signature' | 'app_id_mismatch', ...]`.
+
+### Verifying a signature manually
+
+You can also verify a signature without running the full webhook pipeline. These helpers do take the public key as an argument, so you can verify against any key you already have in memory:
+
+```php
+// RSA-SHA256 (x-wh-signature)
+$ghl->getWebhookManager()->verifySignature($payload, $signature, $rsaPublicKeyPem);
+
+// Ed25519 (x-ghl-signature) — uses libsodium under the hood
+$ghl->getWebhookManager()->verifyEd25519Signature($payload, $ghlSignature, $ed25519PublicKeyPem);
+```
+
+`verifyEd25519Signature` accepts the public key as PEM (SPKI), raw 32 bytes, 64-character hex, or base64. Requires the `sodium` extension, which is bundled with PHP 7.2+.
 
 ## Documentation
 

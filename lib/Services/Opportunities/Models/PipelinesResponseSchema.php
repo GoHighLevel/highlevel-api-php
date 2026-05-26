@@ -40,6 +40,11 @@ class PipelinesResponseSchema
     public ?string $location_id = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $color_render_mode = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -58,6 +63,7 @@ class PipelinesResponseSchema
         $this->show_in_funnel = $data['showInFunnel'] ?? null;
         $this->show_in_pie_chart = $data['showInPieChart'] ?? null;
         $this->location_id = $data['locationId'] ?? null;
+        $this->color_render_mode = $data['colorRenderMode'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

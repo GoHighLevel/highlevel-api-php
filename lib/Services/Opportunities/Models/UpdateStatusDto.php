@@ -15,6 +15,11 @@ class UpdateStatusDto
     public string $status;
 
     /**
+     * @var string|null
+     */
+    public ?string $lost_reason_id = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -28,6 +33,7 @@ class UpdateStatusDto
     public function __construct(array $data = [])
     {
         $this->status = $data['status'] ?? '';
+        $this->lost_reason_id = $data['lostReasonId'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

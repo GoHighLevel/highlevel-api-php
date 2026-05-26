@@ -10,6 +10,11 @@ namespace HighLevel\Services\Opportunities\Models;
 class UpsertOpportunityDto
 {
     /**
+     * @var string|null
+     */
+    public ?string $id = null;
+
+    /**
      * @var string
      */
     public string $pipeline_id;
@@ -20,9 +25,19 @@ class UpsertOpportunityDto
     public string $location_id;
 
     /**
+     * @var array&lt;string&gt;
+     */
+    public array $followers;
+
+    /**
+     * @var bool
+     */
+    public bool $is_remove_all_followers;
+
+    /**
      * @var string
      */
-    public string $contact_id;
+    public string $followers_action_type;
 
     /**
      * @var string|null
@@ -40,14 +55,19 @@ class UpsertOpportunityDto
     public ?string $pipeline_stage_id = null;
 
     /**
-     * @var float|null
+     * @var array&lt;string, mixed&gt;|null
      */
-    public ?float $monetary_value = null;
+    public ?array $monetary_value = null;
 
     /**
      * @var string|null
      */
     public ?string $assigned_to = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $lost_reason_id = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -62,14 +82,18 @@ class UpsertOpportunityDto
      */
     public function __construct(array $data = [])
     {
+        $this->id = $data['id'] ?? null;
         $this->pipeline_id = $data['pipelineId'] ?? '';
         $this->location_id = $data['locationId'] ?? '';
-        $this->contact_id = $data['contactId'] ?? '';
+        $this->followers = $data['followers'] ?? [];
+        $this->is_remove_all_followers = $data['isRemoveAllFollowers'] ?? false;
+        $this->followers_action_type = $data['followersActionType'] ?? '';
         $this->name = $data['name'] ?? null;
         $this->status = $data['status'] ?? null;
         $this->pipeline_stage_id = $data['pipelineStageId'] ?? null;
         $this->monetary_value = $data['monetaryValue'] ?? null;
         $this->assigned_to = $data['assignedTo'] ?? null;
+        $this->lost_reason_id = $data['lostReasonId'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

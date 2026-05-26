@@ -21,6 +21,7 @@ use HighLevel\Services\Contacts\Models\CreateDeleteTagSuccessfulResponseDto;
 use HighLevel\Services\Contacts\Models\GetNotesListSuccessfulResponseDto;
 use HighLevel\Services\Contacts\Models\NotesDTO;
 use HighLevel\Services\Contacts\Models\GetCreateUpdateNoteSuccessfulResponseDto;
+use HighLevel\Services\Contacts\Models\UpdateNoteDTO;
 use HighLevel\Services\Contacts\Models\DeleteNoteSuccessfulResponseDto;
 use HighLevel\Services\Contacts\Models\UpdateTagsDTO;
 use HighLevel\Services\Contacts\Models\UpdateTagsResponseDTO;
@@ -1282,7 +1283,7 @@ class Contacts
      *   contactId: string // Contact Id
      *   id: string // Note Id
      * } $params Request parameters
-     * @param NotesDTO $requestBody Request body data
+     * @param UpdateNoteDTO $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
      * @return GetCreateUpdateNoteSuccessfulResponseDto Response data
      * @throws GHLError
@@ -1290,7 +1291,7 @@ class Contacts
      */
     public function updateNote(
         array $params,
-        NotesDTO $requestBody,
+        UpdateNoteDTO $requestBody,
         ?array $options = null
     ): GetCreateUpdateNoteSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1452,9 +1453,6 @@ class Contacts
      * Update Contacts Tags
      * Allows you to update tags to multiple contacts at once, you can add or remove tags from the contacts
      * 
-     * @param array{
-     *   type: string // Tags operation type
-     * } $params Request parameters
      * @param UpdateTagsDTO $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
      * @return UpdateTagsResponseDTO Response data
@@ -1462,15 +1460,14 @@ class Contacts
      * @throws GuzzleException
      */
     public function createAssociation(
-        array $params,
         UpdateTagsDTO $requestBody,
         ?array $options = null
     ): UpdateTagsResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
-        $paramDefs = [['name' => 'type', 'in' => 'path']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
         $requirements = [];
 
         $url = RequestUtils::buildUrl('/contacts/bulk/tags/update/{type}', $extracted['path']);
@@ -2758,8 +2755,8 @@ class Contacts
      * Get Contacts
      * Get Contacts
 
- **Note:** This API endpoint is deprecated. Please use the [Search Contacts](https://highlevel.stoplight.io/docs/integrations/dbe4f3a00a106-search-contacts) endpoint instead.
-     * @deprecated deprecated. Use the [Search Contacts](https://highlevel instead.
+ **Note:** This API endpoint is deprecated. Please use the [Search Contacts](https://marketplace.gohighlevel.com/docs/ghl/contacts/search-contacts-advanced) endpoint instead.
+     * @deprecated deprecated. Use the [Search Contacts](https://marketplace instead.
      * 
      * @param array{
      *   locationId: string // Location Id

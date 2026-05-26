@@ -10,9 +10,9 @@ namespace HighLevel\Services\Invoices\Models;
 class LateFeesFrequencyDto
 {
     /**
-     * @var float|null
+     * @var float
      */
-    public ?float $interval_count = null;
+    public float $interval_count;
 
     /**
      * @var string
@@ -32,7 +32,7 @@ class LateFeesFrequencyDto
      */
     public function __construct(array $data = [])
     {
-        $this->interval_count = $data['intervalCount'] ?? null;
+        $this->interval_count = $data['intervalCount'] ?? 0;
         $this->interval = $data['interval'] ?? '';
         // No defined properties - store raw data for flexible models
         $this->data = $data;

@@ -70,6 +70,11 @@ class UserSchema
     public ?array $lc_phone = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $platform_language = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -104,6 +109,7 @@ class UserSchema
         }
         $this->deleted = $data['deleted'] ?? null;
         $this->lc_phone = $data['lcPhone'] ?? null;
+        $this->platform_language = $data['platformLanguage'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

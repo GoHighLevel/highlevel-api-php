@@ -125,6 +125,11 @@ class SubscriptionResponseSchema
     public string $updated_at;
 
     /**
+     * @var string|null
+     */
+    public ?string $created_by = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -160,6 +165,7 @@ class SubscriptionResponseSchema
         $this->ip_address = $data['ipAddress'] ?? null;
         $this->created_at = $data['createdAt'] ?? '';
         $this->updated_at = $data['updatedAt'] ?? '';
+        $this->created_by = $data['createdBy'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

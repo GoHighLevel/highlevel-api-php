@@ -45,6 +45,16 @@ class GetLocationAccessTokenSuccessfulResponseDto
     public string $user_id;
 
     /**
+     * @var string|null
+     */
+    public ?string $app_id = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $version_id = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -64,6 +74,8 @@ class GetLocationAccessTokenSuccessfulResponseDto
         $this->location_id = $data['locationId'] ?? null;
         $this->plan_id = $data['planId'] ?? null;
         $this->user_id = $data['userId'] ?? '';
+        $this->app_id = $data['appId'] ?? null;
+        $this->version_id = $data['versionId'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

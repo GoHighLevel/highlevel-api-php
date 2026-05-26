@@ -11,6 +11,9 @@ use HighLevel\Services\Marketplace\Models\RaiseChargeBodyDTO;
 use HighLevel\Services\Marketplace\Models\DeleteIntegrationBodyDto;
 use HighLevel\Services\Marketplace\Models\DeleteIntegrationResponse;
 use HighLevel\Services\Marketplace\Models\GetInstallerDetailsResponseDTO;
+use HighLevel\Services\Marketplace\Models\GetRebillingConfigResponseDTO;
+use HighLevel\Services\Marketplace\Models\MigrateConnectionDto;
+use HighLevel\Services\Marketplace\Models\MigrateConnectionResponseDto;
 
 /**
  * Marketplace Service
@@ -558,9 +561,9 @@ class Marketplace
         array $params,
         ?array $options = null
     ): GetInstallerDetailsResponseDTO {
-        $paramDefs = [['name' => 'appId', 'in' => 'path']];
+        $paramDefs = [['name' => 'appId', 'in' => 'path'], ];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = [];
+        $requirements = ["Location-Access-Only","Agency-Access-Only"];
 
         $url = RequestUtils::buildUrl('/marketplace/app/{appId}/installations', $extracted['path']);
         
@@ -610,6 +613,175 @@ class Marketplace
             $responseData = json_decode($body, true);
             
             return new GetInstallerDetailsResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get rebilling config for an app subscription and usage plans
+     * Get rebilling config for an app subscription and usage plans for the authenticated sub-account. This endpoint returns the subscription and usage plans for an app.
+     * 
+     * @param array{
+     *   appId: string // ID of the app to get rebilling config
+     *   locationId: string // ID of the Sub-Account location to get rebilling config for
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return GetRebillingConfigResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getRebillingConfigForApp(
+        array $params,
+        ?array $options = null
+    ): GetRebillingConfigResponseDTO {
+        $paramDefs = [['name' => 'appId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'path'], ];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["Location-Access-Only"];
+
+        $url = RequestUtils::buildUrl('/marketplace/app/{appId}/rebilling-config/location/{locationId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new GetRebillingConfigResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Migrate external authentication connection
+     * Migrates an external authentication connection credentials (basic or oauth2) for a specific app and location. This endpoint validates the app configuration, stores credentials safely in CRM&#x27;s native encrypted storage. With this the lifecycle of the token is managed by CRM.
+     * 
+     * @param MigrateConnectionDto $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return MigrateConnectionResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function migrateConnection(
+        MigrateConnectionDto $requestBody,
+        ?array $options = null
+    ): MigrateConnectionResponseDto {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["Location-Access","Location-Access-Only"];
+
+        $url = RequestUtils::buildUrl('/marketplace/external-auth/migration', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new MigrateConnectionResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

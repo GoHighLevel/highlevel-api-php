@@ -6,13 +6,18 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use HighLevel\Services\AdManager\AdManager;
+use HighLevel\Services\AffiliateManager\AffiliateManager;
+use HighLevel\Services\AgentStudio\AgentStudio;
 use HighLevel\Services\Associations\Associations;
 use HighLevel\Services\Blogs\Blogs;
+use HighLevel\Services\BrandBoards\BrandBoards;
 use HighLevel\Services\Businesses\Businesses;
 use HighLevel\Services\Calendars\Calendars;
 use HighLevel\Services\Campaigns\Campaigns;
 use HighLevel\Services\Companies\Companies;
 use HighLevel\Services\Contacts\Contacts;
+use HighLevel\Services\ConversationAi\ConversationAi;
 use HighLevel\Services\Conversations\Conversations;
 use HighLevel\Services\Courses\Courses;
 use HighLevel\Services\CustomFields\CustomFields;
@@ -22,6 +27,7 @@ use HighLevel\Services\Emails\Emails;
 use HighLevel\Services\Forms\Forms;
 use HighLevel\Services\Funnels\Funnels;
 use HighLevel\Services\Invoices\Invoices;
+use HighLevel\Services\KnowledgeBase\KnowledgeBase;
 use HighLevel\Services\Links\Links;
 use HighLevel\Services\Locations\Locations;
 use HighLevel\Services\Marketplace\Marketplace;
@@ -79,6 +85,24 @@ class HighLevel
     private SessionStorage $sessionStorage;
 
     /**
+     * AdManager service
+     * @var AdManager
+     */
+    public AdManager $adManager;
+
+    /**
+     * AffiliateManager service
+     * @var AffiliateManager
+     */
+    public AffiliateManager $affiliateManager;
+
+    /**
+     * AgentStudio service
+     * @var AgentStudio
+     */
+    public AgentStudio $agentStudio;
+
+    /**
      * Associations service
      * @var Associations
      */
@@ -89,6 +113,12 @@ class HighLevel
      * @var Blogs
      */
     public Blogs $blogs;
+
+    /**
+     * BrandBoards service
+     * @var BrandBoards
+     */
+    public BrandBoards $brandBoards;
 
     /**
      * Businesses service
@@ -119,6 +149,12 @@ class HighLevel
      * @var Contacts
      */
     public Contacts $contacts;
+
+    /**
+     * ConversationAi service
+     * @var ConversationAi
+     */
+    public ConversationAi $conversationAi;
 
     /**
      * Conversations service
@@ -173,6 +209,12 @@ class HighLevel
      * @var Invoices
      */
     public Invoices $invoices;
+
+    /**
+     * KnowledgeBase service
+     * @var KnowledgeBase
+     */
+    public KnowledgeBase $knowledgeBase;
 
     /**
      * Links service
@@ -382,13 +424,18 @@ class HighLevel
      */
     private function initializeServices(): void
     {
+        $this->adManager = new AdManager($this);
+        $this->affiliateManager = new AffiliateManager($this);
+        $this->agentStudio = new AgentStudio($this);
         $this->associations = new Associations($this);
         $this->blogs = new Blogs($this);
+        $this->brandBoards = new BrandBoards($this);
         $this->businesses = new Businesses($this);
         $this->calendars = new Calendars($this);
         $this->campaigns = new Campaigns($this);
         $this->companies = new Companies($this);
         $this->contacts = new Contacts($this);
+        $this->conversationAi = new ConversationAi($this);
         $this->conversations = new Conversations($this);
         $this->courses = new Courses($this);
         $this->customFields = new CustomFields($this);
@@ -398,6 +445,7 @@ class HighLevel
         $this->forms = new Forms($this);
         $this->funnels = new Funnels($this);
         $this->invoices = new Invoices($this);
+        $this->knowledgeBase = new KnowledgeBase($this);
         $this->links = new Links($this);
         $this->locations = new Locations($this);
         $this->marketplace = new Marketplace($this);

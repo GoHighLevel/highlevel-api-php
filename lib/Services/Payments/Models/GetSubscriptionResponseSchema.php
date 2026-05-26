@@ -145,6 +145,11 @@ class GetSubscriptionResponseSchema
     public ?string $trace_id = null;
 
     /**
+     * @var string|null
+     */
+    public ?string $created_by = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -184,6 +189,7 @@ class GetSubscriptionResponseSchema
         $this->canceled_at = $data['canceledAt'] ?? null;
         $this->canceled_by = $data['canceledBy'] ?? null;
         $this->trace_id = $data['traceId'] ?? null;
+        $this->created_by = $data['createdBy'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

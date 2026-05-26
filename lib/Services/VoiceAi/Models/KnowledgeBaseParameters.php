@@ -10,24 +10,14 @@ namespace HighLevel\Services\VoiceAi\Models;
 class KnowledgeBaseParameters
 {
     /**
-     * @var string|null
-     */
-    public ?string $trigger_prompt = null;
-
-    /**
      * @var string
      */
-    public string $trigger_message;
+    public string $trigger_prompt;
 
     /**
      * @var string
      */
     public string $knowledge_base_id;
-
-    /**
-     * @var array&lt;CustomActionParameterDTO&gt;|null
-     */
-    public ?array $parameters = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -42,17 +32,8 @@ class KnowledgeBaseParameters
      */
     public function __construct(array $data = [])
     {
-        $this->trigger_prompt = $data['triggerPrompt'] ?? null;
-        $this->trigger_message = $data['triggerMessage'] ?? '';
+        $this->trigger_prompt = $data['triggerPrompt'] ?? '';
         $this->knowledge_base_id = $data['knowledgeBaseId'] ?? '';
-        // Handle array of CustomActionParameterDTO objects
-        if (isset($data['parameters']) && is_array($data['parameters'])) {
-            $this->parameters = array_map(function($item) {
-                return is_array($item) ? new CustomActionParameterDTO($item) : $item;
-            }, $data['parameters']);
-        } else {
-            $this->parameters = $data['parameters'] ?? null;
-        }
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

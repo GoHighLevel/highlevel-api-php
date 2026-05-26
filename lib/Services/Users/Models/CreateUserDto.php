@@ -75,6 +75,16 @@ class CreateUserDto
     public ?string $profile_photo = null;
 
     /**
+     * @var array&lt;string, mixed&gt;|null
+     */
+    public ?array $twilio_phone = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $platform_language = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -105,6 +115,8 @@ class CreateUserDto
         $this->scopes = $data['scopes'] ?? null;
         $this->scopes_assigned_to_only = $data['scopesAssignedToOnly'] ?? null;
         $this->profile_photo = $data['profilePhoto'] ?? null;
+        $this->twilio_phone = $data['twilioPhone'] ?? null;
+        $this->platform_language = $data['platformLanguage'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

@@ -95,19 +95,24 @@ class SearchOpportunitiesResponseSchema
     public ?SearchOpportunitiesContactResponseSchema $contact = null;
 
     /**
-     * @var array&lt;string&gt;|null
+     * @var array&lt;array&lt;mixed&gt;&gt;|null
      */
     public ?array $notes = null;
 
     /**
-     * @var array&lt;string&gt;|null
+     * @var array&lt;array&lt;mixed&gt;&gt;|null
      */
     public ?array $tasks = null;
 
     /**
-     * @var array&lt;string&gt;|null
+     * @var array&lt;array&lt;mixed&gt;&gt;|null
      */
     public ?array $calendar_events = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $lost_reason_id = null;
 
     /**
      * @var array&lt;CustomFieldResponseSchema&gt;|null
@@ -118,6 +123,11 @@ class SearchOpportunitiesResponseSchema
      * @var array&lt;array&lt;mixed&gt;&gt;|null
      */
     public ?array $followers = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $external_object_id = null;
 
     /**
      * Raw data storage for models without defined schema
@@ -157,6 +167,7 @@ class SearchOpportunitiesResponseSchema
         $this->notes = $data['notes'] ?? null;
         $this->tasks = $data['tasks'] ?? null;
         $this->calendar_events = $data['calendarEvents'] ?? null;
+        $this->lost_reason_id = $data['lostReasonId'] ?? null;
         // Handle array of CustomFieldResponseSchema objects
         if (isset($data['customFields']) && is_array($data['customFields'])) {
             $this->custom_fields = array_map(function($item) {
@@ -166,6 +177,7 @@ class SearchOpportunitiesResponseSchema
             $this->custom_fields = $data['customFields'] ?? null;
         }
         $this->followers = $data['followers'] ?? null;
+        $this->external_object_id = $data['externalObjectId'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

@@ -70,6 +70,16 @@ class GetAccessCodeSuccessfulResponseDto
     public ?bool $is_bulk_installation = null;
 
     /**
+     * @var bool|null
+     */
+    public ?bool $install_to_future_locations = null;
+
+    /**
+     * @var bool|null
+     */
+    public ?bool $approve_all_locations = null;
+
+    /**
      * Raw data storage for models without defined schema
      * @var array<string, mixed>
      */
@@ -94,6 +104,8 @@ class GetAccessCodeSuccessfulResponseDto
         $this->user_id = $data['userId'] ?? '';
         $this->plan_id = $data['planId'] ?? null;
         $this->is_bulk_installation = $data['isBulkInstallation'] ?? null;
+        $this->install_to_future_locations = $data['installToFutureLocations'] ?? null;
+        $this->approve_all_locations = $data['approveAllLocations'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }

@@ -25,11 +25,6 @@ class DefaultProductResponseDto
     public ?array $variants = null;
 
     /**
-     * @var array&lt;ProductMediaDto&gt;|null
-     */
-    public ?array $medias = null;
-
-    /**
      * @var string
      */
     public string $location_id;
@@ -48,11 +43,6 @@ class DefaultProductResponseDto
      * @var bool|null
      */
     public ?bool $available_in_store = null;
-
-    /**
-     * @var string|null
-     */
-    public ?string $user_id = null;
 
     /**
      * @var string
@@ -95,11 +85,6 @@ class DefaultProductResponseDto
     public ?string $automatic_tax_category_id = null;
 
     /**
-     * @var bool|null
-     */
-    public ?bool $is_label_enabled = null;
-
-    /**
      * @var mixed
      */
     public mixed $label;
@@ -108,11 +93,6 @@ class DefaultProductResponseDto
      * @var string|null
      */
     public ?string $slug = null;
-
-    /**
-     * @var mixed
-     */
-    public mixed $seo;
 
     /**
      * Raw data storage for models without defined schema
@@ -137,19 +117,10 @@ class DefaultProductResponseDto
         } else {
             $this->variants = $data['variants'] ?? null;
         }
-        // Handle array of ProductMediaDto objects
-        if (isset($data['medias']) && is_array($data['medias'])) {
-            $this->medias = array_map(function($item) {
-                return is_array($item) ? new ProductMediaDto($item) : $item;
-            }, $data['medias']);
-        } else {
-            $this->medias = $data['medias'] ?? null;
-        }
         $this->location_id = $data['locationId'] ?? '';
         $this->name = $data['name'] ?? '';
         $this->product_type = $data['productType'] ?? '';
         $this->available_in_store = $data['availableInStore'] ?? null;
-        $this->user_id = $data['userId'] ?? null;
         $this->created_at = $data['createdAt'] ?? '';
         $this->updated_at = $data['updatedAt'] ?? '';
         $this->statement_descriptor = $data['statementDescriptor'] ?? null;
@@ -158,10 +129,8 @@ class DefaultProductResponseDto
         $this->is_taxes_enabled = $data['isTaxesEnabled'] ?? null;
         $this->taxes = $data['taxes'] ?? null;
         $this->automatic_tax_category_id = $data['automaticTaxCategoryId'] ?? null;
-        $this->is_label_enabled = $data['isLabelEnabled'] ?? null;
         $this->label = $data['label'] ?? null;
         $this->slug = $data['slug'] ?? null;
-        $this->seo = $data['seo'] ?? null;
         // No defined properties - store raw data for flexible models
         $this->data = $data;
     }
