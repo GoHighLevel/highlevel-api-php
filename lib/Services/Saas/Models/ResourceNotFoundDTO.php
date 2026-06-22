@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @generated
+ * File generated from our OpenAPI spec
+ */
+
 namespace HighLevel\Services\Saas\Models;
 
 /**
