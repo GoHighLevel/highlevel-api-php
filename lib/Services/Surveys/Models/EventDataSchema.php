@@ -97,13 +97,7 @@ class EventDataSchema
     /**
      * @var mixed
      */
-    public mixed $contact_session_ids;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $contact_session_ids;
 
     /**
      * Create model from array data
@@ -135,61 +129,72 @@ class EventDataSchema
         $this->fingerprint = $data['fingerprint'] ?? null;
         $this->page_visit_type = $data['pageVisitType'] ?? null;
         $this->contact_session_ids = $data['contactSessionIds'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->fbc !== null) {
+            $result['fbc'] = $this->fbc;
+        }
+        if ($this->fbp !== null) {
+            $result['fbp'] = $this->fbp;
+        }
+        if ($this->page !== null) {
+            $result['page'] = is_object($this->page) && method_exists($this->page, 'toArray') 
+                ? $this->page->toArray() 
+                : $this->page;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->domain !== null) {
+            $result['domain'] = $this->domain;
+        }
+        if ($this->medium !== null) {
+            $result['medium'] = $this->medium;
+        }
+        if ($this->source !== null) {
+            $result['source'] = $this->source;
+        }
+        if ($this->version !== null) {
+            $result['version'] = $this->version;
+        }
+        if ($this->ad_source !== null) {
+            $result['adSource'] = $this->ad_source;
+        }
+        if ($this->medium_id !== null) {
+            $result['mediumId'] = $this->medium_id;
+        }
+        if ($this->parent_id !== null) {
+            $result['parentId'] = $this->parent_id;
+        }
+        if ($this->referrer !== null) {
+            $result['referrer'] = $this->referrer;
+        }
+        if ($this->fb_event_id !== null) {
+            $result['fbEventId'] = $this->fb_event_id;
+        }
+        if ($this->timestamp !== null) {
+            $result['timestamp'] = $this->timestamp;
+        }
+        if ($this->parent_name !== null) {
+            $result['parentName'] = $this->parent_name;
+        }
+        if ($this->fingerprint !== null) {
+            $result['fingerprint'] = $this->fingerprint;
+        }
+        if ($this->page_visit_type !== null) {
+            $result['pageVisitType'] = $this->page_visit_type;
+        }
+        if ($this->contact_session_ids !== null) {
+            $result['contactSessionIds'] = $this->contact_session_ids;
+        }
+        return $result;
     }
 }

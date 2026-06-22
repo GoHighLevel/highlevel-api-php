@@ -62,18 +62,22 @@ class UpsertOpportunityDto
     /**
      * @var string|null
      */
+    public ?string $forecast_expected_close_date = null;
+
+    /**
+     * @var float|null
+     */
+    public ?float $forecast_probability = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $assigned_to = null;
 
     /**
      * @var string|null
      */
     public ?string $lost_reason_id = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -92,63 +96,62 @@ class UpsertOpportunityDto
         $this->status = $data['status'] ?? null;
         $this->pipeline_stage_id = $data['pipelineStageId'] ?? null;
         $this->monetary_value = $data['monetaryValue'] ?? null;
+        $this->forecast_expected_close_date = $data['forecastExpectedCloseDate'] ?? null;
+        $this->forecast_probability = $data['forecastProbability'] ?? null;
         $this->assigned_to = $data['assignedTo'] ?? null;
         $this->lost_reason_id = $data['lostReasonId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->pipeline_id !== null) {
+            $result['pipelineId'] = $this->pipeline_id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->followers !== null) {
+            $result['followers'] = $this->followers;
+        }
+        if ($this->is_remove_all_followers !== null) {
+            $result['isRemoveAllFollowers'] = $this->is_remove_all_followers;
+        }
+        if ($this->followers_action_type !== null) {
+            $result['followersActionType'] = $this->followers_action_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->pipeline_stage_id !== null) {
+            $result['pipelineStageId'] = $this->pipeline_stage_id;
+        }
+        if ($this->monetary_value !== null) {
+            $result['monetaryValue'] = $this->monetary_value;
+        }
+        if ($this->forecast_expected_close_date !== null) {
+            $result['forecastExpectedCloseDate'] = $this->forecast_expected_close_date;
+        }
+        if ($this->forecast_probability !== null) {
+            $result['forecastProbability'] = $this->forecast_probability;
+        }
+        if ($this->assigned_to !== null) {
+            $result['assignedTo'] = $this->assigned_to;
+        }
+        if ($this->lost_reason_id !== null) {
+            $result['lostReasonId'] = $this->lost_reason_id;
+        }
+        return $result;
     }
 }

@@ -135,12 +135,6 @@ class OrderResponseSchema
     public ?string $created_by = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -172,61 +166,91 @@ class OrderResponseSchema
         $this->onetime_products = $data['onetimeProducts'] ?? null;
         $this->recurring_products = $data['recurringProducts'] ?? null;
         $this->created_by = $data['createdBy'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->contact_name !== null) {
+            $result['contactName'] = $this->contact_name;
+        }
+        if ($this->contact_email !== null) {
+            $result['contactEmail'] = $this->contact_email;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->subtotal !== null) {
+            $result['subtotal'] = $this->subtotal;
+        }
+        if ($this->discount !== null) {
+            $result['discount'] = $this->discount;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->total_products !== null) {
+            $result['totalProducts'] = $this->total_products;
+        }
+        if ($this->source_type !== null) {
+            $result['sourceType'] = $this->source_type;
+        }
+        if ($this->source_name !== null) {
+            $result['sourceName'] = $this->source_name;
+        }
+        if ($this->source_id !== null) {
+            $result['sourceId'] = $this->source_id;
+        }
+        if ($this->source_meta !== null) {
+            $result['sourceMeta'] = $this->source_meta;
+        }
+        if ($this->coupon_code !== null) {
+            $result['couponCode'] = $this->coupon_code;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->source_sub_type !== null) {
+            $result['sourceSubType'] = $this->source_sub_type;
+        }
+        if ($this->fulfillment_status !== null) {
+            $result['fulfillmentStatus'] = $this->fulfillment_status;
+        }
+        if ($this->onetime_products !== null) {
+            $result['onetimeProducts'] = $this->onetime_products;
+        }
+        if ($this->recurring_products !== null) {
+            $result['recurringProducts'] = $this->recurring_products;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        return $result;
     }
 }

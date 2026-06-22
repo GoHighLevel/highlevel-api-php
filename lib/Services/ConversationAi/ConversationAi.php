@@ -60,7 +60,7 @@ class ConversationAi
      */
     public function createAction(
         array $params,
-        CreateActionDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateActionResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -316,7 +316,7 @@ class ConversationAi
      */
     public function updateAction(
         array $params,
-        CreateActionDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateActionResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -489,7 +489,7 @@ class ConversationAi
      */
     public function updateFollowupSettings(
         array $params,
-        UpdateFollowupSettingsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateActionResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -575,7 +575,7 @@ class ConversationAi
      * @throws GuzzleException
      */
     public function createAgent(
-        CreateEmployeeDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EmployeeResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -749,7 +749,7 @@ class ConversationAi
      */
     public function updateAgent(
         array $params,
-        UpdateEmployeeDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EmployeeResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

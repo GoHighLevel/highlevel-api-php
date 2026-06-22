@@ -55,12 +55,6 @@ class InventoryItemDto
     public ?string $product_name = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -76,61 +70,43 @@ class InventoryItemDto
         $this->updated_at = $data['updatedAt'] ?? '';
         $this->image = $data['image'] ?? null;
         $this->product_name = $data['productName'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->available_quantity !== null) {
+            $result['availableQuantity'] = $this->available_quantity;
+        }
+        if ($this->sku !== null) {
+            $result['sku'] = $this->sku;
+        }
+        if ($this->allow_out_of_stock_purchases !== null) {
+            $result['allowOutOfStockPurchases'] = $this->allow_out_of_stock_purchases;
+        }
+        if ($this->product !== null) {
+            $result['product'] = $this->product;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->image !== null) {
+            $result['image'] = $this->image;
+        }
+        if ($this->product_name !== null) {
+            $result['productName'] = $this->product_name;
+        }
+        return $result;
     }
 }

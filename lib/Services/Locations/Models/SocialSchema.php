@@ -65,12 +65,6 @@ class SocialSchema
     public ?string $google_places_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -88,61 +82,49 @@ class SocialSchema
         $this->pinterest = $data['pinterest'] ?? null;
         $this->blog_rss = $data['blogRss'] ?? null;
         $this->google_places_id = $data['googlePlacesId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->facebook_url !== null) {
+            $result['facebookUrl'] = $this->facebook_url;
+        }
+        if ($this->google_plus !== null) {
+            $result['googlePlus'] = $this->google_plus;
+        }
+        if ($this->linked_in !== null) {
+            $result['linkedIn'] = $this->linked_in;
+        }
+        if ($this->foursquare !== null) {
+            $result['foursquare'] = $this->foursquare;
+        }
+        if ($this->twitter !== null) {
+            $result['twitter'] = $this->twitter;
+        }
+        if ($this->yelp !== null) {
+            $result['yelp'] = $this->yelp;
+        }
+        if ($this->instagram !== null) {
+            $result['instagram'] = $this->instagram;
+        }
+        if ($this->youtube !== null) {
+            $result['youtube'] = $this->youtube;
+        }
+        if ($this->pinterest !== null) {
+            $result['pinterest'] = $this->pinterest;
+        }
+        if ($this->blog_rss !== null) {
+            $result['blogRss'] = $this->blog_rss;
+        }
+        if ($this->google_places_id !== null) {
+            $result['googlePlacesId'] = $this->google_places_id;
+        }
+        return $result;
     }
 }

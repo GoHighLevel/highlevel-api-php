@@ -72,13 +72,17 @@ class AppointmentSchemaResponse
     /**
      * @var string
      */
-    public string $id;
+    public string $date_added;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
+     * @var string
      */
-    private array $data = [];
+    public string $date_updated;
+
+    /**
+     * @var string
+     */
+    public string $id;
 
     /**
      * Create model from array data
@@ -99,62 +103,64 @@ class AppointmentSchemaResponse
         $this->address = $data['address'] ?? null;
         $this->is_recurring = $data['isRecurring'] ?? null;
         $this->rrule = $data['rrule'] ?? null;
+        $this->date_added = $data['dateAdded'] ?? '';
+        $this->date_updated = $data['dateUpdated'] ?? '';
         $this->id = $data['id'] ?? '';
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->calendar_id !== null) {
+            $result['calendarId'] = $this->calendar_id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->start_time !== null) {
+            $result['startTime'] = $this->start_time;
+        }
+        if ($this->end_time !== null) {
+            $result['endTime'] = $this->end_time;
+        }
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->meeting_location_type !== null) {
+            $result['meetingLocationType'] = $this->meeting_location_type;
+        }
+        if ($this->appointment_status !== null) {
+            $result['appointmentStatus'] = $this->appointment_status;
+        }
+        if ($this->assigned_user_id !== null) {
+            $result['assignedUserId'] = $this->assigned_user_id;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->is_recurring !== null) {
+            $result['isRecurring'] = $this->is_recurring;
+        }
+        if ($this->rrule !== null) {
+            $result['rrule'] = $this->rrule;
+        }
+        if ($this->date_added !== null) {
+            $result['dateAdded'] = $this->date_added;
+        }
+        if ($this->date_updated !== null) {
+            $result['dateUpdated'] = $this->date_updated;
+        }
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        return $result;
     }
 }

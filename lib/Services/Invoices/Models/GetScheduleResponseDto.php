@@ -52,7 +52,7 @@ class GetScheduleResponseDto
     /**
      * @var mixed
      */
-    public mixed $business_details;
+    public $business_details;
 
     /**
      * @var string
@@ -62,12 +62,12 @@ class GetScheduleResponseDto
     /**
      * @var mixed
      */
-    public mixed $contact_details;
+    public $contact_details;
 
     /**
      * @var mixed
      */
-    public mixed $discount;
+    public $discount;
 
     /**
      * @var array&lt;string&gt;
@@ -103,12 +103,6 @@ class GetScheduleResponseDto
      * @var string
      */
     public string $updated_at;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -148,61 +142,77 @@ class GetScheduleResponseDto
         $this->compiled_terms_notes = $data['compiledTermsNotes'] ?? '';
         $this->created_at = $data['createdAt'] ?? '';
         $this->updated_at = $data['updatedAt'] ?? '';
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->schedule !== null) {
+            $result['schedule'] = is_object($this->schedule) && method_exists($this->schedule, 'toArray') 
+                ? $this->schedule->toArray() 
+                : $this->schedule;
+        }
+        if ($this->invoices !== null) {
+            $result['invoices'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->invoices);
+        }
+        if ($this->business_details !== null) {
+            $result['businessDetails'] = $this->business_details;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->contact_details !== null) {
+            $result['contactDetails'] = $this->contact_details;
+        }
+        if ($this->discount !== null) {
+            $result['discount'] = $this->discount;
+        }
+        if ($this->items !== null) {
+            $result['items'] = $this->items;
+        }
+        if ($this->total !== null) {
+            $result['total'] = $this->total;
+        }
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->terms_notes !== null) {
+            $result['termsNotes'] = $this->terms_notes;
+        }
+        if ($this->compiled_terms_notes !== null) {
+            $result['compiledTermsNotes'] = $this->compiled_terms_notes;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        return $result;
     }
 }

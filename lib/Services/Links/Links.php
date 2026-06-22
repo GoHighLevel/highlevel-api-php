@@ -135,7 +135,7 @@ class Links
      */
     public function updateLink(
         array $params,
-        LinkUpdateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetLinkSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -382,7 +382,7 @@ class Links
      * Get Links
      * 
      * @param array{
-     *   locationId: string
+     *   locationId: string // Location ID of the business profile
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetLinksSuccessfulResponseDto Response data
@@ -470,7 +470,7 @@ class Links
      * @throws GuzzleException
      */
     public function createLink(
-        LinksDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetLinkSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

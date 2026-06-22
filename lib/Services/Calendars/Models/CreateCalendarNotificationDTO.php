@@ -85,12 +85,6 @@ class CreateCalendarNotificationDTO
     public ?string $from_number = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -126,61 +120,65 @@ class CreateCalendarNotificationDTO
         $this->from_address = $data['fromAddress'] ?? null;
         $this->from_name = $data['fromName'] ?? null;
         $this->from_number = $data['fromNumber'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->receiver_type !== null) {
+            $result['receiverType'] = $this->receiver_type;
+        }
+        if ($this->channel !== null) {
+            $result['channel'] = $this->channel;
+        }
+        if ($this->notification_type !== null) {
+            $result['notificationType'] = $this->notification_type;
+        }
+        if ($this->is_active !== null) {
+            $result['isActive'] = $this->is_active;
+        }
+        if ($this->template_id !== null) {
+            $result['templateId'] = $this->template_id;
+        }
+        if ($this->body !== null) {
+            $result['body'] = $this->body;
+        }
+        if ($this->subject !== null) {
+            $result['subject'] = $this->subject;
+        }
+        if ($this->after_time !== null) {
+            $result['afterTime'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->after_time);
+        }
+        if ($this->before_time !== null) {
+            $result['beforeTime'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->before_time);
+        }
+        if ($this->additional_email_ids !== null) {
+            $result['additionalEmailIds'] = $this->additional_email_ids;
+        }
+        if ($this->additional_phone_numbers !== null) {
+            $result['additionalPhoneNumbers'] = $this->additional_phone_numbers;
+        }
+        if ($this->selected_users !== null) {
+            $result['selectedUsers'] = $this->selected_users;
+        }
+        if ($this->from_address !== null) {
+            $result['fromAddress'] = $this->from_address;
+        }
+        if ($this->from_name !== null) {
+            $result['fromName'] = $this->from_name;
+        }
+        if ($this->from_number !== null) {
+            $result['fromNumber'] = $this->from_number;
+        }
+        return $result;
     }
 }

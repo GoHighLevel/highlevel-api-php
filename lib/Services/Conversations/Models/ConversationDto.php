@@ -70,12 +70,6 @@ class ConversationDto
     public bool $deleted;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -94,61 +88,52 @@ class ConversationDto
         $this->inbox = $data['inbox'] ?? null;
         $this->starred = $data['starred'] ?? null;
         $this->deleted = $data['deleted'] ?? false;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->assigned_to !== null) {
+            $result['assignedTo'] = $this->assigned_to;
+        }
+        if ($this->user_id !== null) {
+            $result['userId'] = $this->user_id;
+        }
+        if ($this->last_message_body !== null) {
+            $result['lastMessageBody'] = $this->last_message_body;
+        }
+        if ($this->last_message_date !== null) {
+            $result['lastMessageDate'] = $this->last_message_date;
+        }
+        if ($this->last_message_type !== null) {
+            $result['lastMessageType'] = $this->last_message_type;
+        }
+        if ($this->unread_count !== null) {
+            $result['unreadCount'] = $this->unread_count;
+        }
+        if ($this->inbox !== null) {
+            $result['inbox'] = $this->inbox;
+        }
+        if ($this->starred !== null) {
+            $result['starred'] = $this->starred;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        return $result;
     }
 }

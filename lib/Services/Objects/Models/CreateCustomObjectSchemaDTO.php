@@ -12,7 +12,7 @@ class CreateCustomObjectSchemaDTO
     /**
      * @var mixed
      */
-    public mixed $labels;
+    public $labels;
 
     /**
      * @var string
@@ -32,13 +32,7 @@ class CreateCustomObjectSchemaDTO
     /**
      * @var mixed
      */
-    public mixed $primary_display_property_details;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $primary_display_property_details;
 
     /**
      * Create model from array data
@@ -52,61 +46,31 @@ class CreateCustomObjectSchemaDTO
         $this->description = $data['description'] ?? null;
         $this->location_id = $data['locationId'] ?? '';
         $this->primary_display_property_details = $data['primaryDisplayPropertyDetails'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->labels !== null) {
+            $result['labels'] = $this->labels;
+        }
+        if ($this->key !== null) {
+            $result['key'] = $this->key;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->primary_display_property_details !== null) {
+            $result['primaryDisplayPropertyDetails'] = $this->primary_display_property_details;
+        }
+        return $result;
     }
 }

@@ -72,48 +72,42 @@ class GetInvoiceSettingsResponseDto
     /**
      * @var mixed
      */
-    public mixed $custom_notification;
+    public $custom_notification;
 
     /**
      * @var mixed
      */
-    public mixed $business_details;
+    public $business_details;
 
     /**
      * @var mixed
      */
-    public mixed $sender_configuration;
+    public $sender_configuration;
 
     /**
      * @var mixed
      */
-    public mixed $product_settings;
+    public $product_settings;
 
     /**
      * @var mixed
      */
-    public mixed $reminder_settings;
+    public $reminder_settings;
 
     /**
      * @var mixed
      */
-    public mixed $late_fees_configuration;
+    public $late_fees_configuration;
 
     /**
      * @var mixed
      */
-    public mixed $tips_configuration;
+    public $tips_configuration;
 
     /**
      * @var mixed
      */
-    public mixed $payment_methods;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $payment_methods;
 
     /**
      * Create model from array data
@@ -142,61 +136,76 @@ class GetInvoiceSettingsResponseDto
         $this->late_fees_configuration = $data['lateFeesConfiguration'] ?? null;
         $this->tips_configuration = $data['tipsConfiguration'] ?? null;
         $this->payment_methods = $data['paymentMethods'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->terms_note !== null) {
+            $result['termsNote'] = $this->terms_note;
+        }
+        if ($this->estimates_terms_note !== null) {
+            $result['estimatesTermsNote'] = $this->estimates_terms_note;
+        }
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->estimates_title !== null) {
+            $result['estimatesTitle'] = $this->estimates_title;
+        }
+        if ($this->invoice_number_prefix !== null) {
+            $result['invoiceNumberPrefix'] = $this->invoice_number_prefix;
+        }
+        if ($this->estimate_number_prefix !== null) {
+            $result['estimateNumberPrefix'] = $this->estimate_number_prefix;
+        }
+        if ($this->due_after_x_days !== null) {
+            $result['dueAfterXDays'] = $this->due_after_x_days;
+        }
+        if ($this->estimates_expire_after_x_days !== null) {
+            $result['estimatesExpireAfterXDays'] = $this->estimates_expire_after_x_days;
+        }
+        if ($this->minimum_percentage_partial_payment !== null) {
+            $result['minimumPercentagePartialPayment'] = $this->minimum_percentage_partial_payment;
+        }
+        if ($this->custom_fields !== null) {
+            $result['customFields'] = $this->custom_fields;
+        }
+        if ($this->custom_notification !== null) {
+            $result['customNotification'] = $this->custom_notification;
+        }
+        if ($this->business_details !== null) {
+            $result['businessDetails'] = $this->business_details;
+        }
+        if ($this->sender_configuration !== null) {
+            $result['senderConfiguration'] = $this->sender_configuration;
+        }
+        if ($this->product_settings !== null) {
+            $result['productSettings'] = $this->product_settings;
+        }
+        if ($this->reminder_settings !== null) {
+            $result['reminderSettings'] = $this->reminder_settings;
+        }
+        if ($this->late_fees_configuration !== null) {
+            $result['lateFeesConfiguration'] = $this->late_fees_configuration;
+        }
+        if ($this->tips_configuration !== null) {
+            $result['tipsConfiguration'] = $this->tips_configuration;
+        }
+        if ($this->payment_methods !== null) {
+            $result['paymentMethods'] = $this->payment_methods;
+        }
+        return $result;
     }
 }

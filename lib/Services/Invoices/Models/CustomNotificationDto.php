@@ -90,12 +90,6 @@ class CustomNotificationDto
     public CustomNotificationItemDto $team_estimate_declined;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -198,61 +192,96 @@ class CustomNotificationDto
         } else {
             $this->team_estimate_declined = $data['teamEstimateDeclined'] ?? null;
         }
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->customer_send_invoice !== null) {
+            $result['customerSendInvoice'] = is_object($this->customer_send_invoice) && method_exists($this->customer_send_invoice, 'toArray') 
+                ? $this->customer_send_invoice->toArray() 
+                : $this->customer_send_invoice;
+        }
+        if ($this->team_payment_success !== null) {
+            $result['teamPaymentSuccess'] = is_object($this->team_payment_success) && method_exists($this->team_payment_success, 'toArray') 
+                ? $this->team_payment_success->toArray() 
+                : $this->team_payment_success;
+        }
+        if ($this->customer_payment_success !== null) {
+            $result['customerPaymentSuccess'] = is_object($this->customer_payment_success) && method_exists($this->customer_payment_success, 'toArray') 
+                ? $this->customer_payment_success->toArray() 
+                : $this->customer_payment_success;
+        }
+        if ($this->team_auto_payment_success !== null) {
+            $result['teamAutoPaymentSuccess'] = is_object($this->team_auto_payment_success) && method_exists($this->team_auto_payment_success, 'toArray') 
+                ? $this->team_auto_payment_success->toArray() 
+                : $this->team_auto_payment_success;
+        }
+        if ($this->customer_auto_payment_success !== null) {
+            $result['customerAutoPaymentSuccess'] = is_object($this->customer_auto_payment_success) && method_exists($this->customer_auto_payment_success, 'toArray') 
+                ? $this->customer_auto_payment_success->toArray() 
+                : $this->customer_auto_payment_success;
+        }
+        if ($this->team_payment_failure !== null) {
+            $result['teamPaymentFailure'] = is_object($this->team_payment_failure) && method_exists($this->team_payment_failure, 'toArray') 
+                ? $this->team_payment_failure->toArray() 
+                : $this->team_payment_failure;
+        }
+        if ($this->customer_payment_failure !== null) {
+            $result['customerPaymentFailure'] = is_object($this->customer_payment_failure) && method_exists($this->customer_payment_failure, 'toArray') 
+                ? $this->customer_payment_failure->toArray() 
+                : $this->customer_payment_failure;
+        }
+        if ($this->team_auto_payment_failure !== null) {
+            $result['teamAutoPaymentFailure'] = is_object($this->team_auto_payment_failure) && method_exists($this->team_auto_payment_failure, 'toArray') 
+                ? $this->team_auto_payment_failure->toArray() 
+                : $this->team_auto_payment_failure;
+        }
+        if ($this->customer_auto_payment_failure !== null) {
+            $result['customerAutoPaymentFailure'] = is_object($this->customer_auto_payment_failure) && method_exists($this->customer_auto_payment_failure, 'toArray') 
+                ? $this->customer_auto_payment_failure->toArray() 
+                : $this->customer_auto_payment_failure;
+        }
+        if ($this->customer_auto_payment_info !== null) {
+            $result['customerAutoPaymentInfo'] = is_object($this->customer_auto_payment_info) && method_exists($this->customer_auto_payment_info, 'toArray') 
+                ? $this->customer_auto_payment_info->toArray() 
+                : $this->customer_auto_payment_info;
+        }
+        if ($this->customer_auto_payment_amount_changed !== null) {
+            $result['customerAutoPaymentAmountChanged'] = is_object($this->customer_auto_payment_amount_changed) && method_exists($this->customer_auto_payment_amount_changed, 'toArray') 
+                ? $this->customer_auto_payment_amount_changed->toArray() 
+                : $this->customer_auto_payment_amount_changed;
+        }
+        if ($this->team_auto_payment_skip !== null) {
+            $result['teamAutoPaymentSkip'] = is_object($this->team_auto_payment_skip) && method_exists($this->team_auto_payment_skip, 'toArray') 
+                ? $this->team_auto_payment_skip->toArray() 
+                : $this->team_auto_payment_skip;
+        }
+        if ($this->team_recurring_send_invoice_failed !== null) {
+            $result['teamRecurringSendInvoiceFailed'] = is_object($this->team_recurring_send_invoice_failed) && method_exists($this->team_recurring_send_invoice_failed, 'toArray') 
+                ? $this->team_recurring_send_invoice_failed->toArray() 
+                : $this->team_recurring_send_invoice_failed;
+        }
+        if ($this->customer_send_estimate !== null) {
+            $result['customerSendEstimate'] = is_object($this->customer_send_estimate) && method_exists($this->customer_send_estimate, 'toArray') 
+                ? $this->customer_send_estimate->toArray() 
+                : $this->customer_send_estimate;
+        }
+        if ($this->team_estimate_accepted !== null) {
+            $result['teamEstimateAccepted'] = is_object($this->team_estimate_accepted) && method_exists($this->team_estimate_accepted, 'toArray') 
+                ? $this->team_estimate_accepted->toArray() 
+                : $this->team_estimate_accepted;
+        }
+        if ($this->team_estimate_declined !== null) {
+            $result['teamEstimateDeclined'] = is_object($this->team_estimate_declined) && method_exists($this->team_estimate_declined, 'toArray') 
+                ? $this->team_estimate_declined->toArray() 
+                : $this->team_estimate_declined;
+        }
+        return $result;
     }
 }

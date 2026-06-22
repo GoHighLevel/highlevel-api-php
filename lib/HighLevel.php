@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use HighLevel\Services\AdManager\AdManager;
+use HighLevel\Services\AdPublishing\AdPublishing;
 use HighLevel\Services\AffiliateManager\AffiliateManager;
 use HighLevel\Services\AgentStudio\AgentStudio;
 use HighLevel\Services\Associations\Associations;
@@ -15,6 +15,7 @@ use HighLevel\Services\BrandBoards\BrandBoards;
 use HighLevel\Services\Businesses\Businesses;
 use HighLevel\Services\Calendars\Calendars;
 use HighLevel\Services\Campaigns\Campaigns;
+use HighLevel\Services\ChatWidget\ChatWidget;
 use HighLevel\Services\Companies\Companies;
 use HighLevel\Services\Contacts\Contacts;
 use HighLevel\Services\ConversationAi\ConversationAi;
@@ -39,9 +40,9 @@ use HighLevel\Services\Payments\Payments;
 use HighLevel\Services\PhoneSystem\PhoneSystem;
 use HighLevel\Services\Products\Products;
 use HighLevel\Services\Proposals\Proposals;
-use HighLevel\Services\SaasApi\SaasApi;
+use HighLevel\Services\Saas\Saas;
 use HighLevel\Services\Snapshots\Snapshots;
-use HighLevel\Services\SocialMediaPosting\SocialMediaPosting;
+use HighLevel\Services\SocialPlanner\SocialPlanner;
 use HighLevel\Services\Store\Store;
 use HighLevel\Services\Surveys\Surveys;
 use HighLevel\Services\Users\Users;
@@ -67,6 +68,12 @@ class HighLevel
     private const BASE_URL = 'https://services.leadconnectorhq.com';
 
     /**
+     * API version sent in the `Version` header on every request.
+     * This is fixed for the SDK build and cannot be overridden by the user.
+     */
+    private const API_VERSION = 'v3';
+
+    /**
      * SDK configuration
      * @var array<string, mixed>
      */
@@ -85,10 +92,10 @@ class HighLevel
     private SessionStorage $sessionStorage;
 
     /**
-     * AdManager service
-     * @var AdManager
+     * AdPublishing service
+     * @var AdPublishing
      */
-    public AdManager $adManager;
+    public AdPublishing $adPublishing;
 
     /**
      * AffiliateManager service
@@ -137,6 +144,12 @@ class HighLevel
      * @var Campaigns
      */
     public Campaigns $campaigns;
+
+    /**
+     * ChatWidget service
+     * @var ChatWidget
+     */
+    public ChatWidget $chatWidget;
 
     /**
      * Companies service
@@ -283,10 +296,10 @@ class HighLevel
     public Proposals $proposals;
 
     /**
-     * SaasApi service
-     * @var SaasApi
+     * Saas service
+     * @var Saas
      */
-    public SaasApi $saasApi;
+    public Saas $saas;
 
     /**
      * Snapshots service
@@ -295,10 +308,10 @@ class HighLevel
     public Snapshots $snapshots;
 
     /**
-     * SocialMediaPosting service
-     * @var SocialMediaPosting
+     * SocialPlanner service
+     * @var SocialPlanner
      */
-    public SocialMediaPosting $socialMediaPosting;
+    public SocialPlanner $socialPlanner;
 
     /**
      * Store service
@@ -346,7 +359,6 @@ class HighLevel
      * Create a new HighLevel SDK instance
      * 
      * @param array{
-     *   apiVersion?: string,
      *   privateIntegrationToken?: string,
      *   agencyAccessToken?: string,
      *   locationAccessToken?: string,
@@ -362,7 +374,6 @@ class HighLevel
     public function __construct(array $config = [])
     {
         $this->config = array_merge([
-            'apiVersion' => '2021-07-28',
             'logLevel' => 'warn',
             'logPrefix' => 'GHL SDK',
             'timeout' => 30,
@@ -410,8 +421,9 @@ class HighLevel
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'User-Agent' => 'GHL-SDK-PHP/1.0',
-                'Version' => $this->config['apiVersion'],
-            ], $this->config['headers']),
+            ], $this->config['headers'], [
+                'Version' => self::API_VERSION,
+            ]),
         ];
 
         $this->client = new Client($clientConfig);
@@ -424,7 +436,7 @@ class HighLevel
      */
     private function initializeServices(): void
     {
-        $this->adManager = new AdManager($this);
+        $this->adPublishing = new AdPublishing($this);
         $this->affiliateManager = new AffiliateManager($this);
         $this->agentStudio = new AgentStudio($this);
         $this->associations = new Associations($this);
@@ -433,6 +445,7 @@ class HighLevel
         $this->businesses = new Businesses($this);
         $this->calendars = new Calendars($this);
         $this->campaigns = new Campaigns($this);
+        $this->chatWidget = new ChatWidget($this);
         $this->companies = new Companies($this);
         $this->contacts = new Contacts($this);
         $this->conversationAi = new ConversationAi($this);
@@ -457,9 +470,9 @@ class HighLevel
         $this->phoneSystem = new PhoneSystem($this);
         $this->products = new Products($this);
         $this->proposals = new Proposals($this);
-        $this->saasApi = new SaasApi($this);
+        $this->saas = new Saas($this);
         $this->snapshots = new Snapshots($this);
-        $this->socialMediaPosting = new SocialMediaPosting($this);
+        $this->socialPlanner = new SocialPlanner($this);
         $this->store = new Store($this);
         $this->surveys = new Surveys($this);
         $this->users = new Users($this);
@@ -689,13 +702,14 @@ class HighLevel
                 $userType ?? 'Location'
             );
             
-            if ($refreshData->access_token) {
+            $accessToken = $refreshData->accessToken ?? $refreshData->access_token ?? null;
+            if ($accessToken) {
                 $this->sessionStorage->setSession($resourceId, new SessionData($refreshData));
-                
-                $tokenType = $refreshData->token_type ?? 'Bearer';
+
+                $tokenType = $refreshData->tokenType ?? $refreshData->token_type ?? 'Bearer';
                 $this->logger->info("Token refreshed successfully for {$resourceId}");
-                
-                return "{$tokenType} {$refreshData->access_token}";
+
+                return "{$tokenType} {$accessToken}";
             } else {
                 $this->logger->warn("Token refresh failed - no access_token in response for {$resourceId}");
                 return null;

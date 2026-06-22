@@ -60,12 +60,6 @@ class UsagePlanDTO
     public float $execution_limit_per_cycle;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -82,61 +76,46 @@ class UsagePlanDTO
         $this->min_price_per_unit = $data['minPricePerUnit'] ?? '';
         $this->max_price_per_unit = $data['maxPricePerUnit'] ?? '';
         $this->execution_limit_per_cycle = $data['executionLimitPerCycle'] ?? 0;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->product_type !== null) {
+            $result['productType'] = $this->product_type;
+        }
+        if ($this->product_name !== null) {
+            $result['productName'] = $this->product_name;
+        }
+        if ($this->usage_unit !== null) {
+            $result['usageUnit'] = $this->usage_unit;
+        }
+        if ($this->meter_id !== null) {
+            $result['meterId'] = $this->meter_id;
+        }
+        if ($this->meter_name !== null) {
+            $result['meterName'] = $this->meter_name;
+        }
+        if ($this->fixed_price_per_unit !== null) {
+            $result['fixedPricePerUnit'] = $this->fixed_price_per_unit;
+        }
+        if ($this->price_type !== null) {
+            $result['priceType'] = $this->price_type;
+        }
+        if ($this->min_price_per_unit !== null) {
+            $result['minPricePerUnit'] = $this->min_price_per_unit;
+        }
+        if ($this->max_price_per_unit !== null) {
+            $result['maxPricePerUnit'] = $this->max_price_per_unit;
+        }
+        if ($this->execution_limit_per_cycle !== null) {
+            $result['executionLimitPerCycle'] = $this->execution_limit_per_cycle;
+        }
+        return $result;
     }
 }

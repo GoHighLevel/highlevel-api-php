@@ -55,10 +55,9 @@ class GetLocationAccessTokenSuccessfulResponseDto
     public ?string $version_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
+     * @var string|null
      */
-    private array $data = [];
+    public ?string $refresh_token = null;
 
     /**
      * Create model from array data
@@ -76,61 +75,47 @@ class GetLocationAccessTokenSuccessfulResponseDto
         $this->user_id = $data['userId'] ?? '';
         $this->app_id = $data['appId'] ?? null;
         $this->version_id = $data['versionId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
+        $this->refresh_token = $data['refresh_token'] ?? null;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->access_token !== null) {
+            $result['access_token'] = $this->access_token;
+        }
+        if ($this->token_type !== null) {
+            $result['token_type'] = $this->token_type;
+        }
+        if ($this->expires_in !== null) {
+            $result['expires_in'] = $this->expires_in;
+        }
+        if ($this->scope !== null) {
+            $result['scope'] = $this->scope;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->plan_id !== null) {
+            $result['planId'] = $this->plan_id;
+        }
+        if ($this->user_id !== null) {
+            $result['userId'] = $this->user_id;
+        }
+        if ($this->app_id !== null) {
+            $result['appId'] = $this->app_id;
+        }
+        if ($this->version_id !== null) {
+            $result['versionId'] = $this->version_id;
+        }
+        if ($this->refresh_token !== null) {
+            $result['refresh_token'] = $this->refresh_token;
+        }
+        return $result;
     }
 }

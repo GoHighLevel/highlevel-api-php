@@ -43,28 +43,11 @@ class CustomFields
     /**
      * Get Custom Field / Folder By Id
      * &lt;div&gt;
-                  &lt;p&gt; Get Custom Field / Folder By Id.&lt;/p&gt; 
-                  &lt;div&gt;
-                    &lt;span style&#x3D; &quot;display: inline-block;
-                                width: 25px; height: 25px;
-                                background-color: yellow;
-                                color: black;
-                                font-weight: bold;
-                                font-size: 24px;
-                                text-align: center;
-                                line-height: 22px;
-                                border: 2px solid black;
-                                border-radius: 10%;
-                                margin-right: 10px;&quot;&gt;
-                                !
-                      &lt;/span&gt;
-                      &lt;span&gt;
-                        &lt;strong&gt;
-                        Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-                        &lt;/strong&gt;
-                      &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
+&lt;p&gt; Get Custom Field / Folder By Id.&lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param array{
      *   id: string
@@ -147,28 +130,11 @@ class CustomFields
     /**
      * Update Custom Field By Id
      * &lt;div&gt;
-    &lt;p&gt; Update Custom Field By Id &lt;/p&gt; 
-    &lt;div&gt;
-      &lt;span style&#x3D; &quot;display: inline-block;
-                  width: 25px; height: 25px;
-                  background-color: yellow;
-                  color: black;
-                  font-weight: bold;
-                  font-size: 24px;
-                  text-align: center;
-                  line-height: 22px;
-                  border: 2px solid black;
-                  border-radius: 10%;
-                  margin-right: 10px;&quot;&gt;
-                  !
-        &lt;/span&gt;
-        &lt;span&gt;
-          &lt;strong&gt;
-          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-          &lt;/strong&gt;
-        &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
+ &lt;p&gt; Update Custom Field By Id &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param array{
      *   id: string
@@ -181,7 +147,7 @@ class CustomFields
      */
     public function updateCustomField(
         array $params,
-        UpdateCustomFieldsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomFieldSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -259,28 +225,11 @@ class CustomFields
     /**
      * Delete Custom Field By Id
      * &lt;div&gt;
-    &lt;p&gt; Delete Custom Field By Id &lt;/p&gt; 
-    &lt;div&gt;
-      &lt;span style&#x3D; &quot;display: inline-block;
-                  width: 25px; height: 25px;
-                  background-color: yellow;
-                  color: black;
-                  font-weight: bold;
-                  font-size: 24px;
-                  text-align: center;
-                  line-height: 22px;
-                  border: 2px solid black;
-                  border-radius: 10%;
-                  margin-right: 10px;&quot;&gt;
-                  !
-        &lt;/span&gt;
-        &lt;span&gt;
-          &lt;strong&gt;
-          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-          &lt;/strong&gt;
-        &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
+ &lt;p&gt; Delete Custom Field By Id &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param array{
      *   id: string
@@ -363,28 +312,11 @@ class CustomFields
     /**
      * Get Custom Fields By Object Key
      * &lt;div&gt;
-                  &lt;p&gt; Get Custom Fields By Object Key&lt;/p&gt; 
-                  &lt;div&gt;
-                    &lt;span style&#x3D; &quot;display: inline-block;
-                                width: 25px; height: 25px;
-                                background-color: yellow;
-                                color: black;
-                                font-weight: bold;
-                                font-size: 24px;
-                                text-align: center;
-                                line-height: 22px;
-                                border: 2px solid black;
-                                border-radius: 10%;
-                                margin-right: 10px;&quot;&gt;
-                                !
-                      &lt;/span&gt;
-                      &lt;span&gt;
-                        &lt;strong&gt;
-                        Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-                        &lt;/strong&gt;
-                      &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
+ &lt;p&gt; Get Custom Fields By Object Key &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param array{
      *   objectKey: string // key of the Object. Must include "custom_objects." prefix for custom objects. Available on the Custom Objects details Page under settings
@@ -468,28 +400,11 @@ class CustomFields
     /**
      * Create Custom Field Folder
      * &lt;div&gt;
-    &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
-    &lt;div&gt;
-      &lt;span style&#x3D; &quot;display: inline-block;
-                  width: 25px; height: 25px;
-                  background-color: yellow;
-                  color: black;
-                  font-weight: bold;
-                  font-size: 24px;
-                  text-align: center;
-                  line-height: 22px;
-                  border: 2px solid black;
-                  border-radius: 10%;
-                  margin-right: 10px;&quot;&gt;
-                  !
-        &lt;/span&gt;
-        &lt;span&gt;
-          &lt;strong&gt;
-          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-          &lt;/strong&gt;
-        &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
+ &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param CreateFolder $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
@@ -498,7 +413,7 @@ class CustomFields
      * @throws GuzzleException
      */
     public function createCustomFieldFolder(
-        CreateFolder $requestBody,
+        $requestBody,
         ?array $options = null
     ): ICustomFieldFolder {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -576,28 +491,11 @@ class CustomFields
     /**
      * Update Custom Field Folder Name
      * &lt;div&gt;
-    &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
-    &lt;div&gt;
-      &lt;span style&#x3D; &quot;display: inline-block;
-                  width: 25px; height: 25px;
-                  background-color: yellow;
-                  color: black;
-                  font-weight: bold;
-                  font-size: 24px;
-                  text-align: center;
-                  line-height: 22px;
-                  border: 2px solid black;
-                  border-radius: 10%;
-                  margin-right: 10px;&quot;&gt;
-                  !
-        &lt;/span&gt;
-        &lt;span&gt;
-          &lt;strong&gt;
-          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-          &lt;/strong&gt;
-        &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
+ &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param array{
      *   id: string
@@ -610,7 +508,7 @@ class CustomFields
      */
     public function updateCustomFieldFolder(
         array $params,
-        UpdateFolder $requestBody,
+        $requestBody,
         ?array $options = null
     ): ICustomFieldFolder {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -688,28 +586,11 @@ class CustomFields
     /**
      * Delete Custom Field Folder
      * &lt;div&gt;
-    &lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
-    &lt;div&gt;
-      &lt;span style&#x3D; &quot;display: inline-block;
-                  width: 25px; height: 25px;
-                  background-color: yellow;
-                  color: black;
-                  font-weight: bold;
-                  font-size: 24px;
-                  text-align: center;
-                  line-height: 22px;
-                  border: 2px solid black;
-                  border-radius: 10%;
-                  margin-right: 10px;&quot;&gt;
-                  !
-        &lt;/span&gt;
-        &lt;span&gt;
-          &lt;strong&gt;
-          Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-          &lt;/strong&gt;
-        &lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
+&lt;p&gt; Create Custom Field Folder &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param array{
      *   id: string
@@ -793,28 +674,11 @@ class CustomFields
     /**
      * Create Custom Field
      * &lt;div&gt;
-                  &lt;p&gt; Create Custom Field &lt;/p&gt; 
-                  &lt;div&gt;
-                    &lt;span style&#x3D; &quot;display: inline-block;
-                                width: 25px; height: 25px;
-                                background-color: yellow;
-                                color: black;
-                                font-weight: bold;
-                                font-size: 24px;
-                                text-align: center;
-                                line-height: 22px;
-                                border: 2px solid black;
-                                border-radius: 10%;
-                                margin-right: 10px;&quot;&gt;
-                                !
-                      &lt;/span&gt;
-                      &lt;span&gt;
-                        &lt;strong&gt;
-                        Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
-                        &lt;/strong&gt;
-                      &lt;/span&gt;
-                  &lt;/div&gt;
-                &lt;/div&gt;
+&lt;p&gt; Create Custom Field &lt;/p&gt; 
+ &lt;/div&gt; 
+ :::info
+ Only supports Custom Objects and Company (Business) today. Will be extended to other Standard Objects in the future.
+ :::
      * 
      * @param CreateCustomFieldsDTO $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
@@ -823,7 +687,7 @@ class CustomFields
      * @throws GuzzleException
      */
     public function createCustomField(
-        CreateCustomFieldsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomFieldSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

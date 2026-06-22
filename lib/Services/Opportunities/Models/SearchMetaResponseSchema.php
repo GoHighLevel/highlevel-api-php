@@ -45,12 +45,6 @@ class SearchMetaResponseSchema
     public ?float $prev_page = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -64,61 +58,37 @@ class SearchMetaResponseSchema
         $this->current_page = $data['currentPage'] ?? null;
         $this->next_page = $data['nextPage'] ?? null;
         $this->prev_page = $data['prevPage'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->total !== null) {
+            $result['total'] = $this->total;
+        }
+        if ($this->next_page_url !== null) {
+            $result['nextPageUrl'] = $this->next_page_url;
+        }
+        if ($this->start_after_id !== null) {
+            $result['startAfterId'] = $this->start_after_id;
+        }
+        if ($this->start_after !== null) {
+            $result['startAfter'] = $this->start_after;
+        }
+        if ($this->current_page !== null) {
+            $result['currentPage'] = $this->current_page;
+        }
+        if ($this->next_page !== null) {
+            $result['nextPage'] = $this->next_page;
+        }
+        if ($this->prev_page !== null) {
+            $result['prevPage'] = $this->prev_page;
+        }
+        return $result;
     }
 }

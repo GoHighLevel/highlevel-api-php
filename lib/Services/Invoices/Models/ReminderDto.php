@@ -80,12 +80,6 @@ class ReminderDto
     public ?string $timezone = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -106,61 +100,58 @@ class ReminderDto
         $this->start_time = $data['startTime'] ?? null;
         $this->end_time = $data['endTime'] ?? null;
         $this->timezone = $data['timezone'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->enabled !== null) {
+            $result['enabled'] = $this->enabled;
+        }
+        if ($this->email_template !== null) {
+            $result['emailTemplate'] = $this->email_template;
+        }
+        if ($this->sms_template !== null) {
+            $result['smsTemplate'] = $this->sms_template;
+        }
+        if ($this->email_subject !== null) {
+            $result['emailSubject'] = $this->email_subject;
+        }
+        if ($this->reminder_id !== null) {
+            $result['reminderId'] = $this->reminder_id;
+        }
+        if ($this->reminder_name !== null) {
+            $result['reminderName'] = $this->reminder_name;
+        }
+        if ($this->reminder_time !== null) {
+            $result['reminderTime'] = $this->reminder_time;
+        }
+        if ($this->interval_type !== null) {
+            $result['intervalType'] = $this->interval_type;
+        }
+        if ($this->max_reminders !== null) {
+            $result['maxReminders'] = $this->max_reminders;
+        }
+        if ($this->reminder_invoice_condition !== null) {
+            $result['reminderInvoiceCondition'] = $this->reminder_invoice_condition;
+        }
+        if ($this->reminder_number !== null) {
+            $result['reminderNumber'] = $this->reminder_number;
+        }
+        if ($this->start_time !== null) {
+            $result['startTime'] = $this->start_time;
+        }
+        if ($this->end_time !== null) {
+            $result['endTime'] = $this->end_time;
+        }
+        if ($this->timezone !== null) {
+            $result['timezone'] = $this->timezone;
+        }
+        return $result;
     }
 }

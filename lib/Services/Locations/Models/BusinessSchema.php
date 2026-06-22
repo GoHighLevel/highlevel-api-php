@@ -55,12 +55,6 @@ class BusinessSchema
     public ?string $logo_url = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -76,61 +70,43 @@ class BusinessSchema
         $this->website = $data['website'] ?? null;
         $this->timezone = $data['timezone'] ?? null;
         $this->logo_url = $data['logoUrl'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->city !== null) {
+            $result['city'] = $this->city;
+        }
+        if ($this->state !== null) {
+            $result['state'] = $this->state;
+        }
+        if ($this->country !== null) {
+            $result['country'] = $this->country;
+        }
+        if ($this->postal_code !== null) {
+            $result['postalCode'] = $this->postal_code;
+        }
+        if ($this->website !== null) {
+            $result['website'] = $this->website;
+        }
+        if ($this->timezone !== null) {
+            $result['timezone'] = $this->timezone;
+        }
+        if ($this->logo_url !== null) {
+            $result['logoUrl'] = $this->logo_url;
+        }
+        return $result;
     }
 }

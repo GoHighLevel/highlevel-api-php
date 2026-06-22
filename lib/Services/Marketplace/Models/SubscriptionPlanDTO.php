@@ -45,12 +45,6 @@ class SubscriptionPlanDTO
     public string $payment_time;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -64,61 +58,37 @@ class SubscriptionPlanDTO
         $this->payment_type = $data['paymentType'] ?? '';
         $this->name = $data['name'] ?? '';
         $this->payment_time = $data['paymentTime'] ?? '';
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->reselling_amount !== null) {
+            $result['resellingAmount'] = $this->reselling_amount;
+        }
+        if ($this->base_amount !== null) {
+            $result['baseAmount'] = $this->base_amount;
+        }
+        if ($this->plan_id !== null) {
+            $result['planId'] = $this->plan_id;
+        }
+        if ($this->features !== null) {
+            $result['features'] = $this->features;
+        }
+        if ($this->payment_type !== null) {
+            $result['paymentType'] = $this->payment_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->payment_time !== null) {
+            $result['paymentTime'] = $this->payment_time;
+        }
+        return $result;
     }
 }

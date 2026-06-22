@@ -72,7 +72,7 @@ class GetSubscriptionResponseSchema
     /**
      * @var mixed
      */
-    public mixed $entity_source;
+    public $entity_source;
 
     /**
      * @var string|null
@@ -117,7 +117,7 @@ class GetSubscriptionResponseSchema
     /**
      * @var mixed
      */
-    public mixed $schedule;
+    public $schedule;
 
     /**
      * @var array&lt;string, mixed&gt;|null
@@ -148,12 +148,6 @@ class GetSubscriptionResponseSchema
      * @var string|null
      */
     public ?string $created_by = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -190,61 +184,100 @@ class GetSubscriptionResponseSchema
         $this->canceled_by = $data['canceledBy'] ?? null;
         $this->trace_id = $data['traceId'] ?? null;
         $this->created_by = $data['createdBy'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->contact_snapshot !== null) {
+            $result['contactSnapshot'] = $this->contact_snapshot;
+        }
+        if ($this->coupon !== null) {
+            $result['coupon'] = $this->coupon;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->entity_type !== null) {
+            $result['entityType'] = $this->entity_type;
+        }
+        if ($this->entity_id !== null) {
+            $result['entityId'] = $this->entity_id;
+        }
+        if ($this->entity_source !== null) {
+            $result['entitySource'] = $this->entity_source;
+        }
+        if ($this->subscription_id !== null) {
+            $result['subscriptionId'] = $this->subscription_id;
+        }
+        if ($this->subscription_snapshot !== null) {
+            $result['subscriptionSnapshot'] = $this->subscription_snapshot;
+        }
+        if ($this->payment_provider !== null) {
+            $result['paymentProvider'] = $this->payment_provider;
+        }
+        if ($this->ip_address !== null) {
+            $result['ipAddress'] = $this->ip_address;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->meta !== null) {
+            $result['meta'] = $this->meta;
+        }
+        if ($this->mark_as_test !== null) {
+            $result['markAsTest'] = $this->mark_as_test;
+        }
+        if ($this->schedule !== null) {
+            $result['schedule'] = $this->schedule;
+        }
+        if ($this->auto_payment !== null) {
+            $result['autoPayment'] = $this->auto_payment;
+        }
+        if ($this->recurring_product !== null) {
+            $result['recurringProduct'] = $this->recurring_product;
+        }
+        if ($this->canceled_at !== null) {
+            $result['canceledAt'] = $this->canceled_at;
+        }
+        if ($this->canceled_by !== null) {
+            $result['canceledBy'] = $this->canceled_by;
+        }
+        if ($this->trace_id !== null) {
+            $result['traceId'] = $this->trace_id;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        return $result;
     }
 }

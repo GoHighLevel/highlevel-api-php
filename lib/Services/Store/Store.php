@@ -69,7 +69,7 @@ class Store
      * @throws GuzzleException
      */
     public function createShippingZone(
-        CreateShippingZoneDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateShippingZoneResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -330,7 +330,7 @@ class Store
      */
     public function updateShippingZone(
         array $params,
-        UpdateShippingZoneDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateShippingZoneResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -500,7 +500,7 @@ class Store
      * @throws GuzzleException
      */
     public function getAvailableShippingZones(
-        GetAvailableShippingRates $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetAvailableShippingRatesResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -590,7 +590,7 @@ class Store
      */
     public function createShippingRate(
         array $params,
-        CreateShippingRateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateShippingRateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -852,7 +852,7 @@ class Store
      */
     public function updateShippingRate(
         array $params,
-        UpdateShippingRateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateShippingRateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1023,7 +1023,7 @@ class Store
      * @throws GuzzleException
      */
     public function createShippingCarrier(
-        CreateShippingCarrierDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateShippingCarrierResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1280,7 +1280,7 @@ class Store
      */
     public function updateShippingCarrier(
         array $params,
-        UpdateShippingCarrierDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateShippingCarrierResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1450,7 +1450,7 @@ class Store
      * @throws GuzzleException
      */
     public function createStoreSetting(
-        CreateStoreSettingDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateStoreSettingResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

@@ -82,7 +82,7 @@ class UpdateProductDto
     /**
      * @var mixed
      */
-    public mixed $label;
+    public $label;
 
     /**
      * @var string|null
@@ -92,7 +92,7 @@ class UpdateProductDto
     /**
      * @var mixed
      */
-    public mixed $seo;
+    public $seo;
 
     /**
      * @var bool|null
@@ -103,12 +103,6 @@ class UpdateProductDto
      * @var array&lt;string&gt;|null
      */
     public ?array $prices = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -150,61 +144,77 @@ class UpdateProductDto
         $this->seo = $data['seo'] ?? null;
         $this->tax_inclusive = $data['taxInclusive'] ?? null;
         $this->prices = $data['prices'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->product_type !== null) {
+            $result['productType'] = $this->product_type;
+        }
+        if ($this->image !== null) {
+            $result['image'] = $this->image;
+        }
+        if ($this->statement_descriptor !== null) {
+            $result['statementDescriptor'] = $this->statement_descriptor;
+        }
+        if ($this->available_in_store !== null) {
+            $result['availableInStore'] = $this->available_in_store;
+        }
+        if ($this->medias !== null) {
+            $result['medias'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->medias);
+        }
+        if ($this->variants !== null) {
+            $result['variants'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->variants);
+        }
+        if ($this->collection_ids !== null) {
+            $result['collectionIds'] = $this->collection_ids;
+        }
+        if ($this->is_taxes_enabled !== null) {
+            $result['isTaxesEnabled'] = $this->is_taxes_enabled;
+        }
+        if ($this->taxes !== null) {
+            $result['taxes'] = $this->taxes;
+        }
+        if ($this->automatic_tax_category_id !== null) {
+            $result['automaticTaxCategoryId'] = $this->automatic_tax_category_id;
+        }
+        if ($this->is_label_enabled !== null) {
+            $result['isLabelEnabled'] = $this->is_label_enabled;
+        }
+        if ($this->label !== null) {
+            $result['label'] = $this->label;
+        }
+        if ($this->slug !== null) {
+            $result['slug'] = $this->slug;
+        }
+        if ($this->seo !== null) {
+            $result['seo'] = $this->seo;
+        }
+        if ($this->tax_inclusive !== null) {
+            $result['taxInclusive'] = $this->tax_inclusive;
+        }
+        if ($this->prices !== null) {
+            $result['prices'] = $this->prices;
+        }
+        return $result;
     }
 }

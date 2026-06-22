@@ -35,12 +35,6 @@ class InitiateFileUploadResponseDto
     public float $max_file_size;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -52,61 +46,31 @@ class InitiateFileUploadResponseDto
         $this->file_path = $data['filePath'] ?? '';
         $this->expires_at = $data['expiresAt'] ?? 0;
         $this->max_file_size = $data['maxFileSize'] ?? 0;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->upload_url !== null) {
+            $result['uploadUrl'] = $this->upload_url;
+        }
+        if ($this->upload_id !== null) {
+            $result['uploadId'] = $this->upload_id;
+        }
+        if ($this->file_path !== null) {
+            $result['filePath'] = $this->file_path;
+        }
+        if ($this->expires_at !== null) {
+            $result['expiresAt'] = $this->expires_at;
+        }
+        if ($this->max_file_size !== null) {
+            $result['maxFileSize'] = $this->max_file_size;
+        }
+        return $result;
     }
 }

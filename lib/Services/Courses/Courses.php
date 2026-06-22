@@ -44,9 +44,9 @@ class Courses
      * @throws GuzzleException
      */
     public function importCourses(
-        PublicExporterPayload $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }

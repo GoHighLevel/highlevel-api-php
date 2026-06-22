@@ -12,6 +12,8 @@ use HighLevel\Services\Locations\Models\GetLocationByIdSuccessfulResponseDto;
 use HighLevel\Services\Locations\Models\UpdateLocationDto;
 use HighLevel\Services\Locations\Models\CreateLocationSuccessfulResponseDto;
 use HighLevel\Services\Locations\Models\LocationDeletedSuccessfulResponseDto;
+use HighLevel\Services\Locations\Models\PermissionsResponseDto;
+use HighLevel\Services\Locations\Models\UpdatePermissionsDto;
 use HighLevel\Services\Locations\Models\LocationTagsSuccessfulResponseDto;
 use HighLevel\Services\Locations\Models\TagBody;
 use HighLevel\Services\Locations\Models\LocationTagSuccessfulResponseDto;
@@ -34,6 +36,7 @@ use HighLevel\Services\Locations\Models\CustomValueIdSuccessfulResponseDto;
 use HighLevel\Services\Locations\Models\CustomValueDeleteSuccessfulResponseDto;
 use HighLevel\Services\Locations\Models\GetTemplatesSuccessfulResponseDto;
 use HighLevel\Services\Locations\Models\CreateLocationDto;
+use HighLevel\Services\Locations\Models\GetConversationChannelListSuccessfulResponseDto;
 
 /**
  * Locations Service
@@ -242,7 +245,7 @@ class Locations
      */
     public function putLocation(
         array $params,
-        UpdateLocationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateLocationSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -401,6 +404,178 @@ class Locations
     }
 
     /**
+     * Get Permissions
+     * Get Sub-Account (Formerly Location) permissions
+     * 
+     * @param array{
+     *   locationId: string // Location Id
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return PermissionsResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getLocationPermissions(
+        array $params,
+        ?array $options = null
+    ): PermissionsResponseDto {
+        $paramDefs = [['name' => 'locationId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["Agency-Access"];
+
+        $url = RequestUtils::buildUrl('/locations/{locationId}/permissions', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new PermissionsResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Update Permissions
+     * Update Sub-Account (Formerly Location) permissions
+     * 
+     * @param array{
+     *   locationId: string // Location Id
+     * } $params Request parameters
+     * @param UpdatePermissionsDto $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return PermissionsResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateLocationPermissions(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): PermissionsResponseDto {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'locationId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["Agency-Access"];
+
+        $url = RequestUtils::buildUrl('/locations/{locationId}/permissions', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new PermissionsResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
      * Get Tags
      * Get Sub-Account (Formerly Location) Tags
      * 
@@ -497,7 +672,7 @@ class Locations
      */
     public function createTag(
         array $params,
-        TagBody $requestBody,
+        $requestBody,
         ?array $options = null
     ): LocationTagSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -671,7 +846,7 @@ class Locations
      */
     public function updateTag(
         array $params,
-        TagBody $requestBody,
+        $requestBody,
         ?array $options = null
     ): LocationTagSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -844,7 +1019,7 @@ class Locations
      */
     public function taskSearch(
         array $params,
-        TaskSearchParamsDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): LocationTaskListSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1018,7 +1193,7 @@ class Locations
      */
     public function updateRecurringTask(
         array $params,
-        RecurringTaskUpdateDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): RecurringTaskSingleResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1191,7 +1366,7 @@ class Locations
      */
     public function createRecurringTask(
         array $params,
-        RecurringTaskCreateDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): RecurringTaskSingleResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1364,7 +1539,7 @@ class Locations
      */
     public function createCustomField(
         array $params,
-        CreateCustomFieldsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomFieldSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1538,7 +1713,7 @@ class Locations
      */
     public function updateCustomField(
         array $params,
-        UpdateCustomFieldsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomFieldSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1711,7 +1886,7 @@ class Locations
      */
     public function uploadFileCustomFields(
         array $params,
-        array $requestBody,
+        $requestBody,
         ?array $options = null
     ): FileUploadResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1883,7 +2058,7 @@ class Locations
      */
     public function createCustomValue(
         array $params,
-        CustomValuesDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomValueIdSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2057,7 +2232,7 @@ class Locations
      */
     public function updateCustomValue(
         array $params,
-        CustomValuesDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomValueIdSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2226,7 +2401,7 @@ class Locations
      */
     public function getTimezones(
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [];
         $extracted = RequestUtils::extractParams([], $paramDefs);
         $requirements = ["bearer","Location-Access"];
@@ -2396,7 +2571,7 @@ class Locations
     public function dELETEAnEmailSmsTemplate(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'id', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -2468,24 +2643,11 @@ class Locations
      * &lt;div&gt;
                   &lt;p&gt;Create a new Sub-Account (Formerly Location) based on the data provided&lt;/p&gt; 
                   &lt;div&gt;
-                    &lt;span style&#x3D; &quot;display: inline-block;
-                                width: 25px; height: 25px;
-                                background-color: yellow;
-                                color: black;
-                                font-weight: bold;
-                                font-size: 24px;
-                                text-align: center;
-                                line-height: 22px;
-                                border: 2px solid black;
-                                border-radius: 10%;
-                                margin-right: 10px;&quot;&gt;
-                                !
-                      &lt;/span&gt;
-                      &lt;span&gt;
-                        &lt;strong&gt;
-                          This feature is only available on Agency Pro ($497) plan.
-                        &lt;/strong&gt;
-                      &lt;/span&gt;
+&lt;span&gt;
+                     :::info
+ This feature is only available on Agency Pro ($497) plan.
+ :::  
+ &lt;/span&gt;
                   &lt;/div&gt;
                 &lt;/div&gt;
     
@@ -2497,7 +2659,7 @@ class Locations
      * @throws GuzzleException
      */
     public function createLocation(
-        CreateLocationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateLocationSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2558,6 +2720,89 @@ class Locations
             $responseData = json_decode($body, true);
             
             return new CreateLocationSuccessfulResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Conversation Channel
+     * Get the conversation channel providers configured for a location by type (SMS or Email)
+     * 
+     * @param array{
+     *   locationId: string // Location Id
+     *   type: string // Channel type to retrieve providers for
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return GetConversationChannelListSuccessfulResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getConversationChannel(
+        array $params,
+        ?array $options = null
+    ): GetConversationChannelListSuccessfulResponseDto {
+        $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'type', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["Location-Access"];
+
+        $url = RequestUtils::buildUrl('/locations/{locationId}/conversationChannels/{type}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new GetConversationChannelListSuccessfulResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

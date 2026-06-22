@@ -77,7 +77,7 @@ class CreateCouponResponseDto
     /**
      * @var mixed
      */
-    public mixed $apply_to_future_payments_config;
+    public $apply_to_future_payments_config;
 
     /**
      * @var string|null
@@ -98,12 +98,6 @@ class CreateCouponResponseDto
      * @var string
      */
     public string $trace_id;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -130,61 +124,70 @@ class CreateCouponResponseDto
         $this->created_at = $data['createdAt'] ?? '';
         $this->updated_at = $data['updatedAt'] ?? '';
         $this->trace_id = $data['traceId'] ?? '';
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->usage_count !== null) {
+            $result['usageCount'] = $this->usage_count;
+        }
+        if ($this->limit_per_customer !== null) {
+            $result['limitPerCustomer'] = $this->limit_per_customer;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->code !== null) {
+            $result['code'] = $this->code;
+        }
+        if ($this->discount_type !== null) {
+            $result['discountType'] = $this->discount_type;
+        }
+        if ($this->discount_value !== null) {
+            $result['discountValue'] = $this->discount_value;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->start_date !== null) {
+            $result['startDate'] = $this->start_date;
+        }
+        if ($this->end_date !== null) {
+            $result['endDate'] = $this->end_date;
+        }
+        if ($this->apply_to_future_payments !== null) {
+            $result['applyToFuturePayments'] = $this->apply_to_future_payments;
+        }
+        if ($this->apply_to_future_payments_config !== null) {
+            $result['applyToFuturePaymentsConfig'] = $this->apply_to_future_payments_config;
+        }
+        if ($this->user_id !== null) {
+            $result['userId'] = $this->user_id;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->trace_id !== null) {
+            $result['traceId'] = $this->trace_id;
+        }
+        return $result;
     }
 }

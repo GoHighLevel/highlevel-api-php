@@ -27,7 +27,7 @@ class ICustomObjectSchema
     /**
      * @var mixed
      */
-    public mixed $labels;
+    public $labels;
 
     /**
      * @var string|null
@@ -60,12 +60,6 @@ class ICustomObjectSchema
     public ?array $type = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -82,61 +76,46 @@ class ICustomObjectSchema
         $this->date_added = $data['dateAdded'] ?? '';
         $this->date_updated = $data['dateUpdated'] ?? '';
         $this->type = $data['type'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->standard !== null) {
+            $result['standard'] = $this->standard;
+        }
+        if ($this->key !== null) {
+            $result['key'] = $this->key;
+        }
+        if ($this->labels !== null) {
+            $result['labels'] = $this->labels;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->primary_display_property !== null) {
+            $result['primaryDisplayProperty'] = $this->primary_display_property;
+        }
+        if ($this->date_added !== null) {
+            $result['dateAdded'] = $this->date_added;
+        }
+        if ($this->date_updated !== null) {
+            $result['dateUpdated'] = $this->date_updated;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        return $result;
     }
 }

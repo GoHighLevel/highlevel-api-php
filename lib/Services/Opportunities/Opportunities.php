@@ -14,18 +14,22 @@ use HighLevel\Services\Opportunities\Models\PostSearchSuccessfulResponseDto;
 use HighLevel\Services\Opportunities\Models\GetPipelinesSuccessfulResponseDto;
 use HighLevel\Services\Opportunities\Models\GetPostOpportunitySuccessfulResponseDto;
 use HighLevel\Services\Opportunities\Models\DeleteUpdateOpportunitySuccessfulResponseDto;
-use HighLevel\Services\Opportunities\Models\UpdateOpportunityDto;
+use HighLevel\Services\Opportunities\Models\UpdateOpportunityDtoV3;
 use HighLevel\Services\Opportunities\Models\UpdateStatusDto;
 use HighLevel\Services\Opportunities\Models\UpsertOpportunityDto;
 use HighLevel\Services\Opportunities\Models\UpsertOpportunitySuccessfulResponseDto;
 use HighLevel\Services\Opportunities\Models\FollowersDTO;
 use HighLevel\Services\Opportunities\Models\CreateAddFollowersSuccessfulResponseDto;
 use HighLevel\Services\Opportunities\Models\DeleteFollowersSuccessfulResponseDto;
-use HighLevel\Services\Opportunities\Models\CreateDto;
+use HighLevel\Services\Opportunities\Models\CreateDtoV3;
 
 /**
  * Opportunities Service
  * Documentation for Opportunities API
+
+## API Version v3
+
+All APIs available via &#x60;/v3&#x60; route prefix with AIP-compliant responses.
  * 
  * @package HighLevel\Services\Opportunities
  */
@@ -52,7 +56,7 @@ class Opportunities
      * Get lost reason
      * 
      * @param array{
-     *   locationId: string
+     *   locationId: string // Identifier of the location (sub-account)
      *   name?: string // lost reason name
      *   deleted?: bool // deleted
      *   query?: string // search query
@@ -140,26 +144,26 @@ class Opportunities
      * Search Opportunity
      * 
      * @param array{
-     *   q?: string
-     *   location_id: string // Location Id
-     *   pipeline_id?: string // Pipeline Id
-     *   pipeline_stage_id?: string // stage Id
-     *   contact_id?: string // Contact Id
-     *   status?: string
-     *   assigned_to?: string
+     *   q?: string // Search query (max 75 characters)
+     *   status?: string // Filter by opportunity status
      *   campaignId?: string // Campaign Id
      *   id?: string // Opportunity Id
-     *   order?: string
+     *   order?: string // Sort order for results (e.g. added_asc, added_desc, name_asc, name_desc)
      *   endDate?: string // End date
      *   startAfter?: string // Start After
      *   startAfterId?: string // Start After Id
      *   date?: string // Start date
-     *   country?: string
-     *   page?: int
+     *   country?: string // Filter by country code (ISO 3166-1 alpha-2)
+     *   page?: int // Page number for pagination
      *   limit?: int // Limit Per Page records count. will allow maximum up to 100 and default will be 20
      *   getTasks?: bool // get Tasks in contact
      *   getNotes?: bool // get Notes in contact
      *   getCalendarEvents?: bool // get Calender event in contact
+     *   locationId: string // Location Id
+     *   pipelineId?: string // Pipeline Id
+     *   pipelineStageId?: string // Stage Id
+     *   contactId?: string // Contact Id
+     *   assignedTo?: string // Filter by assigned user identifier
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return SearchSuccessfulResponseDto Response data
@@ -170,7 +174,7 @@ class Opportunities
         array $params,
         ?array $options = null
     ): SearchSuccessfulResponseDto {
-        $paramDefs = [['name' => 'q', 'in' => 'query'], ['name' => 'location_id', 'in' => 'query'], ['name' => 'pipeline_id', 'in' => 'query'], ['name' => 'pipeline_stage_id', 'in' => 'query'], ['name' => 'contact_id', 'in' => 'query'], ['name' => 'status', 'in' => 'query'], ['name' => 'assigned_to', 'in' => 'query'], ['name' => 'campaignId', 'in' => 'query'], ['name' => 'id', 'in' => 'query'], ['name' => 'order', 'in' => 'query'], ['name' => 'endDate', 'in' => 'query'], ['name' => 'startAfter', 'in' => 'query'], ['name' => 'startAfterId', 'in' => 'query'], ['name' => 'date', 'in' => 'query'], ['name' => 'country', 'in' => 'query'], ['name' => 'page', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'getTasks', 'in' => 'query'], ['name' => 'getNotes', 'in' => 'query'], ['name' => 'getCalendarEvents', 'in' => 'query']];
+        $paramDefs = [['name' => 'q', 'in' => 'query'], ['name' => 'status', 'in' => 'query'], ['name' => 'campaignId', 'in' => 'query'], ['name' => 'id', 'in' => 'query'], ['name' => 'order', 'in' => 'query'], ['name' => 'endDate', 'in' => 'query'], ['name' => 'startAfter', 'in' => 'query'], ['name' => 'startAfterId', 'in' => 'query'], ['name' => 'date', 'in' => 'query'], ['name' => 'country', 'in' => 'query'], ['name' => 'page', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'getTasks', 'in' => 'query'], ['name' => 'getNotes', 'in' => 'query'], ['name' => 'getCalendarEvents', 'in' => 'query'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'pipelineId', 'in' => 'query'], ['name' => 'pipelineStageId', 'in' => 'query'], ['name' => 'contactId', 'in' => 'query'], ['name' => 'assignedTo', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
 
@@ -247,7 +251,7 @@ class Opportunities
      * @throws GuzzleException
      */
     public function searchOpportunitiesAdvanced(
-        OpportunitySearchBodyDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): PostSearchSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -327,7 +331,7 @@ class Opportunities
      * Get Pipelines
      * 
      * @param array{
-     *   locationId: string
+     *   locationId: string // Identifier of the location (sub-account) to retrieve pipelines for
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetPipelinesSuccessfulResponseDto Response data
@@ -575,7 +579,7 @@ class Opportunities
      * @param array{
      *   id: string // Opportunity Id
      * } $params Request parameters
-     * @param UpdateOpportunityDto $requestBody Request body data
+     * @param UpdateOpportunityDtoV3 $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
      * @return GetPostOpportunitySuccessfulResponseDto Response data
      * @throws GHLError
@@ -583,7 +587,7 @@ class Opportunities
      */
     public function updateOpportunity(
         array $params,
-        UpdateOpportunityDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetPostOpportunitySuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -673,7 +677,7 @@ class Opportunities
      */
     public function updateOpportunityStatus(
         array $params,
-        UpdateStatusDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): DeleteUpdateOpportunitySuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -759,7 +763,7 @@ class Opportunities
      * @throws GuzzleException
      */
     public function upsertOpportunity(
-        UpsertOpportunityDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpsertOpportunitySuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -849,7 +853,7 @@ class Opportunities
      */
     public function addFollowersOpportunity(
         array $params,
-        FollowersDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateAddFollowersSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -930,7 +934,7 @@ class Opportunities
      * 
      * @param array{
      *   id: string // Opportunity Id
-     *   isRemoveAllFollowers?: bool
+     *   isRemoveAllFollowers?: bool // Set to true to remove all followers from the opportunity
      * } $params Request parameters
      * @param FollowersDTO $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
@@ -940,7 +944,7 @@ class Opportunities
      */
     public function removeFollowersOpportunity(
         array $params,
-        FollowersDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): DeleteFollowersSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1019,14 +1023,14 @@ class Opportunities
      * Create Opportunity
      * Create Opportunity
      * 
-     * @param CreateDto $requestBody Request body data
+     * @param CreateDtoV3 $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
      * @return GetPostOpportunitySuccessfulResponseDto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function createOpportunity(
-        CreateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetPostOpportunitySuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

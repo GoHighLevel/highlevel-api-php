@@ -102,7 +102,7 @@ class CommissionListItemResponseDto
     /**
      * @var mixed
      */
-    public mixed $customer;
+    public $customer;
 
     /**
      * @var string|null
@@ -117,12 +117,12 @@ class CommissionListItemResponseDto
     /**
      * @var mixed
      */
-    public mixed $campaign;
+    public $campaign;
 
     /**
      * @var mixed
      */
-    public mixed $affiliate;
+    public $affiliate;
 
     /**
      * @var string|null
@@ -138,12 +138,6 @@ class CommissionListItemResponseDto
      * @var float|null
      */
     public ?float $tier = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -178,61 +172,94 @@ class CommissionListItemResponseDto
         $this->due_at = $data['dueAt'] ?? null;
         $this->live_mode = $data['liveMode'] ?? null;
         $this->tier = $data['tier'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->product_id !== null) {
+            $result['productId'] = $this->product_id;
+        }
+        if ($this->product_name !== null) {
+            $result['productName'] = $this->product_name;
+        }
+        if ($this->qty !== null) {
+            $result['qty'] = $this->qty;
+        }
+        if ($this->product_commission !== null) {
+            $result['productCommission'] = $this->product_commission;
+        }
+        if ($this->commission_amount !== null) {
+            $result['commissionAmount'] = $this->commission_amount;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->unit_discount !== null) {
+            $result['unitDiscount'] = $this->unit_discount;
+        }
+        if ($this->campaign_name !== null) {
+            $result['campaignName'] = $this->campaign_name;
+        }
+        if ($this->commission !== null) {
+            $result['commission'] = $this->commission;
+        }
+        if ($this->commission_type !== null) {
+            $result['commissionType'] = $this->commission_type;
+        }
+        if ($this->transaction_at !== null) {
+            $result['transactionAt'] = $this->transaction_at;
+        }
+        if ($this->transaction_id !== null) {
+            $result['transactionId'] = $this->transaction_id;
+        }
+        if ($this->affiliate_id !== null) {
+            $result['affiliateId'] = $this->affiliate_id;
+        }
+        if ($this->payout_id !== null) {
+            $result['payoutId'] = $this->payout_id;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->is_trial !== null) {
+            $result['isTrial'] = $this->is_trial;
+        }
+        if ($this->customer !== null) {
+            $result['customer'] = $this->customer;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->event_id !== null) {
+            $result['eventId'] = $this->event_id;
+        }
+        if ($this->campaign !== null) {
+            $result['campaign'] = $this->campaign;
+        }
+        if ($this->affiliate !== null) {
+            $result['affiliate'] = $this->affiliate;
+        }
+        if ($this->due_at !== null) {
+            $result['dueAt'] = $this->due_at;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->tier !== null) {
+            $result['tier'] = $this->tier;
+        }
+        return $result;
     }
 }

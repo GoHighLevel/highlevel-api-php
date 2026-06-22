@@ -75,12 +75,6 @@ class GetCustomProvidersResponseSchema
     public ?string $trace_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -100,61 +94,55 @@ class GetCustomProvidersResponseSchema
         $this->created_at = $data['createdAt'] ?? '';
         $this->updated_at = $data['updatedAt'] ?? '';
         $this->trace_id = $data['traceId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->payments_url !== null) {
+            $result['paymentsUrl'] = $this->payments_url;
+        }
+        if ($this->query_url !== null) {
+            $result['queryUrl'] = $this->query_url;
+        }
+        if ($this->image_url !== null) {
+            $result['imageUrl'] = $this->image_url;
+        }
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->marketplace_app_id !== null) {
+            $result['marketplaceAppId'] = $this->marketplace_app_id;
+        }
+        if ($this->payment_provider !== null) {
+            $result['paymentProvider'] = $this->payment_provider;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->trace_id !== null) {
+            $result['traceId'] = $this->trace_id;
+        }
+        return $result;
     }
 }

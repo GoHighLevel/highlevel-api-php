@@ -59,7 +59,7 @@ class AgentStudio
      */
     public function createAgent(
         array $params,
-        CreatePublicAgentDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreatePublicAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -236,7 +236,7 @@ class AgentStudio
      */
     public function updateAgentVersion(
         array $params,
-        UpdatePublicAgentVersionDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdatePublicAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -327,7 +327,7 @@ class AgentStudio
      */
     public function updateAgentMetadata(
         array $params,
-        UpdatePublicAgentMetadataDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdatePublicAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -586,7 +586,7 @@ class AgentStudio
      */
     public function promoteAndPublish(
         array $params,
-        PromoteAndPublishDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): PromoteAndPublishResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -682,7 +682,7 @@ class AgentStudio
      */
     public function executeAgent(
         array $params,
-        ExecutePublicAgentDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): ExecutePublicAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -956,7 +956,7 @@ Executes the specified agent and returns a non-streaming JSON response with the 
      */
     public function executeAgentDeprecated(
         array $params,
-        ExecutePublicAgentDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): ExecutePublicAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

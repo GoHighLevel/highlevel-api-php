@@ -72,18 +72,12 @@ class BulkEditPriceDto
     /**
      * @var mixed
      */
-    public mixed $shipping_options;
+    public $shipping_options;
 
     /**
      * @var mixed
      */
-    public mixed $recurring;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $recurring;
 
     /**
      * Create model from array data
@@ -106,61 +100,58 @@ class BulkEditPriceDto
         $this->setup_fee = $data['setupFee'] ?? null;
         $this->shipping_options = $data['shippingOptions'] ?? null;
         $this->recurring = $data['recurring'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->compare_at_price !== null) {
+            $result['compareAtPrice'] = $this->compare_at_price;
+        }
+        if ($this->available_quantity !== null) {
+            $result['availableQuantity'] = $this->available_quantity;
+        }
+        if ($this->track_inventory !== null) {
+            $result['trackInventory'] = $this->track_inventory;
+        }
+        if ($this->allow_out_of_stock_purchases !== null) {
+            $result['allowOutOfStockPurchases'] = $this->allow_out_of_stock_purchases;
+        }
+        if ($this->sku !== null) {
+            $result['sku'] = $this->sku;
+        }
+        if ($this->trial_period !== null) {
+            $result['trialPeriod'] = $this->trial_period;
+        }
+        if ($this->total_cycles !== null) {
+            $result['totalCycles'] = $this->total_cycles;
+        }
+        if ($this->setup_fee !== null) {
+            $result['setupFee'] = $this->setup_fee;
+        }
+        if ($this->shipping_options !== null) {
+            $result['shippingOptions'] = $this->shipping_options;
+        }
+        if ($this->recurring !== null) {
+            $result['recurring'] = $this->recurring;
+        }
+        return $result;
     }
 }

@@ -55,12 +55,6 @@ class StopBotDto
     public ?array $tags = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -76,61 +70,43 @@ class StopBotDto
         $this->stop_bot_examples = $data['stopBotExamples'] ?? [];
         $this->final_message = $data['finalMessage'] ?? '';
         $this->tags = $data['tags'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->stop_bot_detection_type !== null) {
+            $result['stopBotDetectionType'] = $this->stop_bot_detection_type;
+        }
+        if ($this->stop_bot_trigger_condition !== null) {
+            $result['stopBotTriggerCondition'] = $this->stop_bot_trigger_condition;
+        }
+        if ($this->reactivate_enabled !== null) {
+            $result['reactivateEnabled'] = $this->reactivate_enabled;
+        }
+        if ($this->sleep_time_unit !== null) {
+            $result['sleepTimeUnit'] = $this->sleep_time_unit;
+        }
+        if ($this->sleep_time !== null) {
+            $result['sleepTime'] = $this->sleep_time;
+        }
+        if ($this->enabled !== null) {
+            $result['enabled'] = $this->enabled;
+        }
+        if ($this->stop_bot_examples !== null) {
+            $result['stopBotExamples'] = $this->stop_bot_examples;
+        }
+        if ($this->final_message !== null) {
+            $result['finalMessage'] = $this->final_message;
+        }
+        if ($this->tags !== null) {
+            $result['tags'] = $this->tags;
+        }
+        return $result;
     }
 }

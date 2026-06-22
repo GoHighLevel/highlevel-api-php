@@ -82,6 +82,41 @@ class SearchOpportunitiesResponseSchema
     /**
      * @var string|null
      */
+    public ?string $forecast_expected_close_date = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $forecast_original_close_date = null;
+
+    /**
+     * @var float|null
+     */
+    public ?float $forecast_slippage_count = null;
+
+    /**
+     * @var float|null
+     */
+    public ?float $forecast_days_slipped = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $forecast_last_slipped_at = null;
+
+    /**
+     * @var float|null
+     */
+    public ?float $forecast_probability = null;
+
+    /**
+     * @var float|null
+     */
+    public ?float $effective_probability = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $contact_id = null;
 
     /**
@@ -90,9 +125,9 @@ class SearchOpportunitiesResponseSchema
     public ?string $location_id = null;
 
     /**
-     * @var SearchOpportunitiesContactResponseSchema|null
+     * @var mixed
      */
-    public ?SearchOpportunitiesContactResponseSchema $contact = null;
+    public $contact;
 
     /**
      * @var array&lt;array&lt;mixed&gt;&gt;|null
@@ -130,12 +165,6 @@ class SearchOpportunitiesResponseSchema
     public ?string $external_object_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -156,14 +185,16 @@ class SearchOpportunitiesResponseSchema
         $this->index_version = $data['indexVersion'] ?? null;
         $this->created_at = $data['createdAt'] ?? null;
         $this->updated_at = $data['updatedAt'] ?? null;
+        $this->forecast_expected_close_date = $data['forecastExpectedCloseDate'] ?? null;
+        $this->forecast_original_close_date = $data['forecastOriginalCloseDate'] ?? null;
+        $this->forecast_slippage_count = $data['forecastSlippageCount'] ?? null;
+        $this->forecast_days_slipped = $data['forecastDaysSlipped'] ?? null;
+        $this->forecast_last_slipped_at = $data['forecastLastSlippedAt'] ?? null;
+        $this->forecast_probability = $data['forecastProbability'] ?? null;
+        $this->effective_probability = $data['effectiveProbability'] ?? null;
         $this->contact_id = $data['contactId'] ?? null;
         $this->location_id = $data['locationId'] ?? null;
-        // Handle single SearchOpportunitiesContactResponseSchema object
-        if (isset($data['contact']) && is_array($data['contact'])) {
-            $this->contact = new SearchOpportunitiesContactResponseSchema($data['contact']);
-        } else {
-            $this->contact = $data['contact'] ?? null;
-        }
+        $this->contact = $data['contact'] ?? null;
         $this->notes = $data['notes'] ?? null;
         $this->tasks = $data['tasks'] ?? null;
         $this->calendar_events = $data['calendarEvents'] ?? null;
@@ -178,61 +209,111 @@ class SearchOpportunitiesResponseSchema
         }
         $this->followers = $data['followers'] ?? null;
         $this->external_object_id = $data['externalObjectId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->monetary_value !== null) {
+            $result['monetaryValue'] = $this->monetary_value;
+        }
+        if ($this->pipeline_id !== null) {
+            $result['pipelineId'] = $this->pipeline_id;
+        }
+        if ($this->pipeline_stage_id !== null) {
+            $result['pipelineStageId'] = $this->pipeline_stage_id;
+        }
+        if ($this->assigned_to !== null) {
+            $result['assignedTo'] = $this->assigned_to;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->source !== null) {
+            $result['source'] = $this->source;
+        }
+        if ($this->last_status_change_at !== null) {
+            $result['lastStatusChangeAt'] = $this->last_status_change_at;
+        }
+        if ($this->last_stage_change_at !== null) {
+            $result['lastStageChangeAt'] = $this->last_stage_change_at;
+        }
+        if ($this->last_action_date !== null) {
+            $result['lastActionDate'] = $this->last_action_date;
+        }
+        if ($this->index_version !== null) {
+            $result['indexVersion'] = $this->index_version;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->forecast_expected_close_date !== null) {
+            $result['forecastExpectedCloseDate'] = $this->forecast_expected_close_date;
+        }
+        if ($this->forecast_original_close_date !== null) {
+            $result['forecastOriginalCloseDate'] = $this->forecast_original_close_date;
+        }
+        if ($this->forecast_slippage_count !== null) {
+            $result['forecastSlippageCount'] = $this->forecast_slippage_count;
+        }
+        if ($this->forecast_days_slipped !== null) {
+            $result['forecastDaysSlipped'] = $this->forecast_days_slipped;
+        }
+        if ($this->forecast_last_slipped_at !== null) {
+            $result['forecastLastSlippedAt'] = $this->forecast_last_slipped_at;
+        }
+        if ($this->forecast_probability !== null) {
+            $result['forecastProbability'] = $this->forecast_probability;
+        }
+        if ($this->effective_probability !== null) {
+            $result['effectiveProbability'] = $this->effective_probability;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->contact !== null) {
+            $result['contact'] = $this->contact;
+        }
+        if ($this->notes !== null) {
+            $result['notes'] = $this->notes;
+        }
+        if ($this->tasks !== null) {
+            $result['tasks'] = $this->tasks;
+        }
+        if ($this->calendar_events !== null) {
+            $result['calendarEvents'] = $this->calendar_events;
+        }
+        if ($this->lost_reason_id !== null) {
+            $result['lostReasonId'] = $this->lost_reason_id;
+        }
+        if ($this->custom_fields !== null) {
+            $result['customFields'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->custom_fields);
+        }
+        if ($this->followers !== null) {
+            $result['followers'] = $this->followers;
+        }
+        if ($this->external_object_id !== null) {
+            $result['externalObjectId'] = $this->external_object_id;
+        }
+        return $result;
     }
 }

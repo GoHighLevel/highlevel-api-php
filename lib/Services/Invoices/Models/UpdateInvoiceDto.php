@@ -42,7 +42,7 @@ class UpdateInvoiceDto
     /**
      * @var mixed
      */
-    public mixed $business_details;
+    public $business_details;
 
     /**
      * @var string|null
@@ -97,12 +97,12 @@ class UpdateInvoiceDto
     /**
      * @var mixed
      */
-    public mixed $payment_schedule;
+    public $payment_schedule;
 
     /**
      * @var mixed
      */
-    public mixed $tips_configuration;
+    public $tips_configuration;
 
     /**
      * @var array&lt;string, mixed&gt;|null
@@ -117,7 +117,7 @@ class UpdateInvoiceDto
     /**
      * @var mixed
      */
-    public mixed $payment_methods;
+    public $payment_methods;
 
     /**
      * @var array&lt;AttachmentsDto&gt;|null
@@ -127,13 +127,7 @@ class UpdateInvoiceDto
     /**
      * @var mixed
      */
-    public mixed $miscellaneous_charges;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $miscellaneous_charges;
 
     /**
      * Create model from array data
@@ -190,61 +184,96 @@ class UpdateInvoiceDto
             $this->attachments = $data['attachments'] ?? null;
         }
         $this->miscellaneous_charges = $data['miscellaneousCharges'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->business_details !== null) {
+            $result['businessDetails'] = $this->business_details;
+        }
+        if ($this->invoice_number !== null) {
+            $result['invoiceNumber'] = $this->invoice_number;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->contact_details !== null) {
+            $result['contactDetails'] = is_object($this->contact_details) && method_exists($this->contact_details, 'toArray') 
+                ? $this->contact_details->toArray() 
+                : $this->contact_details;
+        }
+        if ($this->terms_notes !== null) {
+            $result['termsNotes'] = $this->terms_notes;
+        }
+        if ($this->discount !== null) {
+            $result['discount'] = is_object($this->discount) && method_exists($this->discount, 'toArray') 
+                ? $this->discount->toArray() 
+                : $this->discount;
+        }
+        if ($this->invoice_items !== null) {
+            $result['invoiceItems'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->invoice_items);
+        }
+        if ($this->automatic_taxes_enabled !== null) {
+            $result['automaticTaxesEnabled'] = $this->automatic_taxes_enabled;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->issue_date !== null) {
+            $result['issueDate'] = $this->issue_date;
+        }
+        if ($this->due_date !== null) {
+            $result['dueDate'] = $this->due_date;
+        }
+        if ($this->payment_schedule !== null) {
+            $result['paymentSchedule'] = $this->payment_schedule;
+        }
+        if ($this->tips_configuration !== null) {
+            $result['tipsConfiguration'] = $this->tips_configuration;
+        }
+        if ($this->xero_details !== null) {
+            $result['xeroDetails'] = $this->xero_details;
+        }
+        if ($this->invoice_number_prefix !== null) {
+            $result['invoiceNumberPrefix'] = $this->invoice_number_prefix;
+        }
+        if ($this->payment_methods !== null) {
+            $result['paymentMethods'] = $this->payment_methods;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->attachments);
+        }
+        if ($this->miscellaneous_charges !== null) {
+            $result['miscellaneousCharges'] = $this->miscellaneous_charges;
+        }
+        return $result;
     }
 }

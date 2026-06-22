@@ -53,7 +53,7 @@ class Businesses
      */
     public function updateBusiness(
         array $params,
-        UpdateBusinessDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateBusinessResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -387,7 +387,7 @@ class Businesses
      * @throws GuzzleException
      */
     public function createBusiness(
-        CreateBusinessDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateBusinessResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

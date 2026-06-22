@@ -175,12 +175,6 @@ class OAuthAffiliateListItemResponseDto
     public ?float $owned = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -220,61 +214,115 @@ class OAuthAffiliateListItemResponseDto
         $this->paid = $data['paid'] ?? null;
         $this->currency = $data['currency'] ?? null;
         $this->owned = $data['owned'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->first_name !== null) {
+            $result['firstName'] = $this->first_name;
+        }
+        if ($this->last_name !== null) {
+            $result['lastName'] = $this->last_name;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->active !== null) {
+            $result['active'] = $this->active;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->avatar !== null) {
+            $result['avatar'] = $this->avatar;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        if ($this->facebook_url !== null) {
+            $result['facebookUrl'] = $this->facebook_url;
+        }
+        if ($this->instagram_url !== null) {
+            $result['instagramUrl'] = $this->instagram_url;
+        }
+        if ($this->linked_in_url !== null) {
+            $result['linkedInUrl'] = $this->linked_in_url;
+        }
+        if ($this->twitter_url !== null) {
+            $result['twitterUrl'] = $this->twitter_url;
+        }
+        if ($this->youtube_url !== null) {
+            $result['youtubeUrl'] = $this->youtube_url;
+        }
+        if ($this->website_url !== null) {
+            $result['websiteUrl'] = $this->website_url;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->campaign_ids !== null) {
+            $result['campaignIds'] = $this->campaign_ids;
+        }
+        if ($this->vat_id !== null) {
+            $result['vatId'] = $this->vat_id;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->w8_form !== null) {
+            $result['w8Form'] = $this->w8_form;
+        }
+        if ($this->w9_form !== null) {
+            $result['w9Form'] = $this->w9_form;
+        }
+        if ($this->last_updated_by !== null) {
+            $result['lastUpdatedBy'] = $this->last_updated_by;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->revenue !== null) {
+            $result['revenue'] = $this->revenue;
+        }
+        if ($this->customer !== null) {
+            $result['customer'] = $this->customer;
+        }
+        if ($this->lead !== null) {
+            $result['lead'] = $this->lead;
+        }
+        if ($this->dropped_customer !== null) {
+            $result['droppedCustomer'] = $this->dropped_customer;
+        }
+        if ($this->click_count !== null) {
+            $result['clickCount'] = $this->click_count;
+        }
+        if ($this->paid !== null) {
+            $result['paid'] = $this->paid;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->owned !== null) {
+            $result['owned'] = $this->owned;
+        }
+        return $result;
     }
 }

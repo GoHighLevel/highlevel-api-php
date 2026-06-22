@@ -81,7 +81,7 @@ class Products
      * @throws GuzzleException
      */
     public function bulkUpdate(
-        BulkUpdateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): BulkUpdateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -167,7 +167,7 @@ class Products
      * @throws GuzzleException
      */
     public function bulkEdit(
-        BulkEditRequestDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): BulkEditResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -257,7 +257,7 @@ class Products
      */
     public function createPriceForProduct(
         array $params,
-        CreatePriceDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreatePriceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -515,7 +515,7 @@ class Products
      * @throws GuzzleException
      */
     public function updateInventory(
-        UpdateInventoryDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInventoryResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -690,7 +690,7 @@ class Products
      */
     public function updatePriceByIdForProduct(
         array $params,
-        UpdatePriceDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdatePriceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -950,7 +950,7 @@ class Products
      */
     public function updateStoreStatus(
         array $params,
-        UpdateProductStoreDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateProductStoreResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1040,9 +1040,9 @@ class Products
      */
     public function updateDisplayPriority(
         array $params,
-        UpdateDisplayPriorityBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -1213,7 +1213,7 @@ class Products
      * @throws GuzzleException
      */
     public function createProductCollection(
-        CreateProductCollectionsDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateCollectionResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1386,7 +1386,7 @@ class Products
      */
     public function updateProductCollection(
         array $params,
-        UpdateProductCollectionsDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateProductCollectionResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1740,7 +1740,7 @@ class Products
      */
     public function updateProductReview(
         array $params,
-        UpdateProductReviewDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateProductReviewsResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1911,7 +1911,7 @@ class Products
      * @throws GuzzleException
      */
     public function bulkUpdateProductReview(
-        UpdateProductReviewsDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateProductReviewsResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2169,7 +2169,7 @@ class Products
      */
     public function updateProductById(
         array $params,
-        UpdateProductDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateProductResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2255,7 +2255,7 @@ class Products
      * @throws GuzzleException
      */
     public function createProduct(
-        CreateProductDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateProductResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

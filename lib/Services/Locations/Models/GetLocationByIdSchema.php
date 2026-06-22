@@ -110,12 +110,6 @@ class GetLocationByIdSchema
     public ?array $reseller = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -157,61 +151,82 @@ class GetLocationByIdSchema
             $this->settings = $data['settings'] ?? null;
         }
         $this->reseller = $data['reseller'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->company_id !== null) {
+            $result['companyId'] = $this->company_id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->domain !== null) {
+            $result['domain'] = $this->domain;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->city !== null) {
+            $result['city'] = $this->city;
+        }
+        if ($this->state !== null) {
+            $result['state'] = $this->state;
+        }
+        if ($this->logo_url !== null) {
+            $result['logoUrl'] = $this->logo_url;
+        }
+        if ($this->country !== null) {
+            $result['country'] = $this->country;
+        }
+        if ($this->postal_code !== null) {
+            $result['postalCode'] = $this->postal_code;
+        }
+        if ($this->website !== null) {
+            $result['website'] = $this->website;
+        }
+        if ($this->timezone !== null) {
+            $result['timezone'] = $this->timezone;
+        }
+        if ($this->first_name !== null) {
+            $result['firstName'] = $this->first_name;
+        }
+        if ($this->last_name !== null) {
+            $result['lastName'] = $this->last_name;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->business !== null) {
+            $result['business'] = is_object($this->business) && method_exists($this->business, 'toArray') 
+                ? $this->business->toArray() 
+                : $this->business;
+        }
+        if ($this->social !== null) {
+            $result['social'] = is_object($this->social) && method_exists($this->social, 'toArray') 
+                ? $this->social->toArray() 
+                : $this->social;
+        }
+        if ($this->settings !== null) {
+            $result['settings'] = is_object($this->settings) && method_exists($this->settings, 'toArray') 
+                ? $this->settings->toArray() 
+                : $this->settings;
+        }
+        if ($this->reseller !== null) {
+            $result['reseller'] = $this->reseller;
+        }
+        return $result;
     }
 }

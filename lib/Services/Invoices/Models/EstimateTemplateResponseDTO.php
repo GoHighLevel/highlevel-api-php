@@ -47,7 +47,7 @@ class EstimateTemplateResponseDTO
     /**
      * @var mixed
      */
-    public mixed $business_details;
+    public $business_details;
 
     /**
      * @var array&lt;array&lt;mixed&gt;&gt;
@@ -57,7 +57,7 @@ class EstimateTemplateResponseDTO
     /**
      * @var mixed
      */
-    public mixed $discount;
+    public $discount;
 
     /**
      * @var string|null
@@ -110,12 +110,6 @@ class EstimateTemplateResponseDTO
     public ?string $terms_notes = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -149,61 +143,78 @@ class EstimateTemplateResponseDTO
         $this->_v = $data['__v'] ?? 0;
         $this->automatic_taxes_enabled = $data['automaticTaxesEnabled'] ?? false;
         $this->terms_notes = $data['termsNotes'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->business_details !== null) {
+            $result['businessDetails'] = $this->business_details;
+        }
+        if ($this->items !== null) {
+            $result['items'] = $this->items;
+        }
+        if ($this->discount !== null) {
+            $result['discount'] = $this->discount;
+        }
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->estimate_number_prefix !== null) {
+            $result['estimateNumberPrefix'] = $this->estimate_number_prefix;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->attachments);
+        }
+        if ($this->updated_by !== null) {
+            $result['updatedBy'] = $this->updated_by;
+        }
+        if ($this->total !== null) {
+            $result['total'] = $this->total;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->_v !== null) {
+            $result['__v'] = $this->_v;
+        }
+        if ($this->automatic_taxes_enabled !== null) {
+            $result['automaticTaxesEnabled'] = $this->automatic_taxes_enabled;
+        }
+        if ($this->terms_notes !== null) {
+            $result['termsNotes'] = $this->terms_notes;
+        }
+        return $result;
     }
 }

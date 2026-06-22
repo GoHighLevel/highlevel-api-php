@@ -22,23 +22,17 @@ class CreateStoreSettingDto
     /**
      * @var mixed
      */
-    public mixed $shipping_origin;
+    public $shipping_origin;
 
     /**
      * @var mixed
      */
-    public mixed $store_order_notification;
+    public $store_order_notification;
 
     /**
      * @var mixed
      */
-    public mixed $store_order_fulfillment_notification;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $store_order_fulfillment_notification;
 
     /**
      * Create model from array data
@@ -52,61 +46,31 @@ class CreateStoreSettingDto
         $this->shipping_origin = $data['shippingOrigin'] ?? null;
         $this->store_order_notification = $data['storeOrderNotification'] ?? null;
         $this->store_order_fulfillment_notification = $data['storeOrderFulfillmentNotification'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->shipping_origin !== null) {
+            $result['shippingOrigin'] = $this->shipping_origin;
+        }
+        if ($this->store_order_notification !== null) {
+            $result['storeOrderNotification'] = $this->store_order_notification;
+        }
+        if ($this->store_order_fulfillment_notification !== null) {
+            $result['storeOrderFulfillmentNotification'] = $this->store_order_fulfillment_notification;
+        }
+        return $result;
     }
 }

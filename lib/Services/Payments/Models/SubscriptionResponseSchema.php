@@ -130,12 +130,6 @@ class SubscriptionResponseSchema
     public ?string $created_by = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -166,61 +160,88 @@ class SubscriptionResponseSchema
         $this->created_at = $data['createdAt'] ?? '';
         $this->updated_at = $data['updatedAt'] ?? '';
         $this->created_by = $data['createdBy'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->contact_name !== null) {
+            $result['contactName'] = $this->contact_name;
+        }
+        if ($this->contact_email !== null) {
+            $result['contactEmail'] = $this->contact_email;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->entity_type !== null) {
+            $result['entityType'] = $this->entity_type;
+        }
+        if ($this->entity_id !== null) {
+            $result['entityId'] = $this->entity_id;
+        }
+        if ($this->entity_source_type !== null) {
+            $result['entitySourceType'] = $this->entity_source_type;
+        }
+        if ($this->entity_source_name !== null) {
+            $result['entitySourceName'] = $this->entity_source_name;
+        }
+        if ($this->entity_source_id !== null) {
+            $result['entitySourceId'] = $this->entity_source_id;
+        }
+        if ($this->entity_source_meta !== null) {
+            $result['entitySourceMeta'] = $this->entity_source_meta;
+        }
+        if ($this->subscription_id !== null) {
+            $result['subscriptionId'] = $this->subscription_id;
+        }
+        if ($this->subscription_snapshot !== null) {
+            $result['subscriptionSnapshot'] = $this->subscription_snapshot;
+        }
+        if ($this->payment_provider_type !== null) {
+            $result['paymentProviderType'] = $this->payment_provider_type;
+        }
+        if ($this->payment_provider_connected_account !== null) {
+            $result['paymentProviderConnectedAccount'] = $this->payment_provider_connected_account;
+        }
+        if ($this->ip_address !== null) {
+            $result['ipAddress'] = $this->ip_address;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        return $result;
     }
 }

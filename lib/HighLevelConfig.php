@@ -12,12 +12,6 @@ use HighLevel\Storage\SessionStorage;
 class HighLevelConfig
 {
     /**
-     * API version
-     * @var string|null
-     */
-    public ?string $apiVersion = null;
-
-    /**
      * Private integration token (for private integrations)
      * @var string|null
      */
@@ -66,7 +60,6 @@ class HighLevelConfig
      */
     public function __construct(array $config = [])
     {
-        $this->apiVersion = $config['apiVersion'] ?? null;
         $this->privateIntegrationToken = $config['privateIntegrationToken'] ?? null;
         $this->agencyAccessToken = $config['agencyAccessToken'] ?? null;
         $this->locationAccessToken = $config['locationAccessToken'] ?? null;

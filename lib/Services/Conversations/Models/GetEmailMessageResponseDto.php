@@ -115,12 +115,6 @@ class GetEmailMessageResponseDto
     public ?string $conversation_provider_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -148,61 +142,79 @@ class GetEmailMessageResponseDto
         $this->reply_to_message_id = $data['replyToMessageId'] ?? null;
         $this->source = $data['source'] ?? null;
         $this->conversation_provider_id = $data['conversationProviderId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->thread_id !== null) {
+            $result['threadId'] = $this->thread_id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->conversation_id !== null) {
+            $result['conversationId'] = $this->conversation_id;
+        }
+        if ($this->date_added !== null) {
+            $result['dateAdded'] = $this->date_added;
+        }
+        if ($this->subject !== null) {
+            $result['subject'] = $this->subject;
+        }
+        if ($this->body !== null) {
+            $result['body'] = $this->body;
+        }
+        if ($this->direction !== null) {
+            $result['direction'] = $this->direction;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->content_type !== null) {
+            $result['contentType'] = $this->content_type;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = $this->attachments;
+        }
+        if ($this->provider !== null) {
+            $result['provider'] = $this->provider;
+        }
+        if ($this->from !== null) {
+            $result['from'] = $this->from;
+        }
+        if ($this->to !== null) {
+            $result['to'] = $this->to;
+        }
+        if ($this->cc !== null) {
+            $result['cc'] = $this->cc;
+        }
+        if ($this->bcc !== null) {
+            $result['bcc'] = $this->bcc;
+        }
+        if ($this->reply_to_message_id !== null) {
+            $result['replyToMessageId'] = $this->reply_to_message_id;
+        }
+        if ($this->source !== null) {
+            $result['source'] = $this->source;
+        }
+        if ($this->conversation_provider_id !== null) {
+            $result['conversationProviderId'] = $this->conversation_provider_id;
+        }
+        return $result;
     }
 }

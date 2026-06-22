@@ -77,7 +77,7 @@ class GetTxnResponseSchema
     /**
      * @var mixed
      */
-    public mixed $entity_source;
+    public $entity_source;
 
     /**
      * @var string|null
@@ -160,12 +160,6 @@ class GetTxnResponseSchema
     public ?string $created_by = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -202,61 +196,106 @@ class GetTxnResponseSchema
         $this->trace_id = $data['traceId'] ?? null;
         $this->merged_from_contact_id = $data['mergedFromContactId'] ?? null;
         $this->created_by = $data['createdBy'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->contact_snapshot !== null) {
+            $result['contactSnapshot'] = $this->contact_snapshot;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->entity_type !== null) {
+            $result['entityType'] = $this->entity_type;
+        }
+        if ($this->entity_id !== null) {
+            $result['entityId'] = $this->entity_id;
+        }
+        if ($this->entity_source !== null) {
+            $result['entitySource'] = $this->entity_source;
+        }
+        if ($this->charge_id !== null) {
+            $result['chargeId'] = $this->charge_id;
+        }
+        if ($this->charge_snapshot !== null) {
+            $result['chargeSnapshot'] = $this->charge_snapshot;
+        }
+        if ($this->invoice_id !== null) {
+            $result['invoiceId'] = $this->invoice_id;
+        }
+        if ($this->subscription_id !== null) {
+            $result['subscriptionId'] = $this->subscription_id;
+        }
+        if ($this->payment_provider !== null) {
+            $result['paymentProvider'] = $this->payment_provider;
+        }
+        if ($this->ip_address !== null) {
+            $result['ipAddress'] = $this->ip_address;
+        }
+        if ($this->meta !== null) {
+            $result['meta'] = $this->meta;
+        }
+        if ($this->mark_as_test !== null) {
+            $result['markAsTest'] = $this->mark_as_test;
+        }
+        if ($this->is_parent !== null) {
+            $result['isParent'] = $this->is_parent;
+        }
+        if ($this->amount_refunded !== null) {
+            $result['amountRefunded'] = $this->amount_refunded;
+        }
+        if ($this->receipt_id !== null) {
+            $result['receiptId'] = $this->receipt_id;
+        }
+        if ($this->qbo_synced !== null) {
+            $result['qboSynced'] = $this->qbo_synced;
+        }
+        if ($this->qbo_response !== null) {
+            $result['qboResponse'] = $this->qbo_response;
+        }
+        if ($this->trace_id !== null) {
+            $result['traceId'] = $this->trace_id;
+        }
+        if ($this->merged_from_contact_id !== null) {
+            $result['mergedFromContactId'] = $this->merged_from_contact_id;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        return $result;
     }
 }

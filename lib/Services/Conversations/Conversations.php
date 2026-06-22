@@ -12,11 +12,10 @@ use HighLevel\Services\Conversations\Models\GetConversationByIdResponse;
 use HighLevel\Services\Conversations\Models\UpdateConversationDto;
 use HighLevel\Services\Conversations\Models\GetConversationSuccessfulResponse;
 use HighLevel\Services\Conversations\Models\DeleteConversationSuccessfulResponse;
-use HighLevel\Services\Conversations\Models\CreateCustomSubtypeDto;
-use HighLevel\Services\Conversations\Models\UpdateCustomSubtypeDto;
-use HighLevel\Services\Conversations\Models\UserSubscriptionChangeDto;
 use HighLevel\Services\Conversations\Models\GetEmailMessageResponseDto;
 use HighLevel\Services\Conversations\Models\CancelScheduledResponseDto;
+use HighLevel\Services\Conversations\Models\UpdateEmailMessageStatusDto;
+use HighLevel\Services\Conversations\Models\UpdateEmailMessageStatusResponseDto;
 use HighLevel\Services\Conversations\Models\ExportMessagesResponseDto;
 use HighLevel\Services\Conversations\Models\GetMessageResponseDto;
 use HighLevel\Services\Conversations\Models\GetMessagesByConversationResponseDto;
@@ -25,12 +24,7 @@ use HighLevel\Services\Conversations\Models\SendMessageResponseDto;
 use HighLevel\Services\Conversations\Models\ProcessMessageBodyDto;
 use HighLevel\Services\Conversations\Models\ProcessMessageResponseDto;
 use HighLevel\Services\Conversations\Models\ProcessOutboundMessageBodyDto;
-use HighLevel\Services\Conversations\Models\SendReviewReplyDto;
 use HighLevel\Services\Conversations\Models\UploadFilesResponseDto;
-use HighLevel\Services\Conversations\Models\InitiateFileUploadDto;
-use HighLevel\Services\Conversations\Models\InitiateFileUploadResponseDto;
-use HighLevel\Services\Conversations\Models\CompleteFileUploadDto;
-use HighLevel\Services\Conversations\Models\CompleteFileUploadResponseDto;
 use HighLevel\Services\Conversations\Models\UpdateMessageStatusDto;
 use HighLevel\Services\Conversations\Models\AddMessageAttachmentsDto;
 use HighLevel\Services\Conversations\Models\GetMessageTranscriptionResponseDto;
@@ -38,6 +32,11 @@ use HighLevel\Services\Conversations\Models\UserTypingBody;
 use HighLevel\Services\Conversations\Models\CreateLiveChatMessageFeedbackResponse;
 use HighLevel\Services\Conversations\Models\CreateConversationDto;
 use HighLevel\Services\Conversations\Models\CreateConversationSuccessResponse;
+use HighLevel\Services\Conversations\Models\SendReviewReplyDto;
+use HighLevel\Services\Conversations\Models\InitiateFileUploadDto;
+use HighLevel\Services\Conversations\Models\InitiateFileUploadResponseDto;
+use HighLevel\Services\Conversations\Models\CompleteFileUploadDto;
+use HighLevel\Services\Conversations\Models\CompleteFileUploadResponseDto;
 
 /**
  * Conversations Service
@@ -262,7 +261,7 @@ class Conversations
      */
     public function updateConversation(
         array $params,
-        UpdateConversationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetConversationSuccessfulResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -420,439 +419,6 @@ class Conversations
     }
 
     /**
-     * Get All Custom Subtypes
-     * Get all custom subtypes for a location
-     * 
-     * @param array{
-     *   locationId: string // Location Id
-     * } $params Request parameters
-     * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function getAllCustomSubtypes(
-        array $params,
-        ?array $options = null
-    ): mixed {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = [];
-
-        $url = RequestUtils::buildUrl('/conversations/preferences/custom-subtypes', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'GET',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return $responseData;
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * Create Custom Subtype
-     * Create a new custom subtype for a location. Requires agency or account admin role.
-     * 
-     * @param array{
-     *   locationId: string // Location Id
-     * } $params Request parameters
-     * @param CreateCustomSubtypeDto $requestBody Request body data
-     * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function createCustomSubtype(
-        array $params,
-        CreateCustomSubtypeDto $requestBody,
-        ?array $options = null
-    ): mixed {
-        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
-            $requestBody = $requestBody->toArray();
-        }
-        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = [];
-
-        $url = RequestUtils::buildUrl('/conversations/preferences/custom-subtypes', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-        if ($requestBody !== null) {
-            $requestOptions['json'] = $requestBody;
-        }
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'POST',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return $responseData;
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * Update Custom Subtype
-     * Update or archive a custom subtype. Requires agency or account admin role.
-     * 
-     * @param array{
-     *   id: string // Custom Subtype Id
-     *   locationId: string // Location Id
-     * } $params Request parameters
-     * @param UpdateCustomSubtypeDto $requestBody Request body data
-     * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function updateCustomSubtype(
-        array $params,
-        UpdateCustomSubtypeDto $requestBody,
-        ?array $options = null
-    ): mixed {
-        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
-            $requestBody = $requestBody->toArray();
-        }
-        $paramDefs = [['name' => 'id', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = [];
-
-        $url = RequestUtils::buildUrl('/conversations/preferences/custom-subtypes/{id}', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-        if ($requestBody !== null) {
-            $requestOptions['json'] = $requestBody;
-        }
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'PUT',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return $responseData;
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * Get Contact Unsubscription Status
-     * Get all subscription statuses for a contact (all emails or specific email)
-     * 
-     * @param array{
-     *   locationId: string // Location Id
-     *   contactId: string // Contact Id
-     *   email?: string // Email address (optional - if not provided, gets all emails for contact)
-     * } $params Request parameters
-     * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function getContactUnsubscriptionStatus(
-        array $params,
-        ?array $options = null
-    ): mixed {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'contactId', 'in' => 'query'], ['name' => 'email', 'in' => 'query']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = [];
-
-        $url = RequestUtils::buildUrl('/conversations/preferences/unsubscriptions/status', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'GET',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return $responseData;
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * User Subscription Change
-     * Process subscription change initiated by a user (admin/agent). Supports individual custom subscription changes and resub all functionality. Legal forms are automatically created for user-initiated resubscribe actions on custom subscriptions.
-     * 
-     * @param UserSubscriptionChangeDto $requestBody Request body data
-     * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function userSubscriptionChange(
-        UserSubscriptionChangeDto $requestBody,
-        ?array $options = null
-    ): mixed {
-        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
-            $requestBody = $requestBody->toArray();
-        }
-        $paramDefs = [];
-        $extracted = RequestUtils::extractParams([], $paramDefs);
-        $requirements = [];
-
-        $url = RequestUtils::buildUrl('/conversations/preferences/unsubscriptions/user-change', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-        if ($requestBody !== null) {
-            $requestOptions['json'] = $requestBody;
-        }
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'POST',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return $responseData;
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
      * Get email by Id
      * Get email by Id
      * 
@@ -866,7 +432,7 @@ class Conversations
     ): GetEmailMessageResponseDto {
         $paramDefs = [];
         $extracted = RequestUtils::extractParams([], $paramDefs);
-        $requirements = [];
+        $requirements = ["bearer"];
 
         $url = RequestUtils::buildUrl('/conversations/messages/email/{id}', $extracted['path']);
         
@@ -948,7 +514,7 @@ class Conversations
     ): CancelScheduledResponseDto {
         $paramDefs = [['name' => 'emailMessageId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = [];
+        $requirements = ["bearer"];
 
         $url = RequestUtils::buildUrl('/conversations/messages/email/{emailMessageId}/schedule', $extracted['path']);
         
@@ -1013,6 +579,119 @@ class Conversations
     }
 
     /**
+     * Update email message status
+     * Update delivery events, per-recipient statuses, and the overall message status for an email sent via a custom conversation provider.
+
+### Authorization
+- Requires the &#x60;conversations/message.write&#x60; OAuth scope.
+- The calling OAuth app must own the conversation provider that originally sent the email.
+- Attempts to update emails sent via LC Email or Mailgun will return &#x60;403 Forbidden&#x60;.
+
+### Updatable Fields
+**&#x60;status&#x60;** is required on every request. You may also include **&#x60;events&#x60;** and/or **&#x60;recipients&#x60;**.
+
+**&#x60;events&#x60;** — Aggregate delivery event counters (integers). Counters are merged into the existing values (not replaced). Setting a counter to &#x60;0&#x60; is treated as no-op and will **not** reset the stored value.
+
+**&#x60;recipients&#x60;** — Per-recipient delivery statuses. Each entry maps a recipient email address to a &#x60;MessageStatus&#x60; value. Use &#x60;failReason&#x60; to capture bounce or rejection details when the status is &#x60;failed&#x60;.
+
+**&#x60;status&#x60;** — The overall message status. Accepts any &#x60;MessageStatus&#x60; enum value.
+
+### Event Inference
+The API automatically infers related events to maintain data consistency:
+- **&#x60;clicked&#x60;, &#x60;complained&#x60;, &#x60;unsubscribed&#x60;, or &#x60;replied&#x60;** → implies &#x60;opened&#x60; (set to 1 if not already provided and open tracking is enabled) and &#x60;delivered&#x60; (set to 1).
+- **&#x60;opened&#x60;** → implies &#x60;delivered&#x60; (set to 1 if not provided).
+- **&#x60;delivered&#x60;, &#x60;permanent_fail&#x60;, or &#x60;temporary_fail&#x60;** → implies &#x60;accepted&#x60; (set to 1 if not provided).
+
+### Timestamps
+The API automatically records server-side timestamps on first occurrence for &#x60;delivered&#x60;, &#x60;opened&#x60;, and &#x60;clicked&#x60; events. Subsequent updates to these counters do not overwrite the original timestamp.
+     * 
+     * @param array{
+     *   id: string // Email message id
+     * } $params Request parameters
+     * @param UpdateEmailMessageStatusDto $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return UpdateEmailMessageStatusResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateEmailMessageStatus(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): UpdateEmailMessageStatusResponseDto {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'id', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/conversations/messages/email/{id}/status', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new UpdateEmailMessageStatusResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
      * Export messages by location ID
      * Export messages for a specific location with cursor-based pagination support. Response includes messageType (string), source, and subType fields. The channel parameter is optional - if not provided, all non-email message types will be returned including activity messages (opportunity updates, appointments, etc.).
      * 
@@ -1024,7 +703,7 @@ class Conversations
      *   sortOrder?: string // Sort order
      *   conversationId?: string // Filter messages by conversation ID
      *   contactId?: string // Filter messages by contact ID
-     *   channel?: string // Filter by message channel. If not provided, all non-email message types will be returned including activity messages (opportunity updates, appointments, etc.)
+     *   channel?: string // Filter by message channel. Optional - when not provided, all non-email message types will be returned including activity messages (opportunity updates, appointments, etc.). To fetch email messages, you must explicitly set channel=Email.
      *   startDate?: string // Start date to filter messages by
      *   endDate?: string // End date to filter messages by
      * } $params Request parameters
@@ -1277,7 +956,7 @@ class Conversations
      * @throws GuzzleException
      */
     public function sendANewMessage(
-        SendMessageBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): SendMessageResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1363,7 +1042,7 @@ class Conversations
      * @throws GuzzleException
      */
     public function addAnInboundMessage(
-        ProcessMessageBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): ProcessMessageResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1449,7 +1128,7 @@ class Conversations
      * @throws GuzzleException
      */
     public function addAnOutboundMessage(
-        ProcessOutboundMessageBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): ProcessMessageResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1510,92 +1189,6 @@ class Conversations
             $responseData = json_decode($body, true);
             
             return new ProcessMessageResponseDto($responseData);
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * Send a review reply to Google My Business
-     * Post a reply to a customer review on Google My Business
-     * 
-     * @param SendReviewReplyDto $requestBody Request body data
-     * @param array<string, mixed>|null $options Additional request options
-     * @return SendMessageResponseDto Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function sendReviewReply(
-        SendReviewReplyDto $requestBody,
-        ?array $options = null
-    ): SendMessageResponseDto {
-        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
-            $requestBody = $requestBody->toArray();
-        }
-        $paramDefs = [];
-        $extracted = RequestUtils::extractParams([], $paramDefs);
-        $requirements = ["bearer"];
-
-        $url = RequestUtils::buildUrl('/conversations/messages/review-reply', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-        if ($requestBody !== null) {
-            $requestOptions['json'] = $requestBody;
-        }
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'POST',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return new SendMessageResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -1703,7 +1296,7 @@ class Conversations
      * @throws GuzzleException
      */
     public function uploadFileAttachments(
-        array $requestBody,
+        $requestBody,
         ?array $options = null
     ): UploadFilesResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1779,178 +1372,6 @@ class Conversations
     }
 
     /**
-     * Initiate file upload to GCS
-     * Generates a signed URL for direct file upload to Google Cloud Storage. Returns a signed URL valid for 15 minutes. Upload file via PUT request, then call /complete to finalize.
-     * 
-     * @param InitiateFileUploadDto $requestBody Request body data
-     * @param array<string, mixed>|null $options Additional request options
-     * @return InitiateFileUploadResponseDto Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function initiateFileUpload(
-        InitiateFileUploadDto $requestBody,
-        ?array $options = null
-    ): InitiateFileUploadResponseDto {
-        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
-            $requestBody = $requestBody->toArray();
-        }
-        $paramDefs = [];
-        $extracted = RequestUtils::extractParams([], $paramDefs);
-        $requirements = ["bearer"];
-
-        $url = RequestUtils::buildUrl('/conversations/messages/upload/initiate', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-        if ($requestBody !== null) {
-            $requestOptions['json'] = $requestBody;
-        }
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'POST',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return new InitiateFileUploadResponseDto($responseData);
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * Complete file upload
-     * Validates the uploaded file in GCS and returns the public URL. Call this endpoint after successfully uploading the file to the signed URL.
-     * 
-     * @param CompleteFileUploadDto $requestBody Request body data
-     * @param array<string, mixed>|null $options Additional request options
-     * @return CompleteFileUploadResponseDto Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function completeFileUpload(
-        CompleteFileUploadDto $requestBody,
-        ?array $options = null
-    ): CompleteFileUploadResponseDto {
-        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
-            $requestBody = $requestBody->toArray();
-        }
-        $paramDefs = [];
-        $extracted = RequestUtils::extractParams([], $paramDefs);
-        $requirements = ["bearer"];
-
-        $url = RequestUtils::buildUrl('/conversations/messages/upload/complete', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-        if ($requestBody !== null) {
-            $requestOptions['json'] = $requestBody;
-        }
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'POST',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return new CompleteFileUploadResponseDto($responseData);
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
      * Update message status
      * Post the necessary fields for the API to update message status.
      * 
@@ -1965,7 +1386,7 @@ class Conversations
      */
     public function updateMessageStatus(
         array $params,
-        UpdateMessageStatusDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): SendMessageResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2055,9 +1476,9 @@ class Conversations
      */
     public function addMessageAttachments(
         array $params,
-        AddMessageAttachmentsDto $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -2146,7 +1567,7 @@ class Conversations
     public function getMessageRecording(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'messageId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer","Location-Access"];
@@ -2312,7 +1733,7 @@ class Conversations
     public function downloadMessageTranscription(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'messageId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer","Location-Access"];
@@ -2390,7 +1811,7 @@ class Conversations
      * @throws GuzzleException
      */
     public function liveChatAgentTyping(
-        UserTypingBody $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateLiveChatMessageFeedbackResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2476,7 +1897,7 @@ class Conversations
      * @throws GuzzleException
      */
     public function createConversation(
-        CreateConversationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateConversationSuccessResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2537,6 +1958,273 @@ class Conversations
             $responseData = json_decode($body, true);
             
             return new CreateConversationSuccessResponse($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Send a review reply to Google My Business
+     * Post a reply to a customer review on Google My Business
+
+This endpoint is internal-only and is not supported for OAuth or public API integrations. It will be removed from the public OpenAPI specification in a future release.
+     * @deprecated This method is deprecated
+     * 
+     * @param SendReviewReplyDto $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return SendMessageResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function sendReviewReply(
+        $requestBody,
+        ?array $options = null
+    ): SendMessageResponseDto {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/conversations/messages/review-reply', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new SendMessageResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Initiate file upload to GCS
+     * Generates a signed URL for direct file upload to Google Cloud Storage. Returns a signed URL valid for 15 minutes. Upload file via PUT request, then call /complete to finalize.
+
+This endpoint is internal-only and is not supported for OAuth or public API integrations. It will be removed from the public OpenAPI specification in a future release.
+     * @deprecated This method is deprecated
+     * 
+     * @param InitiateFileUploadDto $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return InitiateFileUploadResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function initiateFileUpload(
+        $requestBody,
+        ?array $options = null
+    ): InitiateFileUploadResponseDto {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/conversations/messages/upload/initiate', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new InitiateFileUploadResponseDto($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Complete file upload
+     * Validates the uploaded file in GCS and returns the public URL. Call this endpoint after successfully uploading the file to the signed URL.
+
+This endpoint is internal-only and is not supported for OAuth or public API integrations. It will be removed from the public OpenAPI specification in a future release.
+     * @deprecated This method is deprecated
+     * 
+     * @param CompleteFileUploadDto $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return CompleteFileUploadResponseDto Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function completeFileUpload(
+        $requestBody,
+        ?array $options = null
+    ): CompleteFileUploadResponseDto {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/conversations/messages/upload/complete', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new CompleteFileUploadResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

@@ -117,13 +117,7 @@ class PayoutListItemResponseDto
     /**
      * @var mixed
      */
-    public mixed $affiliate;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $affiliate;
 
     /**
      * Create model from array data
@@ -154,61 +148,82 @@ class PayoutListItemResponseDto
         $this->affiliate_email = $data['affiliateEmail'] ?? null;
         $this->payout_method = $data['payoutMethod'] ?? null;
         $this->affiliate = $data['affiliate'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->affiliate_id !== null) {
+            $result['affiliateId'] = $this->affiliate_id;
+        }
+        if ($this->campaign_id !== null) {
+            $result['campaignId'] = $this->campaign_id;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->payout_month !== null) {
+            $result['payoutMonth'] = $this->payout_month;
+        }
+        if ($this->due_at !== null) {
+            $result['dueAt'] = $this->due_at;
+        }
+        if ($this->paid_at !== null) {
+            $result['paidAt'] = $this->paid_at;
+        }
+        if ($this->paid_meta !== null) {
+            $result['paidMeta'] = $this->paid_meta;
+        }
+        if ($this->paid_method !== null) {
+            $result['paidMethod'] = $this->paid_method;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->is_migrated !== null) {
+            $result['isMigrated'] = $this->is_migrated;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->campaign !== null) {
+            $result['campaign'] = $this->campaign;
+        }
+        if ($this->affiliate_name !== null) {
+            $result['affiliateName'] = $this->affiliate_name;
+        }
+        if ($this->affiliate_email !== null) {
+            $result['affiliateEmail'] = $this->affiliate_email;
+        }
+        if ($this->payout_method !== null) {
+            $result['payoutMethod'] = $this->payout_method;
+        }
+        if ($this->affiliate !== null) {
+            $result['affiliate'] = $this->affiliate;
+        }
+        return $result;
     }
 }

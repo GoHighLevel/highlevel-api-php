@@ -60,12 +60,6 @@ class CustomRRulesOptions
     public float $due_after_seconds;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -82,61 +76,46 @@ class CustomRRulesOptions
         $this->count = $data['count'] ?? null;
         $this->create_task_if_over_due = $data['createTaskIfOverDue'] ?? null;
         $this->due_after_seconds = $data['dueAfterSeconds'] ?? 0;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->interval_type !== null) {
+            $result['intervalType'] = $this->interval_type;
+        }
+        if ($this->interval !== null) {
+            $result['interval'] = $this->interval;
+        }
+        if ($this->start_date !== null) {
+            $result['startDate'] = $this->start_date;
+        }
+        if ($this->end_date !== null) {
+            $result['endDate'] = $this->end_date;
+        }
+        if ($this->day_of_month !== null) {
+            $result['dayOfMonth'] = $this->day_of_month;
+        }
+        if ($this->day_of_week !== null) {
+            $result['dayOfWeek'] = $this->day_of_week;
+        }
+        if ($this->month_of_year !== null) {
+            $result['monthOfYear'] = $this->month_of_year;
+        }
+        if ($this->count !== null) {
+            $result['count'] = $this->count;
+        }
+        if ($this->create_task_if_over_due !== null) {
+            $result['createTaskIfOverDue'] = $this->create_task_if_over_due;
+        }
+        if ($this->due_after_seconds !== null) {
+            $result['dueAfterSeconds'] = $this->due_after_seconds;
+        }
+        return $result;
     }
 }

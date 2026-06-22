@@ -10,15 +10,9 @@ namespace HighLevel\Services\Contacts\Models;
 class TaskByIsSuccessfulResponseDto
 {
     /**
-     * @var TaskSchema|null
+     * @var mixed
      */
-    public ?TaskSchema $task = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $task;
 
     /**
      * Create model from array data
@@ -27,67 +21,20 @@ class TaskByIsSuccessfulResponseDto
      */
     public function __construct(array $data = [])
     {
-        // Handle single TaskSchema object
-        if (isset($data['task']) && is_array($data['task'])) {
-            $this->task = new TaskSchema($data['task']);
-        } else {
-            $this->task = $data['task'] ?? null;
-        }
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
+        $this->task = $data['task'] ?? null;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->task !== null) {
+            $result['task'] = $this->task;
+        }
+        return $result;
     }
 }

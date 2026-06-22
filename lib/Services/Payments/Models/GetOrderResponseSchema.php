@@ -72,12 +72,12 @@ class GetOrderResponseSchema
     /**
      * @var mixed
      */
-    public mixed $amount_summary;
+    public $amount_summary;
 
     /**
      * @var mixed
      */
-    public mixed $source;
+    public $source;
 
     /**
      * @var array&lt;string&gt;|null
@@ -130,12 +130,6 @@ class GetOrderResponseSchema
     public ?string $created_by = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -166,61 +160,88 @@ class GetOrderResponseSchema
         $this->automatic_taxes_calculated = $data['automaticTaxesCalculated'] ?? null;
         $this->tax_calculation_provider = $data['taxCalculationProvider'] ?? null;
         $this->created_by = $data['createdBy'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->fulfillment_status !== null) {
+            $result['fulfillmentStatus'] = $this->fulfillment_status;
+        }
+        if ($this->contact_snapshot !== null) {
+            $result['contactSnapshot'] = $this->contact_snapshot;
+        }
+        if ($this->amount_summary !== null) {
+            $result['amountSummary'] = $this->amount_summary;
+        }
+        if ($this->source !== null) {
+            $result['source'] = $this->source;
+        }
+        if ($this->items !== null) {
+            $result['items'] = $this->items;
+        }
+        if ($this->coupon !== null) {
+            $result['coupon'] = $this->coupon;
+        }
+        if ($this->tracking_id !== null) {
+            $result['trackingId'] = $this->tracking_id;
+        }
+        if ($this->fingerprint !== null) {
+            $result['fingerprint'] = $this->fingerprint;
+        }
+        if ($this->meta !== null) {
+            $result['meta'] = $this->meta;
+        }
+        if ($this->mark_as_test !== null) {
+            $result['markAsTest'] = $this->mark_as_test;
+        }
+        if ($this->trace_id !== null) {
+            $result['traceId'] = $this->trace_id;
+        }
+        if ($this->automatic_taxes_calculated !== null) {
+            $result['automaticTaxesCalculated'] = $this->automatic_taxes_calculated;
+        }
+        if ($this->tax_calculation_provider !== null) {
+            $result['taxCalculationProvider'] = $this->tax_calculation_provider;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        return $result;
     }
 }

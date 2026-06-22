@@ -138,7 +138,7 @@ class Proposals
      * @throws GuzzleException
      */
     public function sendDocumentsContracts(
-        SendDocumentDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): SendDocumentResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -314,7 +314,7 @@ class Proposals
      * @throws GuzzleException
      */
     public function sendDocumentsContractsTemplate(
-        SendDocumentFromPublicApiBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): SendTemplateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

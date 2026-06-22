@@ -55,9 +55,9 @@ class UpdateUserDto
     public ?array $location_ids = null;
 
     /**
-     * @var PermissionsDto|null
+     * @var mixed
      */
-    public ?PermissionsDto $permissions = null;
+    public $permissions;
 
     /**
      * @var array&lt;string&gt;|null
@@ -85,12 +85,6 @@ class UpdateUserDto
     public ?string $platform_language = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -106,72 +100,67 @@ class UpdateUserDto
         $this->role = $data['role'] ?? null;
         $this->company_id = $data['companyId'] ?? null;
         $this->location_ids = $data['locationIds'] ?? null;
-        // Handle single PermissionsDto object
-        if (isset($data['permissions']) && is_array($data['permissions'])) {
-            $this->permissions = new PermissionsDto($data['permissions']);
-        } else {
-            $this->permissions = $data['permissions'] ?? null;
-        }
+        $this->permissions = $data['permissions'] ?? null;
         $this->scopes = $data['scopes'] ?? null;
         $this->scopes_assigned_to_only = $data['scopesAssignedToOnly'] ?? null;
         $this->profile_photo = $data['profilePhoto'] ?? null;
         $this->twilio_phone = $data['twilioPhone'] ?? null;
         $this->platform_language = $data['platformLanguage'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->first_name !== null) {
+            $result['firstName'] = $this->first_name;
+        }
+        if ($this->last_name !== null) {
+            $result['lastName'] = $this->last_name;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->password !== null) {
+            $result['password'] = $this->password;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->role !== null) {
+            $result['role'] = $this->role;
+        }
+        if ($this->company_id !== null) {
+            $result['companyId'] = $this->company_id;
+        }
+        if ($this->location_ids !== null) {
+            $result['locationIds'] = $this->location_ids;
+        }
+        if ($this->permissions !== null) {
+            $result['permissions'] = $this->permissions;
+        }
+        if ($this->scopes !== null) {
+            $result['scopes'] = $this->scopes;
+        }
+        if ($this->scopes_assigned_to_only !== null) {
+            $result['scopesAssignedToOnly'] = $this->scopes_assigned_to_only;
+        }
+        if ($this->profile_photo !== null) {
+            $result['profilePhoto'] = $this->profile_photo;
+        }
+        if ($this->twilio_phone !== null) {
+            $result['twilioPhone'] = $this->twilio_phone;
+        }
+        if ($this->platform_language !== null) {
+            $result['platformLanguage'] = $this->platform_language;
+        }
+        return $result;
     }
 }

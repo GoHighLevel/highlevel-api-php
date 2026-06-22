@@ -27,7 +27,7 @@ class CallActionSchema
     /**
      * @var mixed
      */
-    public mixed $action_parameters;
+    public $action_parameters;
 
     /**
      * @var string|null
@@ -38,12 +38,6 @@ class CallActionSchema
      * @var string|null
      */
     public ?string $trigger_received_at = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -58,61 +52,34 @@ class CallActionSchema
         $this->action_parameters = $data['actionParameters'] ?? null;
         $this->executed_at = $data['executedAt'] ?? null;
         $this->trigger_received_at = $data['triggerReceivedAt'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->action_id !== null) {
+            $result['actionId'] = $this->action_id;
+        }
+        if ($this->action_type !== null) {
+            $result['actionType'] = $this->action_type;
+        }
+        if ($this->action_name !== null) {
+            $result['actionName'] = $this->action_name;
+        }
+        if ($this->action_parameters !== null) {
+            $result['actionParameters'] = $this->action_parameters;
+        }
+        if ($this->executed_at !== null) {
+            $result['executedAt'] = $this->executed_at;
+        }
+        if ($this->trigger_received_at !== null) {
+            $result['triggerReceivedAt'] = $this->trigger_received_at;
+        }
+        return $result;
     }
 }

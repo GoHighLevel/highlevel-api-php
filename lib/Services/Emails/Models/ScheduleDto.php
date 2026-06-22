@@ -47,11 +47,6 @@ class ScheduleDto
     /**
      * @var string
      */
-    public string $id;
-
-    /**
-     * @var string
-     */
     public string $status;
 
     /**
@@ -145,12 +140,6 @@ class ScheduleDto
     public array $child;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -164,7 +153,6 @@ class ScheduleDto
         $this->child_count = $data['childCount'] ?? 0;
         $this->campaign_type = $data['campaignType'] ?? '';
         $this->bulk_action_version = $data['bulkActionVersion'] ?? '';
-        $this->id = $data['_id'] ?? '';
         $this->status = $data['status'] ?? '';
         $this->send_days = $data['sendDays'] ?? [];
         $this->deleted = $data['deleted'] ?? false;
@@ -184,61 +172,94 @@ class ScheduleDto
         $this->download_url = $data['downloadUrl'] ?? '';
         $this->template_data_download_url = $data['templateDataDownloadUrl'] ?? '';
         $this->child = $data['child'] ?? [];
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->repeat_after !== null) {
+            $result['repeatAfter'] = $this->repeat_after;
+        }
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->parent_id !== null) {
+            $result['parentId'] = $this->parent_id;
+        }
+        if ($this->child_count !== null) {
+            $result['childCount'] = $this->child_count;
+        }
+        if ($this->campaign_type !== null) {
+            $result['campaignType'] = $this->campaign_type;
+        }
+        if ($this->bulk_action_version !== null) {
+            $result['bulkActionVersion'] = $this->bulk_action_version;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->send_days !== null) {
+            $result['sendDays'] = $this->send_days;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->migrated !== null) {
+            $result['migrated'] = $this->migrated;
+        }
+        if ($this->archived !== null) {
+            $result['archived'] = $this->archived;
+        }
+        if ($this->has_tracking !== null) {
+            $result['hasTracking'] = $this->has_tracking;
+        }
+        if ($this->is_plain_text !== null) {
+            $result['isPlainText'] = $this->is_plain_text;
+        }
+        if ($this->has_utm_tracking !== null) {
+            $result['hasUtmTracking'] = $this->has_utm_tracking;
+        }
+        if ($this->enable_resend_to_unopened !== null) {
+            $result['enableResendToUnopened'] = $this->enable_resend_to_unopened;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->template_id !== null) {
+            $result['templateId'] = $this->template_id;
+        }
+        if ($this->template_type !== null) {
+            $result['templateType'] = $this->template_type;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->_v !== null) {
+            $result['__v'] = $this->_v;
+        }
+        if ($this->document_id !== null) {
+            $result['documentId'] = $this->document_id;
+        }
+        if ($this->download_url !== null) {
+            $result['downloadUrl'] = $this->download_url;
+        }
+        if ($this->template_data_download_url !== null) {
+            $result['templateDataDownloadUrl'] = $this->template_data_download_url;
+        }
+        if ($this->child !== null) {
+            $result['child'] = $this->child;
+        }
+        return $result;
     }
 }

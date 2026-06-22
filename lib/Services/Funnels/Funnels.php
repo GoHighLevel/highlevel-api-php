@@ -52,7 +52,7 @@ class Funnels
      * @throws GuzzleException
      */
     public function createRedirect(
-        CreateRedirectParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateRedirectResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -142,7 +142,7 @@ class Funnels
      */
     public function updateRedirectById(
         array $params,
-        UpdateRedirectParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateRedirectResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

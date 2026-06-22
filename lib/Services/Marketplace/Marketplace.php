@@ -50,9 +50,9 @@ class Marketplace
      * @throws GuzzleException
      */
     public function charge(
-        RaiseChargeBodyDTO $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -146,7 +146,7 @@ class Marketplace
     public function getCharges(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'meterId', 'in' => 'query'], ['name' => 'eventId', 'in' => 'query'], ['name' => 'userId', 'in' => 'query'], ['name' => 'startDate', 'in' => 'query'], ['name' => 'endDate', 'in' => 'query'], ['name' => 'skip', 'in' => 'query'], ['name' => 'limit', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access-Only"];
@@ -228,7 +228,7 @@ class Marketplace
     public function deleteCharge(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'chargeId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access-Only"];
@@ -310,7 +310,7 @@ class Marketplace
     public function getSpecificCharge(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'chargeId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access-Only"];
@@ -388,7 +388,7 @@ class Marketplace
      */
     public function hasFunds(
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [];
         $extracted = RequestUtils::extractParams([], $paramDefs);
         $requirements = ["Location-Access-Only"];
@@ -470,7 +470,7 @@ class Marketplace
      */
     public function uninstallApplication(
         array $params,
-        DeleteIntegrationBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): DeleteIntegrationResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -721,7 +721,7 @@ class Marketplace
      * @throws GuzzleException
      */
     public function migrateConnection(
-        MigrateConnectionDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): MigrateConnectionResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

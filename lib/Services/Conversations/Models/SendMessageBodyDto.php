@@ -117,7 +117,7 @@ class SendMessageBodyDto
     /**
      * @var mixed
      */
-    public mixed $forward;
+    public $forward;
 
     /**
      * @var string
@@ -133,12 +133,6 @@ class SendMessageBodyDto
      * @var string|null
      */
     public ?string $optimization_period = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -172,61 +166,91 @@ class SendMessageBodyDto
         $this->status = $data['status'] ?? '';
         $this->uses_native_scheduling_ai = $data['usesNativeSchedulingAi'] ?? null;
         $this->optimization_period = $data['optimizationPeriod'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->sub_type !== null) {
+            $result['subType'] = $this->sub_type;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->appointment_id !== null) {
+            $result['appointmentId'] = $this->appointment_id;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = $this->attachments;
+        }
+        if ($this->email_from !== null) {
+            $result['emailFrom'] = $this->email_from;
+        }
+        if ($this->email_cc !== null) {
+            $result['emailCc'] = $this->email_cc;
+        }
+        if ($this->email_bcc !== null) {
+            $result['emailBcc'] = $this->email_bcc;
+        }
+        if ($this->html !== null) {
+            $result['html'] = $this->html;
+        }
+        if ($this->message !== null) {
+            $result['message'] = $this->message;
+        }
+        if ($this->subject !== null) {
+            $result['subject'] = $this->subject;
+        }
+        if ($this->reply_message_id !== null) {
+            $result['replyMessageId'] = $this->reply_message_id;
+        }
+        if ($this->template_id !== null) {
+            $result['templateId'] = $this->template_id;
+        }
+        if ($this->thread_id !== null) {
+            $result['threadId'] = $this->thread_id;
+        }
+        if ($this->scheduled_timestamp !== null) {
+            $result['scheduledTimestamp'] = $this->scheduled_timestamp;
+        }
+        if ($this->conversation_provider_id !== null) {
+            $result['conversationProviderId'] = $this->conversation_provider_id;
+        }
+        if ($this->email_to !== null) {
+            $result['emailTo'] = $this->email_to;
+        }
+        if ($this->custom_subtype_id !== null) {
+            $result['customSubtypeId'] = $this->custom_subtype_id;
+        }
+        if ($this->email_reply_mode !== null) {
+            $result['emailReplyMode'] = $this->email_reply_mode;
+        }
+        if ($this->from_number !== null) {
+            $result['fromNumber'] = $this->from_number;
+        }
+        if ($this->to_number !== null) {
+            $result['toNumber'] = $this->to_number;
+        }
+        if ($this->forward !== null) {
+            $result['forward'] = $this->forward;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->uses_native_scheduling_ai !== null) {
+            $result['usesNativeSchedulingAi'] = $this->uses_native_scheduling_ai;
+        }
+        if ($this->optimization_period !== null) {
+            $result['optimizationPeriod'] = $this->optimization_period;
+        }
+        return $result;
     }
 }

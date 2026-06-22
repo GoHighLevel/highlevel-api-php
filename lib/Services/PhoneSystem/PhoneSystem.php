@@ -7,13 +7,13 @@ use HighLevel\GHLError;
 use HighLevel\Utils\RequestUtils;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use HighLevel\Services\PhoneSystem\Models\AvailableNumbersResponseDto;
 use HighLevel\Services\PhoneSystem\Models\PurchasePhoneNumberBodyDto;
-use HighLevel\Services\PhoneSystem\Models\TwilioAccountResponseDto;
+use HighLevel\Services\PhoneSystem\Models\PurchaseNumberForLocationV3Http201ResponseDto;
+use HighLevel\Services\PhoneSystem\Models\ListNumbersV3Http200ResponseDto;
 
 /**
  * PhoneSystem Service
- * Documentation for Phone System API
+ * API Service for LC Phone - version v3
  * 
  * @package HighLevel\Services\PhoneSystem
  */
@@ -36,11 +36,11 @@ class PhoneSystem
     }
 
     /**
-     * List Number Pools
-     * Get list of number pools
+     * List number pools
+     * Returns number pools for the location. Requires locationId as a query parameter.
      * 
      * @param array{
-     *   locationId?: string // Location ID to filter pools
+     *   locationId: string // Location ID to scope the number pool list
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return mixed Response data
@@ -50,8 +50,8 @@ class PhoneSystem
     public function getNumberPoolList(
         array $params,
         ?array $options = null
-    ): mixed {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ];
+    ) {
+        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
@@ -119,29 +119,29 @@ class PhoneSystem
 
     /**
      * List available phone numbers
-     * Search for available phone numbers to purchase for a specific location. Supports filtering by number pattern, type, and capabilities.
+     * Search Twilio inventory for purchasable phone numbers in a country for the given location.
      * 
      * @param array{
-     *   locationId: string // The unique identifier of the location
-     *   countryCode: string // ISO 3166-1 alpha-2 country code for which to search available numbers
-     *   numberTypes?: string // Comma-separated list of phone number types to search for (e.g. local, tollFree, mobile)
-     *   firstPart?: string // Filter numbers that begin with this digit pattern
-     *   lastPart?: string // Filter numbers that end with this digit pattern
-     *   anywhere?: string // Filter numbers that contain this digit pattern anywhere
-     *   smsEnabled?: bool // Filter for numbers with SMS capability
-     *   mmsEnabled?: bool // Filter for numbers with MMS capability
-     *   voiceEnabled?: bool // Filter for numbers with voice capability
+     *   firstPart: string // firstPart is the beginning of the phone number
+     *   lastPart: string // lastPart is the ending of the phone number
+     *   anywhere: string // anywhere are the numbers required anywhere in phone number
+     *   numberTypes: array // comma separated types of phone number required
+     *   smsEnabled: bool // requested phone numbers should have sms functionality
+     *   mmsEnabled: bool // requested phone numbers should have mms functionality
+     *   voiceEnabled: bool // requested phone numbers should have voice functionality
+     *   countryCode: string // country for which the phone numbers are being requested
+     *   locationId: string // Location ID as string
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
-     * @return AvailableNumbersResponseDto Response data
+     * @return mixed Response data
      * @throws GHLError
      * @throws GuzzleException
      */
-    public function availableNumbers(
+    public function listAvailableNumbersForACountry(
         array $params,
         ?array $options = null
-    ): AvailableNumbersResponseDto {
-        $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'countryCode', 'in' => 'query'], ['name' => 'numberTypes', 'in' => 'query'], ['name' => 'firstPart', 'in' => 'query'], ['name' => 'lastPart', 'in' => 'query'], ['name' => 'anywhere', 'in' => 'query'], ['name' => 'smsEnabled', 'in' => 'query'], ['name' => 'mmsEnabled', 'in' => 'query'], ['name' => 'voiceEnabled', 'in' => 'query'], ];
+    ) {
+        $paramDefs = [['name' => 'firstPart', 'in' => 'query'], ['name' => 'lastPart', 'in' => 'query'], ['name' => 'anywhere', 'in' => 'query'], ['name' => 'numberTypes', 'in' => 'query'], ['name' => 'smsEnabled', 'in' => 'query'], ['name' => 'mmsEnabled', 'in' => 'query'], ['name' => 'voiceEnabled', 'in' => 'query'], ['name' => 'countryCode', 'in' => 'query'], ['name' => 'locationId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
@@ -192,7 +192,7 @@ class PhoneSystem
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new AvailableNumbersResponseDto($responseData);
+            return $responseData;
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -208,27 +208,28 @@ class PhoneSystem
     }
 
     /**
-     * Purchase a phone number
-     * Purchase a phone number for a specific location.
+     * Purchase number for location
+     * Purchase number for location. With &#x60;version: v3&#x60;, the HTTP 201 body is the standard success envelope (&#x60;status&#x60;, &#x60;data&#x60;, &#x60;message&#x60;, &#x60;statusCode&#x60;). The v3 purchase fields live under &#x60;data&#x60;: &#x60;number&#x60;, &#x60;locationId&#x60;, &#x60;id&#x60;, and &#x60;underLcAccount&#x60; (renamed from under_ghl_account).
      * 
      * @param array{
-     *   locationId: string // The unique identifier of the location
+     *   locationId: string // Location ID as string
+     *   version: string // Send `v3` to use the v3 response contract (AIP). This is the supported version value for these endpoints.
      * } $params Request parameters
      * @param PurchasePhoneNumberBodyDto $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
-     * @return TwilioAccountResponseDto Response data
+     * @return PurchaseNumberForLocationV3Http201ResponseDto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
-    public function purchasePhoneNumber(
+    public function purchaseNumberForLocation(
         array $params,
-        PurchasePhoneNumberBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
-    ): TwilioAccountResponseDto {
+    ): PurchaseNumberForLocationV3Http201ResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
-        $paramDefs = [['name' => 'locationId', 'in' => 'path'], ];
+        $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'version', 'in' => 'header']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
@@ -282,7 +283,7 @@ class PhoneSystem
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new TwilioAccountResponseDto($responseData);
+            return new PurchaseNumberForLocationV3Http201ResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -299,25 +300,27 @@ class PhoneSystem
 
     /**
      * List active numbers
-     * Retrieve a paginated list of active phone numbers for a specific location. Supports filtering, pagination, and optional exclusion of number pool assignments.
+     * List active numbers. With &#x60;version: v3&#x60;, the HTTP 200 body is the standard success envelope (&#x60;status&#x60;, &#x60;data&#x60;, &#x60;message&#x60;, &#x60;statusCode&#x60;). The v3 list payload is under &#x60;data&#x60;; &#x60;isUnderGhl&#x60; is renamed to &#x60;isUnderLc&#x60; per AIP naming convention.
      * 
      * @param array{
-     *   locationId: string // The unique identifier of the location
+     *   locationId: string // Location ID as string
      *   pageSize?: int // How many resources to return in each list page. The default is 50, and the maximum is 1000.
-     *   page?: int // The page index for pagination. The default is 0.
-     *   searchFilter?: string // Filter numbers by phone number pattern. Supports partial matching (e.g., "+91" to find all Indian numbers).
-     *   skipNumberPool?: bool // Whether to exclude numbers that are assigned to number pools. Default is true.
+     *   page?: int // The page index. The default is 0.
+     *   searchFilter?: string // Number search Filter
+     *   skipNumberPool?: bool // When true, exclude numbers assigned to number pools from the list.
+     *   includeRcsSenderIds?: bool // Include RCS Sender IDs
+     *   version: string // Send `v3` to use the v3 response contract (AIP). This is the supported version value for these endpoints.
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
-     * @return mixed Response data
+     * @return ListNumbersV3Http200ResponseDto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function activeNumbers(
         array $params,
         ?array $options = null
-    ): mixed {
-        $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'pageSize', 'in' => 'query'], ['name' => 'page', 'in' => 'query'], ['name' => 'searchFilter', 'in' => 'query'], ['name' => 'skipNumberPool', 'in' => 'query'], ];
+    ): ListNumbersV3Http200ResponseDto {
+        $paramDefs = [['name' => 'locationId', 'in' => 'path'], ['name' => 'pageSize', 'in' => 'query'], ['name' => 'page', 'in' => 'query'], ['name' => 'searchFilter', 'in' => 'query'], ['name' => 'skipNumberPool', 'in' => 'query'], ['name' => 'includeRcsSenderIds', 'in' => 'query'], ['name' => 'version', 'in' => 'header']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 
@@ -368,7 +371,7 @@ class PhoneSystem
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return $responseData;
+            return new ListNumbersV3Http200ResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
