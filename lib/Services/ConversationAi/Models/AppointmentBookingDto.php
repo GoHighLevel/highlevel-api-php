@@ -70,12 +70,6 @@ class AppointmentBookingDto
     public bool $cancel_enabled;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -94,61 +88,52 @@ class AppointmentBookingDto
         $this->transfer_agent = $data['transferAgent'] ?? null;
         $this->reschedule_enabled = $data['rescheduleEnabled'] ?? false;
         $this->cancel_enabled = $data['cancelEnabled'] ?? false;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->action_id !== null) {
+            $result['actionId'] = $this->action_id;
+        }
+        if ($this->calendar_id !== null) {
+            $result['calendarId'] = $this->calendar_id;
+        }
+        if ($this->only_send_link !== null) {
+            $result['onlySendLink'] = $this->only_send_link;
+        }
+        if ($this->trigger_workflow !== null) {
+            $result['triggerWorkflow'] = $this->trigger_workflow;
+        }
+        if ($this->workflow_ids !== null) {
+            $result['workflowIds'] = $this->workflow_ids;
+        }
+        if ($this->sleep_after_booking !== null) {
+            $result['sleepAfterBooking'] = $this->sleep_after_booking;
+        }
+        if ($this->sleep_time_unit !== null) {
+            $result['sleepTimeUnit'] = $this->sleep_time_unit;
+        }
+        if ($this->sleep_time !== null) {
+            $result['sleepTime'] = $this->sleep_time;
+        }
+        if ($this->transfer_bot !== null) {
+            $result['transferBot'] = $this->transfer_bot;
+        }
+        if ($this->transfer_agent !== null) {
+            $result['transferAgent'] = $this->transfer_agent;
+        }
+        if ($this->reschedule_enabled !== null) {
+            $result['rescheduleEnabled'] = $this->reschedule_enabled;
+        }
+        if ($this->cancel_enabled !== null) {
+            $result['cancelEnabled'] = $this->cancel_enabled;
+        }
+        return $result;
     }
 }

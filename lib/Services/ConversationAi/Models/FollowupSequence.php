@@ -50,12 +50,6 @@ class FollowupSequence
     public ?bool $contact_requested = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -70,61 +64,40 @@ class FollowupSequence
         $this->custom_message = $data['customMessage'] ?? null;
         $this->workflow_id = $data['workflowId'] ?? null;
         $this->contact_requested = $data['contactRequested'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->followup_time_unit !== null) {
+            $result['followupTimeUnit'] = $this->followup_time_unit;
+        }
+        if ($this->followup_time !== null) {
+            $result['followupTime'] = $this->followup_time;
+        }
+        if ($this->ai_enabled_message !== null) {
+            $result['aiEnabledMessage'] = $this->ai_enabled_message;
+        }
+        if ($this->trigger_workflow !== null) {
+            $result['triggerWorkflow'] = $this->trigger_workflow;
+        }
+        if ($this->custom_message !== null) {
+            $result['customMessage'] = $this->custom_message;
+        }
+        if ($this->workflow_id !== null) {
+            $result['workflowId'] = $this->workflow_id;
+        }
+        if ($this->contact_requested !== null) {
+            $result['contactRequested'] = $this->contact_requested;
+        }
+        return $result;
     }
 }

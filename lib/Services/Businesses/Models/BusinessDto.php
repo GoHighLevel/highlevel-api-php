@@ -67,7 +67,7 @@ class BusinessDto
     /**
      * @var mixed
      */
-    public mixed $updated_by;
+    public $updated_by;
 
     /**
      * @var string
@@ -77,7 +77,7 @@ class BusinessDto
     /**
      * @var mixed
      */
-    public mixed $created_by;
+    public $created_by;
 
     /**
      * @var string|null
@@ -88,12 +88,6 @@ class BusinessDto
      * @var string|null
      */
     public ?string $updated_at = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -118,61 +112,64 @@ class BusinessDto
         $this->created_by = $data['createdBy'] ?? null;
         $this->created_at = $data['createdAt'] ?? null;
         $this->updated_at = $data['updatedAt'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->website !== null) {
+            $result['website'] = $this->website;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->city !== null) {
+            $result['city'] = $this->city;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->state !== null) {
+            $result['state'] = $this->state;
+        }
+        if ($this->postal_code !== null) {
+            $result['postalCode'] = $this->postal_code;
+        }
+        if ($this->country !== null) {
+            $result['country'] = $this->country;
+        }
+        if ($this->updated_by !== null) {
+            $result['updatedBy'] = $this->updated_by;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        return $result;
     }
 }

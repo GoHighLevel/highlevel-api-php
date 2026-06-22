@@ -75,12 +75,6 @@ class CustomFieldSchema
     public ?string $model = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -100,61 +94,55 @@ class CustomFieldSchema
         $this->max_file_limit = $data['maxFileLimit'] ?? null;
         $this->location_id = $data['locationId'] ?? null;
         $this->model = $data['model'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->field_key !== null) {
+            $result['fieldKey'] = $this->field_key;
+        }
+        if ($this->placeholder !== null) {
+            $result['placeholder'] = $this->placeholder;
+        }
+        if ($this->data_type !== null) {
+            $result['dataType'] = $this->data_type;
+        }
+        if ($this->position !== null) {
+            $result['position'] = $this->position;
+        }
+        if ($this->picklist_options !== null) {
+            $result['picklistOptions'] = $this->picklist_options;
+        }
+        if ($this->picklist_image_options !== null) {
+            $result['picklistImageOptions'] = $this->picklist_image_options;
+        }
+        if ($this->is_allowed_custom_option !== null) {
+            $result['isAllowedCustomOption'] = $this->is_allowed_custom_option;
+        }
+        if ($this->is_multi_file_allowed !== null) {
+            $result['isMultiFileAllowed'] = $this->is_multi_file_allowed;
+        }
+        if ($this->max_file_limit !== null) {
+            $result['maxFileLimit'] = $this->max_file_limit;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->model !== null) {
+            $result['model'] = $this->model;
+        }
+        return $result;
     }
 }

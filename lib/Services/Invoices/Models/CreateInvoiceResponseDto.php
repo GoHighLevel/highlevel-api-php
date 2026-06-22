@@ -125,12 +125,6 @@ class CreateInvoiceResponseDto
     public ?array $payment_schedule = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -160,61 +154,85 @@ class CreateInvoiceResponseDto
         $this->automatic_taxes_enabled = $data['automaticTaxesEnabled'] ?? null;
         $this->automatic_taxes_calculated = $data['automaticTaxesCalculated'] ?? null;
         $this->payment_schedule = $data['paymentSchedule'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->live_mode !== null) {
+            $result['liveMode'] = $this->live_mode;
+        }
+        if ($this->amount_paid !== null) {
+            $result['amountPaid'] = $this->amount_paid;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->business_details !== null) {
+            $result['businessDetails'] = $this->business_details;
+        }
+        if ($this->invoice_number !== null) {
+            $result['invoiceNumber'] = $this->invoice_number;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->contact_details !== null) {
+            $result['contactDetails'] = $this->contact_details;
+        }
+        if ($this->issue_date !== null) {
+            $result['issueDate'] = $this->issue_date;
+        }
+        if ($this->due_date !== null) {
+            $result['dueDate'] = $this->due_date;
+        }
+        if ($this->discount !== null) {
+            $result['discount'] = $this->discount;
+        }
+        if ($this->invoice_items !== null) {
+            $result['invoiceItems'] = $this->invoice_items;
+        }
+        if ($this->total !== null) {
+            $result['total'] = $this->total;
+        }
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->amount_due !== null) {
+            $result['amountDue'] = $this->amount_due;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->automatic_taxes_enabled !== null) {
+            $result['automaticTaxesEnabled'] = $this->automatic_taxes_enabled;
+        }
+        if ($this->automatic_taxes_calculated !== null) {
+            $result['automaticTaxesCalculated'] = $this->automatic_taxes_calculated;
+        }
+        if ($this->payment_schedule !== null) {
+            $result['paymentSchedule'] = $this->payment_schedule;
+        }
+        return $result;
     }
 }

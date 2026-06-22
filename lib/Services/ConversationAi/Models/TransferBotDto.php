@@ -35,12 +35,6 @@ class TransferBotDto
     public ?array $transfer_bot_examples = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -52,61 +46,31 @@ class TransferBotDto
         $this->enabled = $data['enabled'] ?? false;
         $this->transfer_bot_trigger_condition = $data['transferBotTriggerCondition'] ?? null;
         $this->transfer_bot_examples = $data['transferBotExamples'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->transfer_bot_type !== null) {
+            $result['transferBotType'] = $this->transfer_bot_type;
+        }
+        if ($this->transfer_to_bot !== null) {
+            $result['transferToBot'] = $this->transfer_to_bot;
+        }
+        if ($this->enabled !== null) {
+            $result['enabled'] = $this->enabled;
+        }
+        if ($this->transfer_bot_trigger_condition !== null) {
+            $result['transferBotTriggerCondition'] = $this->transfer_bot_trigger_condition;
+        }
+        if ($this->transfer_bot_examples !== null) {
+            $result['transferBotExamples'] = $this->transfer_bot_examples;
+        }
+        return $result;
     }
 }

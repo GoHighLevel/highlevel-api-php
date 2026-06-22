@@ -50,12 +50,6 @@ class FillableFieldsDTO
     public string $value;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -80,61 +74,44 @@ class FillableFieldsDTO
             $this->type = $data['type'] ?? null;
         }
         $this->value = $data['value'] ?? '';
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->field_id !== null) {
+            $result['fieldId'] = $this->field_id;
+        }
+        if ($this->is_required !== null) {
+            $result['isRequired'] = $this->is_required;
+        }
+        if ($this->has_completed !== null) {
+            $result['hasCompleted'] = $this->has_completed;
+        }
+        if ($this->recipient !== null) {
+            $result['recipient'] = $this->recipient;
+        }
+        if ($this->entity_type !== null) {
+            $result['entityType'] = is_object($this->entity_type) && method_exists($this->entity_type, 'toArray') 
+                ? $this->entity_type->toArray() 
+                : $this->entity_type;
+        }
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->type !== null) {
+            $result['type'] = is_object($this->type) && method_exists($this->type, 'toArray') 
+                ? $this->type->toArray() 
+                : $this->type;
+        }
+        if ($this->value !== null) {
+            $result['value'] = $this->value;
+        }
+        return $result;
     }
 }

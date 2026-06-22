@@ -200,12 +200,6 @@ class PermissionsDto
     public ?bool $export_payments_enabled = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -250,61 +244,130 @@ class PermissionsDto
         $this->payments_enabled = $data['paymentsEnabled'] ?? null;
         $this->communities_enabled = $data['communitiesEnabled'] ?? null;
         $this->export_payments_enabled = $data['exportPaymentsEnabled'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->campaigns_enabled !== null) {
+            $result['campaignsEnabled'] = $this->campaigns_enabled;
+        }
+        if ($this->campaigns_read_only !== null) {
+            $result['campaignsReadOnly'] = $this->campaigns_read_only;
+        }
+        if ($this->contacts_enabled !== null) {
+            $result['contactsEnabled'] = $this->contacts_enabled;
+        }
+        if ($this->workflows_enabled !== null) {
+            $result['workflowsEnabled'] = $this->workflows_enabled;
+        }
+        if ($this->workflows_read_only !== null) {
+            $result['workflowsReadOnly'] = $this->workflows_read_only;
+        }
+        if ($this->triggers_enabled !== null) {
+            $result['triggersEnabled'] = $this->triggers_enabled;
+        }
+        if ($this->funnels_enabled !== null) {
+            $result['funnelsEnabled'] = $this->funnels_enabled;
+        }
+        if ($this->websites_enabled !== null) {
+            $result['websitesEnabled'] = $this->websites_enabled;
+        }
+        if ($this->opportunities_enabled !== null) {
+            $result['opportunitiesEnabled'] = $this->opportunities_enabled;
+        }
+        if ($this->dashboard_stats_enabled !== null) {
+            $result['dashboardStatsEnabled'] = $this->dashboard_stats_enabled;
+        }
+        if ($this->bulk_requests_enabled !== null) {
+            $result['bulkRequestsEnabled'] = $this->bulk_requests_enabled;
+        }
+        if ($this->appointments_enabled !== null) {
+            $result['appointmentsEnabled'] = $this->appointments_enabled;
+        }
+        if ($this->reviews_enabled !== null) {
+            $result['reviewsEnabled'] = $this->reviews_enabled;
+        }
+        if ($this->online_listings_enabled !== null) {
+            $result['onlineListingsEnabled'] = $this->online_listings_enabled;
+        }
+        if ($this->phone_call_enabled !== null) {
+            $result['phoneCallEnabled'] = $this->phone_call_enabled;
+        }
+        if ($this->conversations_enabled !== null) {
+            $result['conversationsEnabled'] = $this->conversations_enabled;
+        }
+        if ($this->assigned_data_only !== null) {
+            $result['assignedDataOnly'] = $this->assigned_data_only;
+        }
+        if ($this->adwords_reporting_enabled !== null) {
+            $result['adwordsReportingEnabled'] = $this->adwords_reporting_enabled;
+        }
+        if ($this->membership_enabled !== null) {
+            $result['membershipEnabled'] = $this->membership_enabled;
+        }
+        if ($this->facebook_ads_reporting_enabled !== null) {
+            $result['facebookAdsReportingEnabled'] = $this->facebook_ads_reporting_enabled;
+        }
+        if ($this->attributions_reporting_enabled !== null) {
+            $result['attributionsReportingEnabled'] = $this->attributions_reporting_enabled;
+        }
+        if ($this->settings_enabled !== null) {
+            $result['settingsEnabled'] = $this->settings_enabled;
+        }
+        if ($this->tags_enabled !== null) {
+            $result['tagsEnabled'] = $this->tags_enabled;
+        }
+        if ($this->lead_value_enabled !== null) {
+            $result['leadValueEnabled'] = $this->lead_value_enabled;
+        }
+        if ($this->marketing_enabled !== null) {
+            $result['marketingEnabled'] = $this->marketing_enabled;
+        }
+        if ($this->agent_reporting_enabled !== null) {
+            $result['agentReportingEnabled'] = $this->agent_reporting_enabled;
+        }
+        if ($this->bot_service !== null) {
+            $result['botService'] = $this->bot_service;
+        }
+        if ($this->social_planner !== null) {
+            $result['socialPlanner'] = $this->social_planner;
+        }
+        if ($this->blogging_enabled !== null) {
+            $result['bloggingEnabled'] = $this->blogging_enabled;
+        }
+        if ($this->invoice_enabled !== null) {
+            $result['invoiceEnabled'] = $this->invoice_enabled;
+        }
+        if ($this->affiliate_manager_enabled !== null) {
+            $result['affiliateManagerEnabled'] = $this->affiliate_manager_enabled;
+        }
+        if ($this->content_ai_enabled !== null) {
+            $result['contentAiEnabled'] = $this->content_ai_enabled;
+        }
+        if ($this->refunds_enabled !== null) {
+            $result['refundsEnabled'] = $this->refunds_enabled;
+        }
+        if ($this->record_payment_enabled !== null) {
+            $result['recordPaymentEnabled'] = $this->record_payment_enabled;
+        }
+        if ($this->cancel_subscription_enabled !== null) {
+            $result['cancelSubscriptionEnabled'] = $this->cancel_subscription_enabled;
+        }
+        if ($this->payments_enabled !== null) {
+            $result['paymentsEnabled'] = $this->payments_enabled;
+        }
+        if ($this->communities_enabled !== null) {
+            $result['communitiesEnabled'] = $this->communities_enabled;
+        }
+        if ($this->export_payments_enabled !== null) {
+            $result['exportPaymentsEnabled'] = $this->export_payments_enabled;
+        }
+        return $result;
     }
 }

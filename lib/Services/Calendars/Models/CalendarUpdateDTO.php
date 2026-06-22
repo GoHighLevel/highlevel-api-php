@@ -262,18 +262,12 @@ class CalendarUpdateDTO
     /**
      * @var mixed
      */
-    public mixed $look_busy_config;
+    public $look_busy_config;
 
     /**
      * @var bool|null
      */
     public ?bool $is_active = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -374,61 +368,184 @@ class CalendarUpdateDTO
         $this->calendar_cover_image = $data['calendarCoverImage'] ?? null;
         $this->look_busy_config = $data['lookBusyConfig'] ?? null;
         $this->is_active = $data['isActive'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->notifications !== null) {
+            $result['notifications'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->notifications);
+        }
+        if ($this->group_id !== null) {
+            $result['groupId'] = $this->group_id;
+        }
+        if ($this->team_members !== null) {
+            $result['teamMembers'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->team_members);
+        }
+        if ($this->event_type !== null) {
+            $result['eventType'] = $this->event_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->slug !== null) {
+            $result['slug'] = $this->slug;
+        }
+        if ($this->widget_slug !== null) {
+            $result['widgetSlug'] = $this->widget_slug;
+        }
+        if ($this->widget_type !== null) {
+            $result['widgetType'] = $this->widget_type;
+        }
+        if ($this->event_title !== null) {
+            $result['eventTitle'] = $this->event_title;
+        }
+        if ($this->event_color !== null) {
+            $result['eventColor'] = $this->event_color;
+        }
+        if ($this->location_configurations !== null) {
+            $result['locationConfigurations'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->location_configurations);
+        }
+        if ($this->meeting_location !== null) {
+            $result['meetingLocation'] = $this->meeting_location;
+        }
+        if ($this->slot_duration !== null) {
+            $result['slotDuration'] = $this->slot_duration;
+        }
+        if ($this->slot_duration_unit !== null) {
+            $result['slotDurationUnit'] = $this->slot_duration_unit;
+        }
+        if ($this->pre_buffer_unit !== null) {
+            $result['preBufferUnit'] = $this->pre_buffer_unit;
+        }
+        if ($this->slot_interval !== null) {
+            $result['slotInterval'] = $this->slot_interval;
+        }
+        if ($this->slot_interval_unit !== null) {
+            $result['slotIntervalUnit'] = $this->slot_interval_unit;
+        }
+        if ($this->slot_buffer !== null) {
+            $result['slotBuffer'] = $this->slot_buffer;
+        }
+        if ($this->pre_buffer !== null) {
+            $result['preBuffer'] = $this->pre_buffer;
+        }
+        if ($this->appoinment_per_slot !== null) {
+            $result['appoinmentPerSlot'] = $this->appoinment_per_slot;
+        }
+        if ($this->appoinment_per_day !== null) {
+            $result['appoinmentPerDay'] = $this->appoinment_per_day;
+        }
+        if ($this->allow_booking_after !== null) {
+            $result['allowBookingAfter'] = $this->allow_booking_after;
+        }
+        if ($this->allow_booking_after_unit !== null) {
+            $result['allowBookingAfterUnit'] = $this->allow_booking_after_unit;
+        }
+        if ($this->allow_booking_for !== null) {
+            $result['allowBookingFor'] = $this->allow_booking_for;
+        }
+        if ($this->allow_booking_for_unit !== null) {
+            $result['allowBookingForUnit'] = $this->allow_booking_for_unit;
+        }
+        if ($this->open_hours !== null) {
+            $result['openHours'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->open_hours);
+        }
+        if ($this->enable_recurring !== null) {
+            $result['enableRecurring'] = $this->enable_recurring;
+        }
+        if ($this->recurring !== null) {
+            $result['recurring'] = is_object($this->recurring) && method_exists($this->recurring, 'toArray') 
+                ? $this->recurring->toArray() 
+                : $this->recurring;
+        }
+        if ($this->form_id !== null) {
+            $result['formId'] = $this->form_id;
+        }
+        if ($this->sticky_contact !== null) {
+            $result['stickyContact'] = $this->sticky_contact;
+        }
+        if ($this->is_live_payment_mode !== null) {
+            $result['isLivePaymentMode'] = $this->is_live_payment_mode;
+        }
+        if ($this->auto_confirm !== null) {
+            $result['autoConfirm'] = $this->auto_confirm;
+        }
+        if ($this->should_send_alert_emails_to_assigned_member !== null) {
+            $result['shouldSendAlertEmailsToAssignedMember'] = $this->should_send_alert_emails_to_assigned_member;
+        }
+        if ($this->alert_email !== null) {
+            $result['alertEmail'] = $this->alert_email;
+        }
+        if ($this->google_invitation_emails !== null) {
+            $result['googleInvitationEmails'] = $this->google_invitation_emails;
+        }
+        if ($this->allow_reschedule !== null) {
+            $result['allowReschedule'] = $this->allow_reschedule;
+        }
+        if ($this->allow_cancellation !== null) {
+            $result['allowCancellation'] = $this->allow_cancellation;
+        }
+        if ($this->should_assign_contact_to_team_member !== null) {
+            $result['shouldAssignContactToTeamMember'] = $this->should_assign_contact_to_team_member;
+        }
+        if ($this->should_skip_assigning_contact_for_existing !== null) {
+            $result['shouldSkipAssigningContactForExisting'] = $this->should_skip_assigning_contact_for_existing;
+        }
+        if ($this->notes !== null) {
+            $result['notes'] = $this->notes;
+        }
+        if ($this->pixel_id !== null) {
+            $result['pixelId'] = $this->pixel_id;
+        }
+        if ($this->form_submit_type !== null) {
+            $result['formSubmitType'] = $this->form_submit_type;
+        }
+        if ($this->form_submit_redirect_u_r_l !== null) {
+            $result['formSubmitRedirectURL'] = $this->form_submit_redirect_u_r_l;
+        }
+        if ($this->form_submit_thanks_message !== null) {
+            $result['formSubmitThanksMessage'] = $this->form_submit_thanks_message;
+        }
+        if ($this->availability_type !== null) {
+            $result['availabilityType'] = $this->availability_type;
+        }
+        if ($this->availabilities !== null) {
+            $result['availabilities'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->availabilities);
+        }
+        if ($this->guest_type !== null) {
+            $result['guestType'] = $this->guest_type;
+        }
+        if ($this->consent_label !== null) {
+            $result['consentLabel'] = $this->consent_label;
+        }
+        if ($this->calendar_cover_image !== null) {
+            $result['calendarCoverImage'] = $this->calendar_cover_image;
+        }
+        if ($this->look_busy_config !== null) {
+            $result['lookBusyConfig'] = $this->look_busy_config;
+        }
+        if ($this->is_active !== null) {
+            $result['isActive'] = $this->is_active;
+        }
+        return $result;
     }
 }

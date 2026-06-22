@@ -55,10 +55,9 @@ class CreateBrandBoardParam
     public ?string $type = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
+     * @var string|null
      */
-    private array $data = [];
+    public ?string $url = null;
 
     /**
      * Create model from array data
@@ -97,61 +96,53 @@ class CreateBrandBoardParam
         $this->brand_board_id = $data['brandBoardId'] ?? null;
         $this->parent_id = $data['parentId'] ?? null;
         $this->type = $data['type'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
+        $this->url = $data['url'] ?? null;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->logos !== null) {
+            $result['logos'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->logos);
+        }
+        if ($this->colors !== null) {
+            $result['colors'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->colors);
+        }
+        if ($this->fonts !== null) {
+            $result['fonts'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->fonts);
+        }
+        if ($this->default !== null) {
+            $result['default'] = $this->default;
+        }
+        if ($this->brand_board_id !== null) {
+            $result['brandBoardId'] = $this->brand_board_id;
+        }
+        if ($this->parent_id !== null) {
+            $result['parentId'] = $this->parent_id;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->url !== null) {
+            $result['url'] = $this->url;
+        }
+        return $result;
     }
 }

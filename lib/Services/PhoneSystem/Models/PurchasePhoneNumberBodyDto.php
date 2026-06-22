@@ -15,50 +15,59 @@ class PurchasePhoneNumberBodyDto
     public string $phone_number;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $country_code = null;
+    public string $address_sid;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $number_type = null;
+    public string $bundle_sid;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $address_sid = null;
+    public string $country_code;
 
     /**
-     * @var string|null
+     * @var array&lt;string, mixed&gt;
      */
-    public ?string $bundle_sid = null;
+    public array $number_type;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $locality = null;
+    public string $payment_intent_id;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $region = null;
+    public string $stripe_account_id;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public ?string $fingerprint_id = null;
+    public string $payment_method_id;
 
     /**
-     * @var bool|null
+     * @var string
      */
-    public ?bool $skip_location_k_y_c = null;
+    public string $locality;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
+     * @var string
      */
-    private array $data = [];
+    public string $region;
+
+    /**
+     * @var string
+     */
+    public string $fingerprint_id;
+
+    /**
+     * @var bool
+     */
+    public bool $skip_location_k_y_c;
 
     /**
      * Create model from array data
@@ -68,69 +77,63 @@ class PurchasePhoneNumberBodyDto
     public function __construct(array $data = [])
     {
         $this->phone_number = $data['phoneNumber'] ?? '';
-        $this->country_code = $data['countryCode'] ?? null;
+        $this->address_sid = $data['addressSid'] ?? '';
+        $this->bundle_sid = $data['bundleSid'] ?? '';
+        $this->country_code = $data['countryCode'] ?? '';
         $this->number_type = $data['numberType'] ?? null;
-        $this->address_sid = $data['addressSid'] ?? null;
-        $this->bundle_sid = $data['bundleSid'] ?? null;
-        $this->locality = $data['locality'] ?? null;
-        $this->region = $data['region'] ?? null;
-        $this->fingerprint_id = $data['fingerprintId'] ?? null;
-        $this->skip_location_k_y_c = $data['skipLocationKYC'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
+        $this->payment_intent_id = $data['paymentIntentId'] ?? '';
+        $this->stripe_account_id = $data['stripeAccountId'] ?? '';
+        $this->payment_method_id = $data['paymentMethodId'] ?? '';
+        $this->locality = $data['locality'] ?? '';
+        $this->region = $data['region'] ?? '';
+        $this->fingerprint_id = $data['fingerprintId'] ?? '';
+        $this->skip_location_k_y_c = $data['skipLocationKYC'] ?? false;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->phone_number !== null) {
+            $result['phoneNumber'] = $this->phone_number;
+        }
+        if ($this->address_sid !== null) {
+            $result['addressSid'] = $this->address_sid;
+        }
+        if ($this->bundle_sid !== null) {
+            $result['bundleSid'] = $this->bundle_sid;
+        }
+        if ($this->country_code !== null) {
+            $result['countryCode'] = $this->country_code;
+        }
+        if ($this->number_type !== null) {
+            $result['numberType'] = $this->number_type;
+        }
+        if ($this->payment_intent_id !== null) {
+            $result['paymentIntentId'] = $this->payment_intent_id;
+        }
+        if ($this->stripe_account_id !== null) {
+            $result['stripeAccountId'] = $this->stripe_account_id;
+        }
+        if ($this->payment_method_id !== null) {
+            $result['paymentMethodId'] = $this->payment_method_id;
+        }
+        if ($this->locality !== null) {
+            $result['locality'] = $this->locality;
+        }
+        if ($this->region !== null) {
+            $result['region'] = $this->region;
+        }
+        if ($this->fingerprint_id !== null) {
+            $result['fingerprintId'] = $this->fingerprint_id;
+        }
+        if ($this->skip_location_k_y_c !== null) {
+            $result['skipLocationKYC'] = $this->skip_location_k_y_c;
+        }
+        return $result;
     }
 }

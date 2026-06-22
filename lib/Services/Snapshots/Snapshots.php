@@ -134,7 +134,7 @@ class Snapshots
      */
     public function createSnapshotShareLink(
         array $params,
-        CreateSnapshotShareLinkRequestDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateSnapshotShareLinkSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -216,10 +216,10 @@ class Snapshots
      * @param array{
      *   snapshotId: string
      *   companyId: string
-     *   from: string
-     *   to: string
+     *   from: string // Only accepts ISO 8601 format
+     *   to: string // Only accepts ISO 8601 format
      *   lastDoc: string // Id for last document till what you want to skip
-     *   limit: string
+     *   limit?: string // Limit of documents to return. Default is 20
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return GetSnapshotPushStatusSuccessfulResponseDTO Response data

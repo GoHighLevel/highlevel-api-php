@@ -11,13 +11,16 @@ use HighLevel\Services\Users\Models\SearchUserSuccessfulResponseDto;
 use HighLevel\Services\Users\Models\FilterByEmailDto;
 use HighLevel\Services\Users\Models\UserSuccessfulResponseDto;
 use HighLevel\Services\Users\Models\UpdateUserDto;
-use HighLevel\Services\Users\Models\DeleteUserSuccessfulResponseDto;
-use HighLevel\Services\Users\Models\LocationSuccessfulResponseDto;
+use HighLevel\Services\Users\Models\DeleteUserSuccessfulResponseV3Dto;
 use HighLevel\Services\Users\Models\CreateUserDto;
 
 /**
  * Users Service
  * Documentation for users API
+
+## API Version v3
+
+All APIs available via &#x60;/v3&#x60; route prefix with AIP-compliant responses.
  * 
  * @package HighLevel\Services\Users
  */
@@ -54,7 +57,7 @@ class Users
      *   ids?: string // List of User IDs to be filtered in the search
      *   sort?: string // The field on which sort is applied in which the results need to be sorted. Default is based on the first and last name
      *   sortDirection?: string // The direction in which the results need to be sorted
-     *   enabled2waySync?: bool
+     *   enabled2waySync?: bool // Filter users by whether 2-way sync is enabled
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
      * @return SearchUserSuccessfulResponseDto Response data
@@ -142,7 +145,7 @@ class Users
      * @throws GuzzleException
      */
     public function filterUsersByEmail(
-        FilterByEmailDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): SearchUserSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -233,7 +236,7 @@ class Users
         array $params,
         ?array $options = null
     ): UserSuccessfulResponseDto {
-        $paramDefs = [['name' => 'userId', 'in' => 'path']];
+        $paramDefs = [['name' => 'userId', 'in' => 'path'], ];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Agency-Access","Location-Access"];
 
@@ -310,7 +313,7 @@ class Users
      * @throws GuzzleException
      */
     public function updateUser(
-        UpdateUserDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UserSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -390,13 +393,13 @@ class Users
      * Delete User
      * 
      * @param array<string, mixed>|null $options Additional request options
-     * @return DeleteUserSuccessfulResponseDto Response data
+     * @return DeleteUserSuccessfulResponseV3Dto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function deleteUser(
         ?array $options = null
-    ): DeleteUserSuccessfulResponseDto {
+    ): DeleteUserSuccessfulResponseV3Dto {
         $paramDefs = [];
         $extracted = RequestUtils::extractParams([], $paramDefs);
         $requirements = ["Agency-Access","Location-Access"];
@@ -448,90 +451,7 @@ class Users
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new DeleteUserSuccessfulResponseDto($responseData);
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
-            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
-            $responseData = $responseBody ? json_decode($responseBody, true) : null;
-
-            throw new GHLError(
-                $e->getMessage(),
-                $statusCode,
-                $responseData,
-                $requestOptions
-            );
-        }
-    }
-
-    /**
-     * Get User by Location
-     * Deprecated. Use &#x60;GET /users/search&#x60; instead. Pass &#x60;locationId&#x60; as a query parameter to filter results by location, along with the required &#x60;companyId&#x60; and other search filters as needed.
-     * @deprecated Deprecated. Use &#x60;GET /users/search&#x60; instead instead.
-     * 
-     * @param array{
-     *   locationId: string
-     * } $params Request parameters
-     * @param array<string, mixed>|null $options Additional request options
-     * @return LocationSuccessfulResponseDto Response data
-     * @throws GHLError
-     * @throws GuzzleException
-     */
-    public function getUserByLocation(
-        array $params,
-        ?array $options = null
-    ): LocationSuccessfulResponseDto {
-        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
-        $extracted = RequestUtils::extractParams($params, $paramDefs);
-        $requirements = ["Location-Access"];
-
-        $url = RequestUtils::buildUrl('/users/', $extracted['path']);
-        
-        $headers = array_merge(
-            $extracted['header'],
-            $options['headers'] ?? []
-        );
-
-        $authToken = RequestUtils::getAuthToken(
-            $this->client,
-            $requirements,
-            $headers,
-            $extracted['query'],
-            $requestBody ?? null,
-            $options['preferredTokenType'] ?? null
-        );
-
-        if ($authToken) {
-            $headers['Authorization'] = $authToken;
-        }
-
-        $requestOptions = [
-            'headers' => $headers,
-            'query' => $extracted['query'],
-            '_security_requirements' => $requirements,
-            '_path_params' => $extracted['path'],
-            '_query_params' => $extracted['query']
-        ];
-
-
-        if ($options) {
-            foreach ($options as $key => $value) {
-                if (!in_array($key, ['headers', 'preferredTokenType'])) {
-                    $requestOptions[$key] = $value;
-                }
-            }
-        }
-
-        try {
-            $response = $this->client->getClient()->request(
-                'GET',
-                $url,
-                $requestOptions
-            );
-
-            $body = (string) $response->getBody();
-            $responseData = json_decode($body, true);
-            
-            return new LocationSuccessfulResponseDto($responseData);
+            return new DeleteUserSuccessfulResponseV3Dto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -557,7 +477,7 @@ class Users
      * @throws GuzzleException
      */
     public function createUser(
-        CreateUserDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UserSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

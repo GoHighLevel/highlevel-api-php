@@ -57,23 +57,17 @@ class RecordResponseDTO
     /**
      * @var mixed
      */
-    public mixed $created_by;
+    public $created_by;
 
     /**
      * @var mixed
      */
-    public mixed $last_updated_by;
+    public $last_updated_by;
 
     /**
      * @var array&lt;float&gt;
      */
     public array $search_after;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -94,61 +88,52 @@ class RecordResponseDTO
         $this->created_by = $data['createdBy'] ?? null;
         $this->last_updated_by = $data['lastUpdatedBy'] ?? null;
         $this->search_after = $data['searchAfter'] ?? [];
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->owner !== null) {
+            $result['owner'] = $this->owner;
+        }
+        if ($this->followers !== null) {
+            $result['followers'] = $this->followers;
+        }
+        if ($this->properties !== null) {
+            $result['properties'] = $this->properties;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->object_id !== null) {
+            $result['objectId'] = $this->object_id;
+        }
+        if ($this->object_key !== null) {
+            $result['objectKey'] = $this->object_key;
+        }
+        if ($this->created_by !== null) {
+            $result['createdBy'] = $this->created_by;
+        }
+        if ($this->last_updated_by !== null) {
+            $result['lastUpdatedBy'] = $this->last_updated_by;
+        }
+        if ($this->search_after !== null) {
+            $result['searchAfter'] = $this->search_after;
+        }
+        return $result;
     }
 }

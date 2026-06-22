@@ -55,12 +55,6 @@ class ForwardConfigDto
     public ?string $recipient_conversation_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -76,61 +70,43 @@ class ForwardConfigDto
         $this->to_email = $data['toEmail'] ?? null;
         $this->recipient_contact_id = $data['recipientContactId'] ?? null;
         $this->recipient_conversation_id = $data['recipientConversationId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->is_forwarded !== null) {
+            $result['isForwarded'] = $this->is_forwarded;
+        }
+        if ($this->forward_whole_thread !== null) {
+            $result['forwardWholeThread'] = $this->forward_whole_thread;
+        }
+        if ($this->message_id !== null) {
+            $result['messageId'] = $this->message_id;
+        }
+        if ($this->email_message_id !== null) {
+            $result['emailMessageId'] = $this->email_message_id;
+        }
+        if ($this->source_contact_id !== null) {
+            $result['sourceContactId'] = $this->source_contact_id;
+        }
+        if ($this->source_conversation_id !== null) {
+            $result['sourceConversationId'] = $this->source_conversation_id;
+        }
+        if ($this->to_email !== null) {
+            $result['toEmail'] = $this->to_email;
+        }
+        if ($this->recipient_contact_id !== null) {
+            $result['recipientContactId'] = $this->recipient_contact_id;
+        }
+        if ($this->recipient_conversation_id !== null) {
+            $result['recipientConversationId'] = $this->recipient_conversation_id;
+        }
+        return $result;
     }
 }

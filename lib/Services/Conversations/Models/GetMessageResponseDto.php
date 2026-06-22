@@ -95,12 +95,6 @@ class GetMessageResponseDto
     public ?string $chat_widget_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -129,61 +123,69 @@ class GetMessageResponseDto
         $this->user_id = $data['userId'] ?? null;
         $this->conversation_provider_id = $data['conversationProviderId'] ?? null;
         $this->chat_widget_id = $data['chatWidgetId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->message_type !== null) {
+            $result['messageType'] = $this->message_type;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->conversation_id !== null) {
+            $result['conversationId'] = $this->conversation_id;
+        }
+        if ($this->date_added !== null) {
+            $result['dateAdded'] = $this->date_added;
+        }
+        if ($this->body !== null) {
+            $result['body'] = $this->body;
+        }
+        if ($this->direction !== null) {
+            $result['direction'] = $this->direction;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->content_type !== null) {
+            $result['contentType'] = $this->content_type;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = $this->attachments;
+        }
+        if ($this->meta !== null) {
+            $result['meta'] = is_object($this->meta) && method_exists($this->meta, 'toArray') 
+                ? $this->meta->toArray() 
+                : $this->meta;
+        }
+        if ($this->source !== null) {
+            $result['source'] = $this->source;
+        }
+        if ($this->user_id !== null) {
+            $result['userId'] = $this->user_id;
+        }
+        if ($this->conversation_provider_id !== null) {
+            $result['conversationProviderId'] = $this->conversation_provider_id;
+        }
+        if ($this->chat_widget_id !== null) {
+            $result['chatWidgetId'] = $this->chat_widget_id;
+        }
+        return $result;
     }
 }

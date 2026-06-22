@@ -138,9 +138,9 @@ class Forms
      */
     public function uploadToCustomFields(
         array $params,
-        array $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }

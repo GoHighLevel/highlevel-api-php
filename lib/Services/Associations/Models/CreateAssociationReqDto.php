@@ -40,12 +40,6 @@ class CreateAssociationReqDto
     public array $second_object_key;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -58,61 +52,34 @@ class CreateAssociationReqDto
         $this->first_object_key = $data['firstObjectKey'] ?? null;
         $this->second_object_label = $data['secondObjectLabel'] ?? null;
         $this->second_object_key = $data['secondObjectKey'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->key !== null) {
+            $result['key'] = $this->key;
+        }
+        if ($this->first_object_label !== null) {
+            $result['firstObjectLabel'] = $this->first_object_label;
+        }
+        if ($this->first_object_key !== null) {
+            $result['firstObjectKey'] = $this->first_object_key;
+        }
+        if ($this->second_object_label !== null) {
+            $result['secondObjectLabel'] = $this->second_object_label;
+        }
+        if ($this->second_object_key !== null) {
+            $result['secondObjectKey'] = $this->second_object_key;
+        }
+        return $result;
     }
 }

@@ -110,12 +110,6 @@ class RecipientItem
     public ?string $share_link = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -142,61 +136,76 @@ class RecipientItem
         $this->initials_img_url = $data['initialsImgUrl'] ?? null;
         $this->last_viewed_at = $data['lastViewedAt'] ?? null;
         $this->share_link = $data['shareLink'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->first_name !== null) {
+            $result['firstName'] = $this->first_name;
+        }
+        if ($this->last_name !== null) {
+            $result['lastName'] = $this->last_name;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->phone_number !== null) {
+            $result['phoneNumber'] = $this->phone_number;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->has_completed !== null) {
+            $result['hasCompleted'] = $this->has_completed;
+        }
+        if ($this->role !== null) {
+            $result['role'] = $this->role;
+        }
+        if ($this->is_primary !== null) {
+            $result['isPrimary'] = $this->is_primary;
+        }
+        if ($this->signing_order !== null) {
+            $result['signingOrder'] = $this->signing_order;
+        }
+        if ($this->img_url !== null) {
+            $result['imgUrl'] = $this->img_url;
+        }
+        if ($this->ip !== null) {
+            $result['ip'] = $this->ip;
+        }
+        if ($this->user_agent !== null) {
+            $result['userAgent'] = $this->user_agent;
+        }
+        if ($this->signed_date !== null) {
+            $result['signedDate'] = $this->signed_date;
+        }
+        if ($this->contact_name !== null) {
+            $result['contactName'] = $this->contact_name;
+        }
+        if ($this->country !== null) {
+            $result['country'] = $this->country;
+        }
+        if ($this->entity_name !== null) {
+            $result['entityName'] = $this->entity_name;
+        }
+        if ($this->initials_img_url !== null) {
+            $result['initialsImgUrl'] = $this->initials_img_url;
+        }
+        if ($this->last_viewed_at !== null) {
+            $result['lastViewedAt'] = $this->last_viewed_at;
+        }
+        if ($this->share_link !== null) {
+            $result['shareLink'] = $this->share_link;
+        }
+        return $result;
     }
 }

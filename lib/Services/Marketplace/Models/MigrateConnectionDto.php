@@ -80,12 +80,6 @@ class MigrateConnectionDto
     public ?bool $is_default = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -106,61 +100,58 @@ class MigrateConnectionDto
         $this->scopes = $data['scopes'] ?? null;
         $this->display_name = $data['displayName'] ?? null;
         $this->is_default = $data['isDefault'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->app_id !== null) {
+            $result['appId'] = $this->app_id;
+        }
+        if ($this->app_version_id !== null) {
+            $result['appVersionId'] = $this->app_version_id;
+        }
+        if ($this->account_id !== null) {
+            $result['accountId'] = $this->account_id;
+        }
+        if ($this->api_key !== null) {
+            $result['apiKey'] = $this->api_key;
+        }
+        if ($this->basic_credentials !== null) {
+            $result['basicCredentials'] = $this->basic_credentials;
+        }
+        if ($this->access_token !== null) {
+            $result['accessToken'] = $this->access_token;
+        }
+        if ($this->refresh_token !== null) {
+            $result['refreshToken'] = $this->refresh_token;
+        }
+        if ($this->expiry_in !== null) {
+            $result['expiryIn'] = $this->expiry_in;
+        }
+        if ($this->expiry_at !== null) {
+            $result['expiryAt'] = $this->expiry_at;
+        }
+        if ($this->scopes !== null) {
+            $result['scopes'] = $this->scopes;
+        }
+        if ($this->display_name !== null) {
+            $result['displayName'] = $this->display_name;
+        }
+        if ($this->is_default !== null) {
+            $result['isDefault'] = $this->is_default;
+        }
+        return $result;
     }
 }

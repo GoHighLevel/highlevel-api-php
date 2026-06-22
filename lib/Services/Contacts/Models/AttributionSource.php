@@ -100,12 +100,6 @@ class AttributionSource
     public ?string $medium_id = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -130,61 +124,70 @@ class AttributionSource
         $this->ip = $data['ip'] ?? null;
         $this->medium = $data['medium'] ?? null;
         $this->medium_id = $data['mediumId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->url !== null) {
+            $result['url'] = $this->url;
+        }
+        if ($this->campaign !== null) {
+            $result['campaign'] = $this->campaign;
+        }
+        if ($this->utm_source !== null) {
+            $result['utmSource'] = $this->utm_source;
+        }
+        if ($this->utm_medium !== null) {
+            $result['utmMedium'] = $this->utm_medium;
+        }
+        if ($this->utm_content !== null) {
+            $result['utmContent'] = $this->utm_content;
+        }
+        if ($this->referrer !== null) {
+            $result['referrer'] = $this->referrer;
+        }
+        if ($this->campaign_id !== null) {
+            $result['campaignId'] = $this->campaign_id;
+        }
+        if ($this->fbclid !== null) {
+            $result['fbclid'] = $this->fbclid;
+        }
+        if ($this->gclid !== null) {
+            $result['gclid'] = $this->gclid;
+        }
+        if ($this->msclikid !== null) {
+            $result['msclikid'] = $this->msclikid;
+        }
+        if ($this->dclid !== null) {
+            $result['dclid'] = $this->dclid;
+        }
+        if ($this->fbc !== null) {
+            $result['fbc'] = $this->fbc;
+        }
+        if ($this->fbp !== null) {
+            $result['fbp'] = $this->fbp;
+        }
+        if ($this->fb_event_id !== null) {
+            $result['fbEventId'] = $this->fb_event_id;
+        }
+        if ($this->user_agent !== null) {
+            $result['userAgent'] = $this->user_agent;
+        }
+        if ($this->ip !== null) {
+            $result['ip'] = $this->ip;
+        }
+        if ($this->medium !== null) {
+            $result['medium'] = $this->medium;
+        }
+        if ($this->medium_id !== null) {
+            $result['mediumId'] = $this->medium_id;
+        }
+        return $result;
     }
 }

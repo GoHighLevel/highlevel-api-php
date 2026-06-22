@@ -95,12 +95,6 @@ class IOnboardingDto
     public ?array $meta_data = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -124,61 +118,67 @@ class IOnboardingDto
         $this->has_joined_implementation_call = $data['hasJoinedImplementationCall'] ?? null;
         $this->version = $data['version'] ?? null;
         $this->meta_data = $data['metaData'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->pending !== null) {
+            $result['pending'] = $this->pending;
+        }
+        if ($this->have_website !== null) {
+            $result['haveWebsite'] = $this->have_website;
+        }
+        if ($this->website_url !== null) {
+            $result['websiteUrl'] = $this->website_url;
+        }
+        if ($this->industry_served !== null) {
+            $result['industryServed'] = $this->industry_served;
+        }
+        if ($this->customer_count !== null) {
+            $result['customerCount'] = $this->customer_count;
+        }
+        if ($this->tools !== null) {
+            $result['tools'] = $this->tools;
+        }
+        if ($this->location !== null) {
+            $result['location'] = $this->location;
+        }
+        if ($this->conversation_demo !== null) {
+            $result['conversationDemo'] = $this->conversation_demo;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->snapshot_id !== null) {
+            $result['snapshotId'] = $this->snapshot_id;
+        }
+        if ($this->plan_id !== null) {
+            $result['planId'] = $this->plan_id;
+        }
+        if ($this->affiliate_signup !== null) {
+            $result['affiliateSignup'] = $this->affiliate_signup;
+        }
+        if ($this->has_joined_kickoff_call !== null) {
+            $result['hasJoinedKickoffCall'] = $this->has_joined_kickoff_call;
+        }
+        if ($this->kickoff_action_taken !== null) {
+            $result['kickoffActionTaken'] = $this->kickoff_action_taken;
+        }
+        if ($this->has_joined_implementation_call !== null) {
+            $result['hasJoinedImplementationCall'] = $this->has_joined_implementation_call;
+        }
+        if ($this->version !== null) {
+            $result['version'] = $this->version;
+        }
+        if ($this->meta_data !== null) {
+            $result['metaData'] = $this->meta_data;
+        }
+        return $result;
     }
 }

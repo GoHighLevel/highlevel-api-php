@@ -136,7 +136,7 @@ class Blogs
      * @throws GuzzleException
      */
     public function updateBlogPost(
-        UpdateBlogPostParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): BlogPostUpdateResponseWrapperDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -222,7 +222,7 @@ class Blogs
      * @throws GuzzleException
      */
     public function createBlogPost(
-        CreateBlogPostParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): BlogPostCreateResponseWrapperDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

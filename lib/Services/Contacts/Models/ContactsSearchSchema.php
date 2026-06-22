@@ -70,12 +70,6 @@ class ContactsSearchSchema
     public ?array $followers = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -108,61 +102,56 @@ class ContactsSearchSchema
             $this->attributions = $data['attributions'] ?? null;
         }
         $this->followers = $data['followers'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->timezone !== null) {
+            $result['timezone'] = $this->timezone;
+        }
+        if ($this->country !== null) {
+            $result['country'] = $this->country;
+        }
+        if ($this->source !== null) {
+            $result['source'] = $this->source;
+        }
+        if ($this->date_added !== null) {
+            $result['dateAdded'] = $this->date_added;
+        }
+        if ($this->custom_fields !== null) {
+            $result['customFields'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->custom_fields);
+        }
+        if ($this->tags !== null) {
+            $result['tags'] = $this->tags;
+        }
+        if ($this->business_id !== null) {
+            $result['businessId'] = $this->business_id;
+        }
+        if ($this->attributions !== null) {
+            $result['attributions'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->attributions);
+        }
+        if ($this->followers !== null) {
+            $result['followers'] = $this->followers;
+        }
+        return $result;
     }
 }

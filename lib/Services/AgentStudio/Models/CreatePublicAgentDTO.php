@@ -65,12 +65,6 @@ class CreatePublicAgentDTO
     public ?array $edges = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -88,61 +82,49 @@ class CreatePublicAgentDTO
         $this->version = $data['version'] ?? null;
         $this->nodes = $data['nodes'] ?? null;
         $this->edges = $data['edges'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->agency_id !== null) {
+            $result['agencyId'] = $this->agency_id;
+        }
+        if ($this->author_id !== null) {
+            $result['authorId'] = $this->author_id;
+        }
+        if ($this->author_name !== null) {
+            $result['authorName'] = $this->author_name;
+        }
+        if ($this->author_email !== null) {
+            $result['authorEmail'] = $this->author_email;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->version !== null) {
+            $result['version'] = $this->version;
+        }
+        if ($this->nodes !== null) {
+            $result['nodes'] = $this->nodes;
+        }
+        if ($this->edges !== null) {
+            $result['edges'] = $this->edges;
+        }
+        return $result;
     }
 }

@@ -317,7 +317,7 @@ class MemorySessionStorage extends SessionStorage
             }
             
             foreach ($_SESSION[$this->sessionNamespace] as $key => $sessionData) {
-                if (str_starts_with($key, "{$applicationId}:")) {
+                if (strpos($key, "{$applicationId}:") === 0) {
                     $cleanSessionData = $sessionData;
                     unset($cleanSessionData['createdAt'], $cleanSessionData['updatedAt']);
                     $appSessions[] = new SessionData($cleanSessionData);

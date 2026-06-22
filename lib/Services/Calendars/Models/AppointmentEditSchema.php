@@ -85,12 +85,6 @@ class AppointmentEditSchema
     public ?string $end_time = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -112,61 +106,61 @@ class AppointmentEditSchema
         $this->calendar_id = $data['calendarId'] ?? null;
         $this->start_time = $data['startTime'] ?? null;
         $this->end_time = $data['endTime'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->title !== null) {
+            $result['title'] = $this->title;
+        }
+        if ($this->meeting_location_type !== null) {
+            $result['meetingLocationType'] = $this->meeting_location_type;
+        }
+        if ($this->meeting_location_id !== null) {
+            $result['meetingLocationId'] = $this->meeting_location_id;
+        }
+        if ($this->override_location_config !== null) {
+            $result['overrideLocationConfig'] = $this->override_location_config;
+        }
+        if ($this->appointment_status !== null) {
+            $result['appointmentStatus'] = $this->appointment_status;
+        }
+        if ($this->assigned_user_id !== null) {
+            $result['assignedUserId'] = $this->assigned_user_id;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->ignore_date_range !== null) {
+            $result['ignoreDateRange'] = $this->ignore_date_range;
+        }
+        if ($this->to_notify !== null) {
+            $result['toNotify'] = $this->to_notify;
+        }
+        if ($this->ignore_free_slot_validation !== null) {
+            $result['ignoreFreeSlotValidation'] = $this->ignore_free_slot_validation;
+        }
+        if ($this->rrule !== null) {
+            $result['rrule'] = $this->rrule;
+        }
+        if ($this->calendar_id !== null) {
+            $result['calendarId'] = $this->calendar_id;
+        }
+        if ($this->start_time !== null) {
+            $result['startTime'] = $this->start_time;
+        }
+        if ($this->end_time !== null) {
+            $result['endTime'] = $this->end_time;
+        }
+        return $result;
     }
 }

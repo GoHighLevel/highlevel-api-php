@@ -12,6 +12,10 @@ use HighLevel\Services\EmailIsv\Models\VerificationBodyDto;
 /**
  * EmailIsv Service
  * Documentation for Email ISV API
+
+## API Version v3
+
+All APIs available via &#x60;/v3&#x60; route prefix with AIP-compliant responses.
  * 
  * @package HighLevel\Services\EmailIsv
  */
@@ -48,13 +52,13 @@ class EmailIsv
      */
     public function verifyEmail(
         array $params,
-        VerificationBodyDto $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
-        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
+        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
 

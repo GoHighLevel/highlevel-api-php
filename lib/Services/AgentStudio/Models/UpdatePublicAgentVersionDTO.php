@@ -65,12 +65,6 @@ class UpdatePublicAgentVersionDTO
     public ?string $user_name = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -88,61 +82,49 @@ class UpdatePublicAgentVersionDTO
         $this->global_config = $data['globalConfig'] ?? null;
         $this->user_id = $data['userId'] ?? null;
         $this->user_name = $data['userName'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->version_name !== null) {
+            $result['versionName'] = $this->version_name;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->nodes !== null) {
+            $result['nodes'] = $this->nodes;
+        }
+        if ($this->edges !== null) {
+            $result['edges'] = $this->edges;
+        }
+        if ($this->global_variables !== null) {
+            $result['globalVariables'] = $this->global_variables;
+        }
+        if ($this->input_variables !== null) {
+            $result['inputVariables'] = $this->input_variables;
+        }
+        if ($this->runtime_variables !== null) {
+            $result['runtimeVariables'] = $this->runtime_variables;
+        }
+        if ($this->global_config !== null) {
+            $result['globalConfig'] = $this->global_config;
+        }
+        if ($this->user_id !== null) {
+            $result['userId'] = $this->user_id;
+        }
+        if ($this->user_name !== null) {
+            $result['userName'] = $this->user_name;
+        }
+        return $result;
     }
 }

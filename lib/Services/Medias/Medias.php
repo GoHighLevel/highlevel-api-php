@@ -132,7 +132,7 @@ class Medias
 
     /**
      * Upload File into Media Storage
-     * If hosted is set to true then fileUrl is required. Else file is required. If adding a file, maximum allowed is 25 MB
+     * If hosted is set to true then fileUrl is required. Else file is required. If adding a file, maximum allowed is 25 MB. For video files, the maximum allowed size is 500 MB.
      * 
      * @param array $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
@@ -141,7 +141,7 @@ class Medias
      * @throws GuzzleException
      */
     public function uploadMediaContent(
-        array $requestBody,
+        $requestBody,
         ?array $options = null
     ): UploadFileResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -233,7 +233,7 @@ class Medias
     public function deleteMediaContent(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'id', 'in' => 'path'], ['name' => 'altType', 'in' => 'query'], ['name' => 'altId', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
@@ -315,9 +315,9 @@ class Medias
      */
     public function updateMediaObject(
         array $params,
-        UpdateObject $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -401,7 +401,7 @@ class Medias
      * @throws GuzzleException
      */
     public function createMediaFolder(
-        CreateFolderParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): FolderDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -487,9 +487,9 @@ class Medias
      * @throws GuzzleException
      */
     public function bulkUpdateMediaObjects(
-        UpdateMediaObjects $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -573,9 +573,9 @@ class Medias
      * @throws GuzzleException
      */
     public function bulkDeleteMediaObjects(
-        DeleteMediaObjectsBodyParams $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }

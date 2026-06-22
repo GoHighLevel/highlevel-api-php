@@ -8,13 +8,18 @@ use HighLevel\Utils\RequestUtils;
 use HighLevel\Constants\UserType;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use HighLevel\Services\Oauth\Models\GetAccessCodeSuccessfulResponseDto;
-use HighLevel\Services\Oauth\Models\GetLocationAccessTokenSuccessfulResponseDto;
-use HighLevel\Services\Oauth\Models\GetInstalledLocationsSuccessfulResponseDto;
+use HighLevel\Services\Oauth\Models\GetAccessTokenBodyDto;
+use HighLevel\Services\Oauth\Models\GetAccessTokenSuccessfulResponseDto;
+use HighLevel\Services\Oauth\Models\GetLocationAccessTokenV3SuccessfulResponseDto;
+use HighLevel\Services\Oauth\Models\GetInstalledLocationsV3SuccessfulResponseDto;
 
 /**
  * Oauth Service
  * Documentation for OAuth 2.0 API
+
+## API Version v3
+
+All APIs available via &#x60;/v3&#x60; route prefix with AIP-compliant responses.
  * 
  * @package HighLevel\Services\Oauth
  */
@@ -66,7 +71,7 @@ class Oauth
             'response_type' => 'code'
         ];
 
-        return self::MARKETPLACE_URL . '/oauth/chooselocation?' . http_build_query($params);
+        return self::MARKETPLACE_URL . '/v2/oauth/chooselocation?' . http_build_query($params);
     }
 
     /**
@@ -96,28 +101,28 @@ class Oauth
         }
 
         return $this->getAccessToken([
-            'refresh_token' => $refreshToken,
-            'client_id' => $clientId,
-            'client_secret' => $clientSecret,
-            'grant_type' => $grantType,
-            'user_type' => $userType
+            'refreshToken' => $refreshToken,
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+            'grantType' => $grantType,
+            'userType' => $userType
         ]);
     }
 
     /**
      * Get Access Token
-     * Use Access Tokens to access GoHighLevel resources on behalf of an authenticated location/company.
+     * Use Access Tokens to access CRM resources on behalf of an authenticated location/company.
      * 
-     * @param array $requestBody Request body data
+     * @param GetAccessTokenBodyDto $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
-     * @return GetAccessCodeSuccessfulResponseDto Response data
+     * @return GetAccessTokenSuccessfulResponseDto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function getAccessToken(
-        array $requestBody,
+        $requestBody,
         ?array $options = null
-    ): GetAccessCodeSuccessfulResponseDto {
+    ): GetAccessTokenSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -181,7 +186,7 @@ class Oauth
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new GetAccessCodeSuccessfulResponseDto($responseData);
+            return new GetAccessTokenSuccessfulResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -202,14 +207,14 @@ class Oauth
      * 
      * @param array $requestBody Request body data
      * @param array<string, mixed>|null $options Additional request options
-     * @return GetLocationAccessTokenSuccessfulResponseDto Response data
+     * @return GetLocationAccessTokenV3SuccessfulResponseDto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function getLocationAccessToken(
-        array $requestBody,
+        $requestBody,
         ?array $options = null
-    ): GetLocationAccessTokenSuccessfulResponseDto {
+    ): GetLocationAccessTokenV3SuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -219,7 +224,7 @@ class Oauth
 
         $processedBody = $requestBody ? http_build_query($requestBody) : null;
 
-        $url = RequestUtils::buildUrl('/oauth/locationToken', $extracted['path']);
+        $url = RequestUtils::buildUrl('/oauth/location-token', $extracted['path']);
         
         $headers = array_merge(
             
@@ -273,7 +278,7 @@ class Oauth
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new GetLocationAccessTokenSuccessfulResponseDto($responseData);
+            return new GetLocationAccessTokenV3SuccessfulResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -293,10 +298,11 @@ class Oauth
      * This API allows you fetch location where app is installed upon
      * 
      * @param array{
-     *   skip?: string // Parameter to skip the number installed locations
-     *   limit?: string // Parameter to limit the number installed locations
+     *   pageSize?: int // Max items per page (1-100). Replaces legacy `limit` parameter per AIP-158.
+     *   pageToken?: string // Opaque token returned in a previous response to fetch the next page. Replaces legacy `skip` parameter per AIP-158.
      *   query?: string // Parameter to search for the installed location by name
      *   isInstalled?: bool // Filters out location which are installed for specified app under the specified company
+     *   restrictToUserLocations?: bool // When true, restricts the list to locations the current user has access to (for restricted agency admins and account admins). When false or omitted, no user-based filter is applied for installed list; for backward compatibility, install list (isInstalled=false) is still filtered by user when this param is omitted.
      *   companyId: string // Parameter to search by the companyId
      *   appId: string // Parameter to search by the appId
      *   versionId?: string // VersionId of the app
@@ -305,20 +311,20 @@ class Oauth
      *   locationId?: string // locationId
      * } $params Request parameters
      * @param array<string, mixed>|null $options Additional request options
-     * @return GetInstalledLocationsSuccessfulResponseDto Response data
+     * @return GetInstalledLocationsV3SuccessfulResponseDto Response data
      * @throws GHLError
      * @throws GuzzleException
      */
     public function getInstalledLocation(
         array $params,
         ?array $options = null
-    ): GetInstalledLocationsSuccessfulResponseDto {
-        $paramDefs = [['name' => 'skip', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'query', 'in' => 'query'], ['name' => 'isInstalled', 'in' => 'query'], ['name' => 'companyId', 'in' => 'query'], ['name' => 'appId', 'in' => 'query'], ['name' => 'versionId', 'in' => 'query'], ['name' => 'onTrial', 'in' => 'query'], ['name' => 'planId', 'in' => 'query'], ['name' => 'locationId', 'in' => 'query'], ];
+    ): GetInstalledLocationsV3SuccessfulResponseDto {
+        $paramDefs = [['name' => 'pageSize', 'in' => 'query'], ['name' => 'pageToken', 'in' => 'query'], ['name' => 'query', 'in' => 'query'], ['name' => 'isInstalled', 'in' => 'query'], ['name' => 'restrictToUserLocations', 'in' => 'query'], ['name' => 'companyId', 'in' => 'query'], ['name' => 'appId', 'in' => 'query'], ['name' => 'versionId', 'in' => 'query'], ['name' => 'onTrial', 'in' => 'query'], ['name' => 'planId', 'in' => 'query'], ['name' => 'locationId', 'in' => 'query'], ];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Agency-Access-Only"];
 
 
-        $url = RequestUtils::buildUrl('/oauth/installedLocations', $extracted['path']);
+        $url = RequestUtils::buildUrl('/oauth/installed-locations', $extracted['path']);
         
         $headers = array_merge(
             
@@ -366,7 +372,7 @@ class Oauth
             $body = (string) $response->getBody();
             $responseData = json_decode($body, true);
             
-            return new GetInstalledLocationsSuccessfulResponseDto($responseData);
+            return new GetInstalledLocationsV3SuccessfulResponseDto($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;

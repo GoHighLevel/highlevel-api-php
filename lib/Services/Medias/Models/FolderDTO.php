@@ -90,12 +90,6 @@ class FolderDTO
     public ?string $last_updated_by = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -118,61 +112,64 @@ class FolderDTO
         $this->is_essential = $data['isEssential'] ?? null;
         $this->status = $data['status'] ?? null;
         $this->last_updated_by = $data['lastUpdatedBy'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->parent_id !== null) {
+            $result['parentId'] = $this->parent_id;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->pending_upload !== null) {
+            $result['pendingUpload'] = $this->pending_upload;
+        }
+        if ($this->category !== null) {
+            $result['category'] = $this->category;
+        }
+        if ($this->sub_category !== null) {
+            $result['subCategory'] = $this->sub_category;
+        }
+        if ($this->is_private !== null) {
+            $result['isPrivate'] = $this->is_private;
+        }
+        if ($this->relocated_folder !== null) {
+            $result['relocatedFolder'] = $this->relocated_folder;
+        }
+        if ($this->migration_completed !== null) {
+            $result['migrationCompleted'] = $this->migration_completed;
+        }
+        if ($this->app_folder !== null) {
+            $result['appFolder'] = $this->app_folder;
+        }
+        if ($this->is_essential !== null) {
+            $result['isEssential'] = $this->is_essential;
+        }
+        if ($this->status !== null) {
+            $result['status'] = $this->status;
+        }
+        if ($this->last_updated_by !== null) {
+            $result['lastUpdatedBy'] = $this->last_updated_by;
+        }
+        return $result;
     }
 }

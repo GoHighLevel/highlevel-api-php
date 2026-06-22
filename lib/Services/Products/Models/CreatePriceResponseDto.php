@@ -62,7 +62,7 @@ class CreatePriceResponseDto
     /**
      * @var mixed
      */
-    public mixed $recurring;
+    public $recurring;
 
     /**
      * @var string|null
@@ -95,12 +95,6 @@ class CreatePriceResponseDto
     public ?bool $allow_out_of_stock_purchases = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -131,61 +125,69 @@ class CreatePriceResponseDto
         $this->track_inventory = $data['trackInventory'] ?? null;
         $this->available_quantity = $data['availableQuantity'] ?? null;
         $this->allow_out_of_stock_purchases = $data['allowOutOfStockPurchases'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->membership_offers !== null) {
+            $result['membershipOffers'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->membership_offers);
+        }
+        if ($this->variant_option_ids !== null) {
+            $result['variantOptionIds'] = $this->variant_option_ids;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->product !== null) {
+            $result['product'] = $this->product;
+        }
+        if ($this->user_id !== null) {
+            $result['userId'] = $this->user_id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->currency !== null) {
+            $result['currency'] = $this->currency;
+        }
+        if ($this->amount !== null) {
+            $result['amount'] = $this->amount;
+        }
+        if ($this->recurring !== null) {
+            $result['recurring'] = $this->recurring;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        if ($this->compare_at_price !== null) {
+            $result['compareAtPrice'] = $this->compare_at_price;
+        }
+        if ($this->track_inventory !== null) {
+            $result['trackInventory'] = $this->track_inventory;
+        }
+        if ($this->available_quantity !== null) {
+            $result['availableQuantity'] = $this->available_quantity;
+        }
+        if ($this->allow_out_of_stock_purchases !== null) {
+            $result['allowOutOfStockPurchases'] = $this->allow_out_of_stock_purchases;
+        }
+        return $result;
     }
 }

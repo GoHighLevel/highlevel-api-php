@@ -15,6 +15,22 @@ use HighLevel\Services\Calendars\Models\ValidateGroupSlugSuccessResponseDTO;
 use HighLevel\Services\Calendars\Models\GroupSuccessfulResponseDTO;
 use HighLevel\Services\Calendars\Models\GroupUpdateDTO;
 use HighLevel\Services\Calendars\Models\GroupStatusUpdateParams;
+use HighLevel\Services\Calendars\Models\ServiceBookingsListResponseDTO;
+use HighLevel\Services\Calendars\Models\CreatePublicServiceBookingDTO;
+use HighLevel\Services\Calendars\Models\CreateOrUpdateServiceBookingResponseDTO;
+use HighLevel\Services\Calendars\Models\ServiceBookingResponseDTO;
+use HighLevel\Services\Calendars\Models\UpdateServiceBookingDTO;
+use HighLevel\Services\Calendars\Models\DeleteServiceBookingResponseDTO;
+use HighLevel\Services\Calendars\Models\ServicesListResponseDTO;
+use HighLevel\Services\Calendars\Models\CreateServiceDTO;
+use HighLevel\Services\Calendars\Models\ServiceResponseWrapperDTO;
+use HighLevel\Services\Calendars\Models\UpdateServiceDTO;
+use HighLevel\Services\Calendars\Models\DeleteServiceResponseDTO;
+use HighLevel\Services\Calendars\Models\ServiceLocationListResponseDTO;
+use HighLevel\Services\Calendars\Models\CreateServiceLocationDTO;
+use HighLevel\Services\Calendars\Models\ServiceLocationResponseDTO;
+use HighLevel\Services\Calendars\Models\UpdateServiceLocationDTO;
+use HighLevel\Services\Calendars\Models\DeleteServiceLocationResponseDTO;
 use HighLevel\Services\Calendars\Models\AppointmentCreateSchema;
 use HighLevel\Services\Calendars\Models\AppointmentSchemaResponse;
 use HighLevel\Services\Calendars\Models\AppointmentEditSchema;
@@ -44,6 +60,9 @@ use HighLevel\Services\Calendars\Models\GetAllSchedulesResponseDTO;
 use HighLevel\Services\Calendars\Models\ScheduleResponseDTO;
 use HighLevel\Services\Calendars\Models\UpdateScheduleDTO;
 use HighLevel\Services\Calendars\Models\CreateScheduleDTO;
+use HighLevel\Services\Calendars\Models\CreateEventCalendarScheduleDTO;
+use HighLevel\Services\Calendars\Models\EventCalendarScheduleWrapperDTO;
+use HighLevel\Services\Calendars\Models\UpdateEventCalendarScheduleDTO;
 use HighLevel\Services\Calendars\Models\CalendarsGetSuccessfulResponseDTO;
 use HighLevel\Services\Calendars\Models\CalendarCreateDTO;
 
@@ -164,7 +183,7 @@ class Calendars
      * @throws GuzzleException
      */
     public function createCalendarGroup(
-        GroupCreateDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): GroupCreateSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -250,7 +269,7 @@ class Calendars
      * @throws GuzzleException
      */
     public function validateGroupsSlug(
-        ValidateGroupSlugPostBody $requestBody,
+        $requestBody,
         ?array $options = null
     ): ValidateGroupSlugSuccessResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -422,7 +441,7 @@ class Calendars
      */
     public function editGroup(
         array $params,
-        GroupUpdateDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): GroupCreateSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -512,7 +531,7 @@ class Calendars
      */
     public function disableGroup(
         array $params,
-        GroupStatusUpdateParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): GroupSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -588,6 +607,1285 @@ class Calendars
     }
 
     /**
+     * Get Service Bookings
+     * Retrieve service bookings for a location within a given date range, with an optional service location filter.
+     * 
+     * @param array{
+     *   locationId: string // Location ID
+     *   startTime: string // Start Time (timestamp in milliseconds as string)
+     *   endTime: string // End Time (timestamp in milliseconds as string)
+     *   timezone?: string // Timezone
+     *   serviceLocationId?: string // Service Location ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceBookingsListResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getServiceBookings(
+        array $params,
+        ?array $options = null
+    ): ServiceBookingsListResponseDTO {
+        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'startTime', 'in' => 'query'], ['name' => 'endTime', 'in' => 'query'], ['name' => 'timezone', 'in' => 'query'], ['name' => 'serviceLocationId', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/bookings', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceBookingsListResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Create Service Booking
+     * Create a new service booking
+     * 
+     * @param array{
+     *   overrideAvailability?: bool // If true the time slot validation would be avoided for any booking creation/update (even the skipSchedulingNotice)
+     *   skipSchedulingNotice?: bool // If set to true, the minimum scheduling notice and date range would be ignored
+     * } $params Request parameters
+     * @param CreatePublicServiceBookingDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return CreateOrUpdateServiceBookingResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function createServiceBooking(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): CreateOrUpdateServiceBookingResponseDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'overrideAvailability', 'in' => 'query'], ['name' => 'skipSchedulingNotice', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/bookings', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new CreateOrUpdateServiceBookingResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Service Booking by ID
+     * Get a specific service booking by ID
+     * 
+     * @param array{
+     *   bookingId: string // Unique Service Booking ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceBookingResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getServiceBookingById(
+        array $params,
+        ?array $options = null
+    ): ServiceBookingResponseDTO {
+        $paramDefs = [['name' => 'bookingId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/bookings/{bookingId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceBookingResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Update Service Booking
+     * Update an existing service booking
+     * 
+     * @param array{
+     *   bookingId: string // Unique Service Booking ID
+     *   overrideAvailability?: bool // If true the time slot validation would be avoided for any booking creation/update (even the skipSchedulingNotice)
+     *   skipSchedulingNotice?: bool // If set to true, the minimum scheduling notice and date range would be ignored
+     * } $params Request parameters
+     * @param UpdateServiceBookingDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return CreateOrUpdateServiceBookingResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateServiceBooking(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): CreateOrUpdateServiceBookingResponseDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'bookingId', 'in' => 'path'], ['name' => 'overrideAvailability', 'in' => 'query'], ['name' => 'skipSchedulingNotice', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/bookings/{bookingId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new CreateOrUpdateServiceBookingResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Delete Service Booking
+     * Delete a service booking by ID
+     * 
+     * @param array{
+     *   bookingId: string // Unique Service Booking ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return DeleteServiceBookingResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function deleteServiceBooking(
+        array $params,
+        ?array $options = null
+    ): DeleteServiceBookingResponseDTO {
+        $paramDefs = [['name' => 'bookingId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/bookings/{bookingId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'DELETE',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new DeleteServiceBookingResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Services
+     * Get all services in a location.
+     * 
+     * @param array{
+     *   locationId: string // Location ID
+     *   serviceCategoryId?: string // Filter by service category ID
+     *   isPrivate?: bool // Filter services: true = private only, false = public only, unset = all services
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServicesListResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getServicesCatalog(
+        array $params,
+        ?array $options = null
+    ): ServicesListResponseDTO {
+        $paramDefs = [['name' => 'locationId', 'in' => 'query'], ['name' => 'serviceCategoryId', 'in' => 'query'], ['name' => 'isPrivate', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/catalog', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServicesListResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Create Service
+     * Create new service in a location.
+     * 
+     * @param CreateServiceDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceResponseWrapperDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function createServiceCatalog(
+        $requestBody,
+        ?array $options = null
+    ): ServiceResponseWrapperDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/catalog', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceResponseWrapperDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Service by ID
+     * Get service by ID.
+     * 
+     * @param array{
+     *   serviceId: string // Service ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceResponseWrapperDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getServiceCatalogById(
+        array $params,
+        ?array $options = null
+    ): ServiceResponseWrapperDTO {
+        $paramDefs = [['name' => 'serviceId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/catalog/{serviceId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceResponseWrapperDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Update Service
+     * Update service by ID.
+     * 
+     * @param array{
+     *   serviceId: string // Service ID
+     * } $params Request parameters
+     * @param UpdateServiceDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceResponseWrapperDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateServiceCatalog(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): ServiceResponseWrapperDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'serviceId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/catalog/{serviceId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceResponseWrapperDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Delete Service
+     * Delete service by ID.
+     * 
+     * @param array{
+     *   serviceId: string // Service ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return DeleteServiceResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function deleteServiceCatalog(
+        array $params,
+        ?array $options = null
+    ): DeleteServiceResponseDTO {
+        $paramDefs = [['name' => 'serviceId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/catalog/{serviceId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'DELETE',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new DeleteServiceResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Service Locations
+     * Get all service locations
+     * 
+     * @param array{
+     *   locationId: string // Location ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceLocationListResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getServiceLocations(
+        array $params,
+        ?array $options = null
+    ): ServiceLocationListResponseDTO {
+        $paramDefs = [['name' => 'locationId', 'in' => 'query']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/locations', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceLocationListResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Create Service Location
+     * Create a new service location
+     * 
+     * @param CreateServiceLocationDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceLocationResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function createServiceLocation(
+        $requestBody,
+        ?array $options = null
+    ): ServiceLocationResponseDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [];
+        $extracted = RequestUtils::extractParams([], $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/locations', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceLocationResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get Service Location by ID
+     * Get service location by ID
+     * 
+     * @param array{
+     *   serviceLocationId: string // Unique Service Location ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceLocationResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getServiceLocationById(
+        array $params,
+        ?array $options = null
+    ): ServiceLocationResponseDTO {
+        $paramDefs = [['name' => 'serviceLocationId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/locations/{serviceLocationId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceLocationResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Update Service Location
+     * Update an existing service location
+     * 
+     * @param array{
+     *   serviceLocationId: string // Unique Service Location ID
+     * } $params Request parameters
+     * @param UpdateServiceLocationDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return ServiceLocationResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateServiceLocation(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): ServiceLocationResponseDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'serviceLocationId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/locations/{serviceLocationId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new ServiceLocationResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Delete Service Location
+     * Delete a service location by ID
+     * 
+     * @param array{
+     *   serviceLocationId: string // Unique Service Location ID
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return DeleteServiceLocationResponseDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function deleteServiceLocation(
+        array $params,
+        ?array $options = null
+    ): DeleteServiceLocationResponseDTO {
+        $paramDefs = [['name' => 'serviceLocationId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/services/locations/{serviceLocationId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'DELETE',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new DeleteServiceLocationResponseDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
      * Create appointment
      * Create appointment
      * 
@@ -598,7 +1896,7 @@ class Calendars
      * @throws GuzzleException
      */
     public function createAppointment(
-        AppointmentCreateSchema $requestBody,
+        $requestBody,
         ?array $options = null
     ): AppointmentSchemaResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -688,7 +1986,7 @@ class Calendars
      */
     public function editAppointment(
         array $params,
-        AppointmentEditSchema $requestBody,
+        $requestBody,
         ?array $options = null
     ): AppointmentSchemaResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1030,7 +2328,7 @@ class Calendars
      * @throws GuzzleException
      */
     public function createBlockSlot(
-        BlockSlotCreateRequestDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): BlockedSlotSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1120,7 +2418,7 @@ class Calendars
      */
     public function editBlockSlot(
         array $params,
-        BlockSlotEditRequestDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): BlockedSlotSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1215,7 +2513,7 @@ class Calendars
     public function getSlots(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'calendarId', 'in' => 'path'], ['name' => 'startDate', 'in' => 'query'], ['name' => 'endDate', 'in' => 'query'], ['name' => 'timezone', 'in' => 'query'], ['name' => 'userId', 'in' => 'query'], ['name' => 'userIds', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -1297,7 +2595,7 @@ class Calendars
      */
     public function updateCalendar(
         array $params,
-        CalendarUpdateDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CalendarByIdSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1551,7 +2849,7 @@ class Calendars
      */
     public function deleteEvent(
         array $params,
-        DeleteAppointmentSchema $requestBody,
+        $requestBody,
         ?array $options = null
     ): DeleteEventSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1725,7 +3023,7 @@ class Calendars
      */
     public function createAppointmentNote(
         array $params,
-        NotesDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetCreateUpdateNoteSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1815,7 +3113,7 @@ class Calendars
      */
     public function updateAppointmentNote(
         array $params,
-        NotesDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetCreateUpdateNoteSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1974,7 +3272,8 @@ class Calendars
 
     /**
      * Get Calendar Resource
-     * Get calendar resource by ID
+     * Get calendar resource by ID (Services V1)
+     * @deprecated This method is deprecated
      * 
      * @param array{
      *   resourceType: string // Calendar Resource Type
@@ -2057,7 +3356,8 @@ class Calendars
 
     /**
      * Update Calendar Resource
-     * Update calendar resource by ID
+     * Update calendar resource by ID (Services V1)
+     * @deprecated This method is deprecated
      * 
      * @param array{
      *   resourceType: string // Calendar Resource Type
@@ -2071,7 +3371,7 @@ class Calendars
      */
     public function updateCalendarResource(
         array $params,
-        UpdateCalendarResourceDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CalendarResourceResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2148,7 +3448,8 @@ class Calendars
 
     /**
      * Delete Calendar Resource
-     * Delete calendar resource by ID
+     * Delete calendar resource by ID (Services V1)
+     * @deprecated This method is deprecated
      * 
      * @param array{
      *   resourceType: string // Calendar Resource Type
@@ -2231,7 +3532,8 @@ class Calendars
 
     /**
      * List Calendar Resources
-     * List calendar resources by resource type and location ID
+     * List calendar resources by resource type and location ID (Services V1)
+     * @deprecated This method is deprecated
      * 
      * @param array{
      *   resourceType: string // Calendar Resource Type
@@ -2247,7 +3549,7 @@ class Calendars
     public function fetchCalendarResources(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'resourceType', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'skip', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
@@ -2316,7 +3618,8 @@ class Calendars
 
     /**
      * Create Calendar Resource
-     * Create calendar resource by resource type
+     * Create calendar resource by resource type (Services V1)
+     * @deprecated This method is deprecated
      * 
      * @param array{
      *   resourceType: string // Calendar Resource Type
@@ -2329,7 +3632,7 @@ class Calendars
      */
     public function createCalendarResource(
         array $params,
-        CreateCalendarResourceDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CalendarResourceByIdResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2423,7 +3726,7 @@ class Calendars
     public function getEventNotification(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'calendarId', 'in' => 'path'], ['name' => 'isActive', 'in' => 'query'], ['name' => 'deleted', 'in' => 'query'], ['name' => 'limit', 'in' => 'query'], ['name' => 'skip', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -2505,9 +3808,9 @@ class Calendars
      */
     public function createEventNotification(
         array $params,
-        array $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -2679,7 +3982,7 @@ class Calendars
      */
     public function updateEventNotification(
         array $params,
-        UpdateCalendarNotificationsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CalendarNotificationDeleteResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3020,7 +4323,7 @@ class Calendars
      */
     public function updateSchedule(
         array $params,
-        UpdateScheduleDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): ScheduleResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3110,7 +4413,7 @@ class Calendars
     public function deleteSchedule(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'id', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -3188,7 +4491,7 @@ class Calendars
      * @throws GuzzleException
      */
     public function createSchedule(
-        CreateScheduleDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): ScheduleResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3279,7 +4582,7 @@ class Calendars
     public function addCalendarToSchedule(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'id', 'in' => 'path'], ['name' => 'calendarId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -3362,7 +4665,7 @@ class Calendars
     public function removeCalendarFromSchedule(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'id', 'in' => 'path'], ['name' => 'calendarId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -3415,6 +4718,268 @@ class Calendars
             $responseData = json_decode($body, true);
             
             return $responseData;
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Create event calendar availability schedule
+     * Create a new availability schedule specifically for an event calendar. The calendar ID is provided in the path, and schedule rules and timezone are provided in the request body.
+     * 
+     * @param array{
+     *   calendarId: string // Unique identifier of the event calendar
+     * } $params Request parameters
+     * @param CreateEventCalendarScheduleDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return EventCalendarScheduleWrapperDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function createCalendarSchedule(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): EventCalendarScheduleWrapperDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'calendarId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/event-calendar/{calendarId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'POST',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new EventCalendarScheduleWrapperDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Get event calendar availability schedule
+     * Retrieve the availability schedule for a specific event calendar. Returns the schedule associated with the calendar ID provided in the path.
+     * 
+     * @param array{
+     *   calendarId: string // Unique identifier of the event calendar
+     * } $params Request parameters
+     * @param array<string, mixed>|null $options Additional request options
+     * @return EventCalendarScheduleWrapperDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function getCalendarSchedule(
+        array $params,
+        ?array $options = null
+    ): EventCalendarScheduleWrapperDTO {
+        $paramDefs = [['name' => 'calendarId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/event-calendar/{calendarId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'GET',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new EventCalendarScheduleWrapperDTO($responseData);
+        } catch (RequestException $e) {
+            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
+            $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
+            $responseData = $responseBody ? json_decode($responseBody, true) : null;
+
+            throw new GHLError(
+                $e->getMessage(),
+                $statusCode,
+                $responseData,
+                $requestOptions
+            );
+        }
+    }
+
+    /**
+     * Update event calendar availability schedule
+     * Update the availability schedule for a specific event calendar. Only provided fields will be updated. The calendar ID is provided in the path.
+     * 
+     * @param array{
+     *   calendarId: string // Unique identifier of the event calendar
+     * } $params Request parameters
+     * @param UpdateEventCalendarScheduleDTO $requestBody Request body data
+     * @param array<string, mixed>|null $options Additional request options
+     * @return EventCalendarScheduleWrapperDTO Response data
+     * @throws GHLError
+     * @throws GuzzleException
+     */
+    public function updateCalendarSchedule(
+        array $params,
+        $requestBody,
+        ?array $options = null
+    ): EventCalendarScheduleWrapperDTO {
+        if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
+            $requestBody = $requestBody->toArray();
+        }
+        $paramDefs = [['name' => 'calendarId', 'in' => 'path']];
+        $extracted = RequestUtils::extractParams($params, $paramDefs);
+        $requirements = ["bearer"];
+
+        $url = RequestUtils::buildUrl('/calendars/schedules/event-calendar/{calendarId}', $extracted['path']);
+        
+        $headers = array_merge(
+            $extracted['header'],
+            $options['headers'] ?? []
+        );
+
+        $authToken = RequestUtils::getAuthToken(
+            $this->client,
+            $requirements,
+            $headers,
+            $extracted['query'],
+            $requestBody ?? null,
+            $options['preferredTokenType'] ?? null
+        );
+
+        if ($authToken) {
+            $headers['Authorization'] = $authToken;
+        }
+
+        $requestOptions = [
+            'headers' => $headers,
+            'query' => $extracted['query'],
+            '_security_requirements' => $requirements,
+            '_path_params' => $extracted['path'],
+            '_query_params' => $extracted['query']
+        ];
+
+        if ($requestBody !== null) {
+            $requestOptions['json'] = $requestBody;
+        }
+
+        if ($options) {
+            foreach ($options as $key => $value) {
+                if (!in_array($key, ['headers', 'preferredTokenType'])) {
+                    $requestOptions[$key] = $value;
+                }
+            }
+        }
+
+        try {
+            $response = $this->client->getClient()->request(
+                'PUT',
+                $url,
+                $requestOptions
+            );
+
+            $body = (string) $response->getBody();
+            $responseData = json_decode($body, true);
+            
+            return new EventCalendarScheduleWrapperDTO($responseData);
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : null;
             $responseBody = $e->hasResponse() ? (string) $e->getResponse()->getBody() : null;
@@ -3524,7 +5089,7 @@ class Calendars
      * @throws GuzzleException
      */
     public function createCalendar(
-        CalendarCreateDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CalendarByIdSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

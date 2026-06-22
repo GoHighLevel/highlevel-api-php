@@ -48,7 +48,7 @@ class Associations
      * @throws GuzzleException
      */
     public function createRelation(
-        CreateRelationReqDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetPostSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -473,7 +473,7 @@ class Associations
      */
     public function updateAssociation(
         array $params,
-        UpdateAssociationReqDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetPostSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -723,7 +723,7 @@ class Associations
      * @throws GuzzleException
      */
     public function createAssociation(
-        CreateAssociationReqDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetPostSuccessfulResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

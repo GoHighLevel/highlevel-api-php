@@ -149,7 +149,7 @@ class KnowledgeBase
      * @throws GuzzleException
      */
     public function create(
-        AddFaqDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateFaqResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -239,7 +239,7 @@ class KnowledgeBase
      */
     public function update(
         array $params,
-        UpdateFaqBodyDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateFaqResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -493,7 +493,7 @@ class KnowledgeBase
      * @throws GuzzleException
      */
     public function discoverWebsite(
-        DiscoverWebsiteRequestDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): DiscoverWebsiteResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -579,7 +579,7 @@ class KnowledgeBase
      * @throws GuzzleException
      */
     public function deleteTrainedUrlsForKnowledgeBase(
-        DeleteWebsiteUrlRequestDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): DeleteWebsiteUrlResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -749,7 +749,7 @@ class KnowledgeBase
      * @throws GuzzleException
      */
     public function trainDiscoveredUrls(
-        TrainDiscoveredUrlsDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): TrainDiscoveredUrlsResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1003,7 +1003,7 @@ class KnowledgeBase
      */
     public function updateKnowledgeBase(
         array $params,
-        UpdateKnowledgeBaseDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateKnowledgeBaseResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1174,7 +1174,7 @@ class KnowledgeBase
      * @throws GuzzleException
      */
     public function createKnowledgeBase(
-        CreateKnowledgeBaseDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateKnowledgeBaseResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

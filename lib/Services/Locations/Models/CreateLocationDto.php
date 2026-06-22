@@ -62,38 +62,32 @@ class CreateLocationDto
     /**
      * @var mixed
      */
-    public mixed $prospect_info;
+    public $prospect_info;
 
     /**
      * @var mixed
      */
-    public mixed $settings;
+    public $settings;
 
     /**
      * @var mixed
      */
-    public mixed $social;
+    public $social;
 
     /**
      * @var mixed
      */
-    public mixed $twilio;
+    public $twilio;
 
     /**
      * @var mixed
      */
-    public mixed $mailgun;
+    public $mailgun;
 
     /**
      * @var string|null
      */
     public ?string $snapshot_id = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -118,61 +112,64 @@ class CreateLocationDto
         $this->twilio = $data['twilio'] ?? null;
         $this->mailgun = $data['mailgun'] ?? null;
         $this->snapshot_id = $data['snapshotId'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->company_id !== null) {
+            $result['companyId'] = $this->company_id;
+        }
+        if ($this->address !== null) {
+            $result['address'] = $this->address;
+        }
+        if ($this->city !== null) {
+            $result['city'] = $this->city;
+        }
+        if ($this->state !== null) {
+            $result['state'] = $this->state;
+        }
+        if ($this->country !== null) {
+            $result['country'] = $this->country;
+        }
+        if ($this->postal_code !== null) {
+            $result['postalCode'] = $this->postal_code;
+        }
+        if ($this->website !== null) {
+            $result['website'] = $this->website;
+        }
+        if ($this->timezone !== null) {
+            $result['timezone'] = $this->timezone;
+        }
+        if ($this->prospect_info !== null) {
+            $result['prospectInfo'] = $this->prospect_info;
+        }
+        if ($this->settings !== null) {
+            $result['settings'] = $this->settings;
+        }
+        if ($this->social !== null) {
+            $result['social'] = $this->social;
+        }
+        if ($this->twilio !== null) {
+            $result['twilio'] = $this->twilio;
+        }
+        if ($this->mailgun !== null) {
+            $result['mailgun'] = $this->mailgun;
+        }
+        if ($this->snapshot_id !== null) {
+            $result['snapshotId'] = $this->snapshot_id;
+        }
+        return $result;
     }
 }

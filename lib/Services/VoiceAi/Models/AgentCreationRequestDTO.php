@@ -82,7 +82,7 @@ class AgentCreationRequestDTO
     /**
      * @var mixed
      */
-    public mixed $send_post_call_notification_to;
+    public $send_post_call_notification_to;
 
     /**
      * @var array&lt;AgentWorkingHoursDTO&gt;|null
@@ -102,13 +102,7 @@ class AgentCreationRequestDTO
     /**
      * @var mixed
      */
-    public mixed $translation;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $translation;
 
     /**
      * Create model from array data
@@ -153,61 +147,79 @@ class AgentCreationRequestDTO
         $this->timezone = $data['timezone'] ?? null;
         $this->is_agent_as_backup_disabled = $data['isAgentAsBackupDisabled'] ?? null;
         $this->translation = $data['translation'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->agent_name !== null) {
+            $result['agentName'] = $this->agent_name;
+        }
+        if ($this->business_name !== null) {
+            $result['businessName'] = $this->business_name;
+        }
+        if ($this->welcome_message !== null) {
+            $result['welcomeMessage'] = $this->welcome_message;
+        }
+        if ($this->agent_prompt !== null) {
+            $result['agentPrompt'] = $this->agent_prompt;
+        }
+        if ($this->voice_id !== null) {
+            $result['voiceId'] = $this->voice_id;
+        }
+        if ($this->language !== null) {
+            $result['language'] = is_object($this->language) && method_exists($this->language, 'toArray') 
+                ? $this->language->toArray() 
+                : $this->language;
+        }
+        if ($this->patience_level !== null) {
+            $result['patienceLevel'] = is_object($this->patience_level) && method_exists($this->patience_level, 'toArray') 
+                ? $this->patience_level->toArray() 
+                : $this->patience_level;
+        }
+        if ($this->max_call_duration !== null) {
+            $result['maxCallDuration'] = $this->max_call_duration;
+        }
+        if ($this->send_user_idle_reminders !== null) {
+            $result['sendUserIdleReminders'] = $this->send_user_idle_reminders;
+        }
+        if ($this->reminder_after_idle_time_seconds !== null) {
+            $result['reminderAfterIdleTimeSeconds'] = $this->reminder_after_idle_time_seconds;
+        }
+        if ($this->inbound_number !== null) {
+            $result['inboundNumber'] = $this->inbound_number;
+        }
+        if ($this->number_pool_id !== null) {
+            $result['numberPoolId'] = $this->number_pool_id;
+        }
+        if ($this->call_end_workflow_ids !== null) {
+            $result['callEndWorkflowIds'] = $this->call_end_workflow_ids;
+        }
+        if ($this->send_post_call_notification_to !== null) {
+            $result['sendPostCallNotificationTo'] = $this->send_post_call_notification_to;
+        }
+        if ($this->agent_working_hours !== null) {
+            $result['agentWorkingHours'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->agent_working_hours);
+        }
+        if ($this->timezone !== null) {
+            $result['timezone'] = $this->timezone;
+        }
+        if ($this->is_agent_as_backup_disabled !== null) {
+            $result['isAgentAsBackupDisabled'] = $this->is_agent_as_backup_disabled;
+        }
+        if ($this->translation !== null) {
+            $result['translation'] = $this->translation;
+        }
+        return $result;
     }
 }

@@ -45,9 +45,9 @@ class UserSuccessfulResponseDto
     public ?string $extension = null;
 
     /**
-     * @var PermissionsDto|null
+     * @var mixed
      */
-    public ?PermissionsDto $permissions = null;
+    public $permissions;
 
     /**
      * @var string|null
@@ -55,9 +55,9 @@ class UserSuccessfulResponseDto
     public ?string $scopes = null;
 
     /**
-     * @var RoleSchema|null
+     * @var mixed
      */
-    public ?RoleSchema $roles = null;
+    public $roles;
 
     /**
      * @var array&lt;string, mixed&gt;|null
@@ -68,12 +68,6 @@ class UserSuccessfulResponseDto
      * @var string|null
      */
     public ?string $platform_language = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -89,76 +83,57 @@ class UserSuccessfulResponseDto
         $this->email = $data['email'] ?? null;
         $this->phone = $data['phone'] ?? null;
         $this->extension = $data['extension'] ?? null;
-        // Handle single PermissionsDto object
-        if (isset($data['permissions']) && is_array($data['permissions'])) {
-            $this->permissions = new PermissionsDto($data['permissions']);
-        } else {
-            $this->permissions = $data['permissions'] ?? null;
-        }
+        $this->permissions = $data['permissions'] ?? null;
         $this->scopes = $data['scopes'] ?? null;
-        // Handle single RoleSchema object
-        if (isset($data['roles']) && is_array($data['roles'])) {
-            $this->roles = new RoleSchema($data['roles']);
-        } else {
-            $this->roles = $data['roles'] ?? null;
-        }
+        $this->roles = $data['roles'] ?? null;
         $this->lc_phone = $data['lcPhone'] ?? null;
         $this->platform_language = $data['platformLanguage'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->first_name !== null) {
+            $result['firstName'] = $this->first_name;
+        }
+        if ($this->last_name !== null) {
+            $result['lastName'] = $this->last_name;
+        }
+        if ($this->email !== null) {
+            $result['email'] = $this->email;
+        }
+        if ($this->phone !== null) {
+            $result['phone'] = $this->phone;
+        }
+        if ($this->extension !== null) {
+            $result['extension'] = $this->extension;
+        }
+        if ($this->permissions !== null) {
+            $result['permissions'] = $this->permissions;
+        }
+        if ($this->scopes !== null) {
+            $result['scopes'] = $this->scopes;
+        }
+        if ($this->roles !== null) {
+            $result['roles'] = $this->roles;
+        }
+        if ($this->lc_phone !== null) {
+            $result['lcPhone'] = $this->lc_phone;
+        }
+        if ($this->platform_language !== null) {
+            $result['platformLanguage'] = $this->platform_language;
+        }
+        return $result;
     }
 }

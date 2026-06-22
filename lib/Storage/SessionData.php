@@ -91,27 +91,29 @@ class SessionData
             $this->expires_in = $data->expires_in;
             $this->expire_at = $data->expire_at;
         } elseif (is_object($data)) {
-            $this->access_token = $data->access_token ?? null;
-            $this->refresh_token = $data->refresh_token ?? null;
-            $this->token_type = $data->token_type ?? null;
+            // Accept both camelCase (v3 API token responses) and snake_case keys.
+            $this->access_token = $data->accessToken ?? $data->access_token ?? null;
+            $this->refresh_token = $data->refreshToken ?? $data->refresh_token ?? null;
+            $this->token_type = $data->tokenType ?? $data->token_type ?? null;
             $this->scope = $data->scope ?? null;
-            $this->user_type = $data->user_type ?? null;
-            $this->company_id = $data->company_id ?? null;
-            $this->location_id = $data->location_id ?? null;
-            $this->user_id = $data->user_id ?? null;
-            $this->expires_in = $data->expires_in ?? null;
-            $this->expire_at = $data->expire_at ?? null;
+            $this->user_type = $data->userType ?? $data->user_type ?? null;
+            $this->company_id = $data->companyId ?? $data->company_id ?? null;
+            $this->location_id = $data->locationId ?? $data->location_id ?? null;
+            $this->user_id = $data->userId ?? $data->user_id ?? null;
+            $this->expires_in = $data->expiresIn ?? $data->expires_in ?? null;
+            $this->expire_at = $data->expireAt ?? $data->expire_at ?? null;
         } elseif (is_array($data)) {
-            $this->access_token = $data['access_token'] ?? null;
-            $this->refresh_token = $data['refresh_token'] ?? null;
-            $this->token_type = $data['token_type'] ?? null;
+            // Accept both camelCase (v3 API token responses) and snake_case keys.
+            $this->access_token = $data['accessToken'] ?? $data['access_token'] ?? null;
+            $this->refresh_token = $data['refreshToken'] ?? $data['refresh_token'] ?? null;
+            $this->token_type = $data['tokenType'] ?? $data['token_type'] ?? null;
             $this->scope = $data['scope'] ?? null;
-            $this->user_type = $data['user_type'] ?? null;
-            $this->company_id = $data['company_id'] ?? null;
-            $this->location_id = $data['location_id'] ?? null;
-            $this->user_id = $data['user_id'] ?? null;
-            $this->expires_in = $data['expires_in'] ?? null;
-            $this->expire_at = $data['expire_at'] ?? null;
+            $this->user_type = $data['userType'] ?? $data['user_type'] ?? null;
+            $this->company_id = $data['companyId'] ?? $data['company_id'] ?? null;
+            $this->location_id = $data['locationId'] ?? $data['location_id'] ?? null;
+            $this->user_id = $data['userId'] ?? $data['user_id'] ?? null;
+            $this->expires_in = $data['expiresIn'] ?? $data['expires_in'] ?? null;
+            $this->expire_at = $data['expireAt'] ?? $data['expire_at'] ?? null;
         }
     }
 

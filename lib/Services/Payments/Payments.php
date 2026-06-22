@@ -73,7 +73,7 @@ class Payments
      * @throws GuzzleException
      */
     public function createIntegrationProvider(
-        CreateWhiteLabelIntegrationProviderDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateWhitelabelIntegrationResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -426,7 +426,7 @@ class Payments
      */
     public function recordOrderPayment(
         array $params,
-        PostRecordOrderPaymentBody $requestBody,
+        $requestBody,
         ?array $options = null
     ): PostRecordOrderPaymentResponse {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -516,7 +516,7 @@ class Payments
      */
     public function createOrderFulfillment(
         array $params,
-        CreateFulfillmentDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateFulfillmentResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -692,7 +692,7 @@ class Payments
     public function listOrderNotes(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'altId', 'in' => 'query'], ['name' => 'altType', 'in' => 'query'], ['name' => 'orderId', 'in' => 'path']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["Location-Access"];
@@ -1215,7 +1215,7 @@ class Payments
      * @throws GuzzleException
      */
     public function createCoupon(
-        CreateCouponParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateCouponResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1301,7 +1301,7 @@ class Payments
      * @throws GuzzleException
      */
     public function updateCoupon(
-        UpdateCouponParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateCouponResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1387,7 +1387,7 @@ class Payments
      * @throws GuzzleException
      */
     public function deleteCoupon(
-        DeleteCouponParams $requestBody,
+        $requestBody,
         ?array $options = null
     ): DeleteCouponResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1562,7 +1562,7 @@ class Payments
      */
     public function createIntegration(
         array $params,
-        CreateCustomProvidersDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateCustomProvidersResponseSchema {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1816,7 +1816,7 @@ class Payments
      */
     public function createConfig(
         array $params,
-        ConnectCustomProvidersConfigDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): ConnectCustomProvidersResponseSchema {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1906,7 +1906,7 @@ class Payments
      */
     public function disconnectConfig(
         array $params,
-        DeleteCustomProvidersConfigDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): DisconnectCustomProvidersResponseSchema {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1992,7 +1992,7 @@ class Payments
      * @throws GuzzleException
      */
     public function customProviderMarketplaceAppUpdateCapabilities(
-        UpdateCustomProviderCapabilitiesDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateCustomProviderCapabilitiesResponseSchema {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

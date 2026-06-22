@@ -57,7 +57,7 @@ class BulkEditProductDto
     /**
      * @var mixed
      */
-    public mixed $seo;
+    public $seo;
 
     /**
      * @var string|null
@@ -90,12 +90,6 @@ class BulkEditProductDto
     public ?array $label = null;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -125,61 +119,66 @@ class BulkEditProductDto
         $this->taxes = $data['taxes'] ?? null;
         $this->medias = $data['medias'] ?? null;
         $this->label = $data['label'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->description !== null) {
+            $result['description'] = $this->description;
+        }
+        if ($this->image !== null) {
+            $result['image'] = $this->image;
+        }
+        if ($this->available_in_store !== null) {
+            $result['availableInStore'] = $this->available_in_store;
+        }
+        if ($this->prices !== null) {
+            $result['prices'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->prices);
+        }
+        if ($this->collection_ids !== null) {
+            $result['collectionIds'] = $this->collection_ids;
+        }
+        if ($this->is_label_enabled !== null) {
+            $result['isLabelEnabled'] = $this->is_label_enabled;
+        }
+        if ($this->is_taxes_enabled !== null) {
+            $result['isTaxesEnabled'] = $this->is_taxes_enabled;
+        }
+        if ($this->seo !== null) {
+            $result['seo'] = $this->seo;
+        }
+        if ($this->slug !== null) {
+            $result['slug'] = $this->slug;
+        }
+        if ($this->automatic_tax_category_id !== null) {
+            $result['automaticTaxCategoryId'] = $this->automatic_tax_category_id;
+        }
+        if ($this->tax_inclusive !== null) {
+            $result['taxInclusive'] = $this->tax_inclusive;
+        }
+        if ($this->taxes !== null) {
+            $result['taxes'] = $this->taxes;
+        }
+        if ($this->medias !== null) {
+            $result['medias'] = $this->medias;
+        }
+        if ($this->label !== null) {
+            $result['label'] = $this->label;
+        }
+        return $result;
     }
 }

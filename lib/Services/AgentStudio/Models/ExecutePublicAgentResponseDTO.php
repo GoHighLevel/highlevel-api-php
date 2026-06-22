@@ -65,12 +65,6 @@ class ExecutePublicAgentResponseDTO
     public array $generative_outputs;
 
     /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
-
-    /**
      * Create model from array data
      * 
      * @param array<string, mixed> $data Model data
@@ -88,61 +82,49 @@ class ExecutePublicAgentResponseDTO
         $this->flow_switch = $data['flowSwitch'] ?? false;
         $this->attachments = $data['attachments'] ?? [];
         $this->generative_outputs = $data['generativeOutputs'] ?? [];
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->success !== null) {
+            $result['success'] = $this->success;
+        }
+        if ($this->execution_id !== null) {
+            $result['executionId'] = $this->execution_id;
+        }
+        if ($this->interaction_id !== null) {
+            $result['interactionId'] = $this->interaction_id;
+        }
+        if ($this->response !== null) {
+            $result['response'] = $this->response;
+        }
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->next_expected_input !== null) {
+            $result['nextExpectedInput'] = $this->next_expected_input;
+        }
+        if ($this->goal_completion !== null) {
+            $result['goalCompletion'] = $this->goal_completion;
+        }
+        if ($this->execution_status !== null) {
+            $result['executionStatus'] = $this->execution_status;
+        }
+        if ($this->flow_switch !== null) {
+            $result['flowSwitch'] = $this->flow_switch;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = $this->attachments;
+        }
+        if ($this->generative_outputs !== null) {
+            $result['generativeOutputs'] = $this->generative_outputs;
+        }
+        return $result;
     }
 }

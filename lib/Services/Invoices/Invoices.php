@@ -97,7 +97,7 @@ class Invoices
      * @throws GuzzleException
      */
     public function createInvoiceTemplate(
-        CreateInvoiceTemplateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateInvoiceTemplateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -361,7 +361,7 @@ class Invoices
      */
     public function updateInvoiceTemplate(
         array $params,
-        UpdateInvoiceTemplateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInvoiceTemplateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -535,7 +535,7 @@ class Invoices
      */
     public function updateInvoiceTemplateLateFeesConfiguration(
         array $params,
-        UpdateInvoiceLateFeesConfigurationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInvoiceTemplateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -625,7 +625,7 @@ class Invoices
      */
     public function updateInvoicePaymentMethodsConfiguration(
         array $params,
-        UpdatePaymentMethodsConfigurationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInvoiceTemplateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -711,7 +711,7 @@ class Invoices
      * @throws GuzzleException
      */
     public function createInvoiceSchedule(
-        CreateInvoiceScheduleDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateInvoiceScheduleResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -975,7 +975,7 @@ class Invoices
      */
     public function updateInvoiceSchedule(
         array $params,
-        UpdateInvoiceScheduleDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInvoiceScheduleResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1231,7 +1231,7 @@ class Invoices
      */
     public function scheduleInvoiceSchedule(
         array $params,
-        ScheduleInvoiceScheduleDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): ScheduleInvoiceScheduleResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1321,7 +1321,7 @@ class Invoices
      */
     public function autoPaymentInvoiceSchedule(
         array $params,
-        AutoPaymentScheduleDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): AutoPaymentInvoiceScheduleResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1411,7 +1411,7 @@ class Invoices
      */
     public function cancelInvoiceSchedule(
         array $params,
-        CancelInvoiceScheduleDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CancelInvoiceScheduleResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1497,7 +1497,7 @@ class Invoices
      * @throws GuzzleException
      */
     public function text2payInvoice(
-        Text2PayDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): Text2PayInvoiceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -1837,7 +1837,7 @@ class Invoices
      */
     public function updateInvoice(
         array $params,
-        UpdateInvoiceDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInvoiceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2011,7 +2011,7 @@ class Invoices
      */
     public function updateInvoiceLateFeesConfiguration(
         array $params,
-        UpdateInvoiceLateFeesConfigurationDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateInvoiceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2101,7 +2101,7 @@ class Invoices
      */
     public function voidInvoice(
         array $params,
-        VoidInvoiceDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): VoidInvoiceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2191,7 +2191,7 @@ class Invoices
      */
     public function sendInvoice(
         array $params,
-        SendInvoiceDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): SendInvoicesResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2281,7 +2281,7 @@ class Invoices
      */
     public function recordInvoice(
         array $params,
-        RecordPaymentDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): RecordPaymentResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2367,9 +2367,9 @@ class Invoices
      * @throws GuzzleException
      */
     public function updateInvoiceLastVisitedAt(
-        PatchInvoiceStatsLastViewedDto $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -2453,7 +2453,7 @@ class Invoices
      * @throws GuzzleException
      */
     public function createNewEstimate(
-        CreateEstimatesDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2543,7 +2543,7 @@ class Invoices
      */
     public function updateEstimate(
         array $params,
-        UpdateEstimateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2633,7 +2633,7 @@ class Invoices
      */
     public function deleteEstimate(
         array $params,
-        AltDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2806,7 +2806,7 @@ class Invoices
      */
     public function sendEstimate(
         array $params,
-        SendEstimateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -2896,7 +2896,7 @@ class Invoices
      */
     public function createInvoiceFromEstimate(
         array $params,
-        CreateInvoiceFromEstimateDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateInvoiceFromEstimateResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3072,9 +3072,9 @@ class Invoices
      * @throws GuzzleException
      */
     public function updateEstimateLastVisitedAt(
-        EstimateIdParam $requestBody,
+        $requestBody,
         ?array $options = null
-    ): mixed {
+    ) {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
             $requestBody = $requestBody->toArray();
         }
@@ -3244,7 +3244,7 @@ class Invoices
      * @throws GuzzleException
      */
     public function createEstimateTemplate(
-        EstimateTemplatesDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateTemplateResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3334,7 +3334,7 @@ class Invoices
      */
     public function updateEstimateTemplate(
         array $params,
-        EstimateTemplatesDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateTemplateResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3424,7 +3424,7 @@ class Invoices
      */
     public function deleteEstimateTemplate(
         array $params,
-        AltDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): EstimateTemplateResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -3594,7 +3594,7 @@ class Invoices
      * @throws GuzzleException
      */
     public function createInvoice(
-        CreateInvoiceDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateInvoiceResponseDto {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

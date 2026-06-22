@@ -27,13 +27,7 @@ class AutoPaymentScheduleDto
     /**
      * @var mixed
      */
-    public mixed $auto_payment;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $auto_payment;
 
     /**
      * Create model from array data
@@ -46,61 +40,28 @@ class AutoPaymentScheduleDto
         $this->alt_type = $data['altType'] ?? '';
         $this->id = $data['id'] ?? '';
         $this->auto_payment = $data['autoPayment'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->alt_type !== null) {
+            $result['altType'] = $this->alt_type;
+        }
+        if ($this->id !== null) {
+            $result['id'] = $this->id;
+        }
+        if ($this->auto_payment !== null) {
+            $result['autoPayment'] = $this->auto_payment;
+        }
+        return $result;
     }
 }

@@ -67,7 +67,12 @@ class GetBrandBoardSuccessDTO
     /**
      * @var mixed
      */
-    public mixed $meta;
+    public $meta;
+
+    /**
+     * @var mixed
+     */
+    public $missing_assets;
 
     /**
      * @var string|null
@@ -78,12 +83,6 @@ class GetBrandBoardSuccessDTO
      * @var string|null
      */
     public ?string $updated_at = null;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
 
     /**
      * Create model from array data
@@ -125,63 +124,70 @@ class GetBrandBoardSuccessDTO
         $this->folder_id = $data['folderId'] ?? null;
         $this->origin_id = $data['originId'] ?? null;
         $this->meta = $data['meta'] ?? null;
+        $this->missing_assets = $data['missingAssets'] ?? null;
         $this->created_at = $data['createdAt'] ?? null;
         $this->updated_at = $data['updatedAt'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->id !== null) {
+            $result['_id'] = $this->id;
+        }
+        if ($this->location_id !== null) {
+            $result['locationId'] = $this->location_id;
+        }
+        if ($this->name !== null) {
+            $result['name'] = $this->name;
+        }
+        if ($this->logos !== null) {
+            $result['logos'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->logos);
+        }
+        if ($this->colors !== null) {
+            $result['colors'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->colors);
+        }
+        if ($this->fonts !== null) {
+            $result['fonts'] = array_map(function($item) {
+                return is_object($item) && method_exists($item, 'toArray') ? $item->toArray() : $item;
+            }, $this->fonts);
+        }
+        if ($this->default !== null) {
+            $result['default'] = $this->default;
+        }
+        if ($this->deleted !== null) {
+            $result['deleted'] = $this->deleted;
+        }
+        if ($this->parent_id !== null) {
+            $result['parentId'] = $this->parent_id;
+        }
+        if ($this->folder_id !== null) {
+            $result['folderId'] = $this->folder_id;
+        }
+        if ($this->origin_id !== null) {
+            $result['originId'] = $this->origin_id;
+        }
+        if ($this->meta !== null) {
+            $result['meta'] = $this->meta;
+        }
+        if ($this->missing_assets !== null) {
+            $result['missingAssets'] = $this->missing_assets;
+        }
+        if ($this->created_at !== null) {
+            $result['createdAt'] = $this->created_at;
+        }
+        if ($this->updated_at !== null) {
+            $result['updatedAt'] = $this->updated_at;
+        }
+        return $result;
     }
 }

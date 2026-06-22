@@ -142,7 +142,7 @@ class Objects
      */
     public function updateCustomObject(
         array $params,
-        UpdateCustomObjectSchemaDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomObjectResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -317,7 +317,7 @@ class Objects
      */
     public function updateObjectRecord(
         array $params,
-        UpdateCustomObjectRecordDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): RecordByIdResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -490,7 +490,7 @@ class Objects
      */
     public function createObjectRecord(
         array $params,
-        CreateCustomObjectRecordDto $requestBody,
+        $requestBody,
         ?array $options = null
     ): RecordByIdResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -580,7 +580,7 @@ class Objects
      */
     public function searchObjectRecords(
         array $params,
-        SearchRecordsBody $requestBody,
+        $requestBody,
         ?array $options = null
     ): SearchRecordResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -748,7 +748,7 @@ class Objects
      * @throws GuzzleException
      */
     public function createCustomObjectSchema(
-        CreateCustomObjectSchemaDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CustomObjectResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

@@ -217,7 +217,7 @@ class CustomMenus
      */
     public function updateCustomMenu(
         array $params,
-        UpdateCustomMenuDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateCustomMenuLinkResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -389,7 +389,7 @@ class CustomMenus
      * @throws GuzzleException
      */
     public function createCustomMenu(
-        CreateCustomMenuDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): GetSingleCustomMenusSuccessfulResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {

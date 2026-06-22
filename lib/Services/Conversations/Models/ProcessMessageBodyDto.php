@@ -92,13 +92,7 @@ class ProcessMessageBodyDto
     /**
      * @var mixed
      */
-    public mixed $call;
-
-    /**
-     * Raw data storage for models without defined schema
-     * @var array<string, mixed>
-     */
-    private array $data = [];
+    public $call;
 
     /**
      * Create model from array data
@@ -124,61 +118,67 @@ class ProcessMessageBodyDto
         $this->direction = $data['direction'] ?? null;
         $this->date = $data['date'] ?? null;
         $this->call = $data['call'] ?? null;
-        // No defined properties - store raw data for flexible models
-        $this->data = $data;
     }
 
     /**
-     * Convert model to array (for models without defined schema)
+     * Convert model to array
      * 
      * @return array<string, mixed>
      */
     public function toArray(): array
     {
-        return $this->data;
-    }
-
-    /**
-     * Magic getter for accessing data properties
-     * 
-     * @param string $name Property name
-     * @return mixed Property value or null if not found
-     */
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
-
-    /**
-     * Magic setter for setting data properties
-     * 
-     * @param string $name Property name
-     * @param mixed $value Property value
-     * @return void
-     */
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    /**
-     * Magic isset for checking if data property exists
-     * 
-     * @param string $name Property name
-     * @return bool True if property exists, false otherwise
-     */
-    public function __isset(string $name): bool
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * Get all data as array
-     * 
-     * @return array<string, mixed>
-     */
-    public function getData(): array
-    {
-        return $this->data;
+        $result = [];
+        if ($this->type !== null) {
+            $result['type'] = $this->type;
+        }
+        if ($this->attachments !== null) {
+            $result['attachments'] = $this->attachments;
+        }
+        if ($this->message !== null) {
+            $result['message'] = $this->message;
+        }
+        if ($this->conversation_id !== null) {
+            $result['conversationId'] = $this->conversation_id;
+        }
+        if ($this->contact_id !== null) {
+            $result['contactId'] = $this->contact_id;
+        }
+        if ($this->conversation_provider_id !== null) {
+            $result['conversationProviderId'] = $this->conversation_provider_id;
+        }
+        if ($this->html !== null) {
+            $result['html'] = $this->html;
+        }
+        if ($this->subject !== null) {
+            $result['subject'] = $this->subject;
+        }
+        if ($this->email_from !== null) {
+            $result['emailFrom'] = $this->email_from;
+        }
+        if ($this->email_to !== null) {
+            $result['emailTo'] = $this->email_to;
+        }
+        if ($this->email_cc !== null) {
+            $result['emailCc'] = $this->email_cc;
+        }
+        if ($this->email_bcc !== null) {
+            $result['emailBcc'] = $this->email_bcc;
+        }
+        if ($this->email_message_id !== null) {
+            $result['emailMessageId'] = $this->email_message_id;
+        }
+        if ($this->alt_id !== null) {
+            $result['altId'] = $this->alt_id;
+        }
+        if ($this->direction !== null) {
+            $result['direction'] = $this->direction;
+        }
+        if ($this->date !== null) {
+            $result['date'] = $this->date;
+        }
+        if ($this->call !== null) {
+            $result['call'] = $this->call;
+        }
+        return $result;
     }
 }

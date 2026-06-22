@@ -56,7 +56,7 @@ class VoiceAi
      * @throws GuzzleException
      */
     public function createAgent(
-        AgentCreationRequestDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -232,7 +232,7 @@ class VoiceAi
      */
     public function patchAgent(
         array $params,
-        PatchAgentDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): PatchAgentResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -406,7 +406,7 @@ class VoiceAi
     public function deleteAgent(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'agentId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
@@ -659,7 +659,7 @@ class VoiceAi
      * @throws GuzzleException
      */
     public function createAction(
-        CreateSingleActionDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): CreateActionResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -749,7 +749,7 @@ class VoiceAi
      */
     public function updateAction(
         array $params,
-        UpdateSingleActionDTO $requestBody,
+        $requestBody,
         ?array $options = null
     ): UpdateActionResponseDTO {
         if ($requestBody !== null && is_object($requestBody) && method_exists($requestBody, 'toArray')) {
@@ -924,7 +924,7 @@ class VoiceAi
     public function deleteAction(
         array $params,
         ?array $options = null
-    ): mixed {
+    ) {
         $paramDefs = [['name' => 'actionId', 'in' => 'path'], ['name' => 'locationId', 'in' => 'query'], ['name' => 'agentId', 'in' => 'query']];
         $extracted = RequestUtils::extractParams($params, $paramDefs);
         $requirements = ["bearer"];
