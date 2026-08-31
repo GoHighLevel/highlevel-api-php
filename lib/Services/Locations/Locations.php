@@ -184,7 +184,7 @@ class Locations
             $this->client,
             $requirements,
             $headers,
-            $extracted['query'],
+            $extracted['path'],
             $requestBody ?? null,
             $options['preferredTokenType'] ?? null
         );
